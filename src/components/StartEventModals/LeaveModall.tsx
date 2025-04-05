@@ -74,11 +74,14 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const handleGetAllLeaveMembers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getLeaveMembers`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getLeaveMembers/${eventID}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       console.log(res.data);
       setListLeaveMember(res.data);
     } catch (error) {

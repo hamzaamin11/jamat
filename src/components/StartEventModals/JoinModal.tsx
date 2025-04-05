@@ -41,7 +41,6 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const [addMemberList, setAddMemberList] = useState<MemberT[] | null>(null);
 
- 
   const handleSearchUser = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/searchMember`, {
@@ -62,9 +61,12 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const handleGetAllMembers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getJoinMembers`, {
-        headers: { Authorization: token },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getJoinMembers/${eventID}`,
+        {
+          headers: { Authorization: token },
+        }
+      );
 
       setAddMemberList(res.data);
     } catch (error) {

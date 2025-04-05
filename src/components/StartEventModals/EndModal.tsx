@@ -7,6 +7,30 @@ import { BASE_URL } from "../../Contents/URL";
 import { useAppSelector } from "../../redux/Hooks";
 import { ChangeEvent, useEffect, useState } from "react";
 
+type MemberEvent = {
+  id: number;
+  memberId: number;
+  eventId: number;
+  memberClockin: string; // HH:mm:ss format
+  memberClockout: string; // HH:mm:ss format
+  presentHours: string; // e.g., "0 Minutes"
+  eventStatus: string; // e.g., "End"
+  fullName: string;
+  fatherName: string;
+  zone: string;
+  mobileNumber: string;
+  address: string;
+  education: string;
+  email: string;
+  cnic: string;
+  dob: string; // ISO string format
+  district: string;
+  age: number;
+  profession: string;
+  image: string; // e.g., "C:\\fakepath\\Avatar.png"
+  status: "Y" | "N"; // assuming only 'Y' or 'N'
+  joinStatus: "Y" | "N"; // assuming only 'Y' or 'N'
+};
 type EventType = {
   id: number;
   eventName: string;
@@ -19,13 +43,13 @@ type EventType = {
   presentTime: string; // e.g. "00:00:00"
   endStatus: string; // e.g. 'Start'
   location: string;
-
+  fullName: string;
   image: string | null;
-
+  fatherName: string;
   focalPersonName: string;
   focalPersonEmail: string;
   focalPersonNumber: string;
-
+  phoneNumber: string;
   infoPersonName: string;
   infoPersonEmail: string;
   infoPersonNumber: string;
@@ -43,7 +67,7 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const [endNote, setEndnote] = useState("");
 
-  const [leaveMembers, setLeaveMembers] = useState<EventType | null>(null);
+  const [leaveMembers, setLeaveMembers] = useState<MemberEvent[] | null>(null);
 
   const [eventData, setEventData] = useState<EventType | null>(null);
 
@@ -60,7 +84,21 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
     }
   };
 
-  const handleLeaveEvent = async () => {
+  const handleGetEndEventMemebers = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/getEndMembers/${eventID}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setLeaveMembers(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(leaveMembers, "hamaz");
+  const handleEndEvent = async () => {
     try {
       const res = await axios.post(
         `${BASE_URL}/user/endEvent/${eventID}`,
@@ -72,14 +110,15 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
         }
       );
       console.log(res.data);
-      setLeaveMembers(res.data);
+      handleGetEndEventMemebers();
     } catch (error) {
       console.log(error);
     }
   };
-  console.log("user ", leaveMembers);
+
   useEffect(() => {
     handleGetEventDetail();
+    handleGetEndEventMemebers();
   }, []);
 
   return (
@@ -119,7 +158,7 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
         </div>
 
         <div className="flex items-center justify-center">
-          <AddButton label="End Events" handleClick={handleLeaveEvent} />
+          <AddButton label="End Events" handleClick={handleEndEvent} />
         </div>
         <div className="py-3">
           <span className="text-sm text-gray-800 font-semibold ">
@@ -139,42 +178,18 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
             </thead>
 
             {/* Table Body */}
-            <tbody className="text-center bg-white text-sm ">
-              <tr className="hover:bg-gray-100 transition duration-300">
-                <td className="p-1 border ">Hamza</td>
-                <td className="p-1 border">Amin Ullah</td>
-                <td className="p-1 border">0321-5965061</td>
-                <td className="p-1 border">11:40 AM</td>
-                <td className="p-1 border">02:40 PM</td>
-                <td className="p-1 border">2 Hours</td>
-              </tr>
-
-              <tr className="hover:bg-gray-100 transition duration-300">
-                <td className="p-1 border ">Hamza</td>
-                <td className="p-1 border">Amin Ullah</td>
-                <td className="p-1 border">0321-5965061</td>
-                <td className="p-1 border">11:40 AM</td>
-                <td className="p-1 border">04:00 PM</td>
-                <td className="p-1 border">5 Hours</td>
-              </tr>
-
-              <tr className="hover:bg-gray-100 transition duration-300">
-                <td className="p-1 border ">Hamza</td>
-                <td className="p-1 border">Amin Ullah</td>
-                <td className="p-1 border">0321-5965061</td>
-                <td className="p-1 border">11:40 AM</td>
-                <td className="p-1 border">00:30 AM</td>
-                <td className="p-1 border">30 Mints</td>
-              </tr>
-              <tr className="hover:bg-gray-100 transition duration-300">
-                <td className="p-1 border ">Hamza</td>
-                <td className="p-1 border">Amin Ullah</td>
-                <td className="p-1 border">0321-5965061</td>
-                <td className="p-1 border">11:40 AM</td>
-                <td className="p-1 border">12:40 PM</td>
-                <td className="p-1 border">1 Hour</td>
-              </tr>
-            </tbody>
+            {leaveMembers?.map((end) => (
+              <tbody className="text-center bg-white text-sm ">
+                <tr className="hover:bg-gray-100 transition duration-300">
+                  <td className="p-1 border ">{end.fullName}</td>
+                  <td className="p-1 border">{end.fatherName}</td>
+                  <td className="p-1 border">{end.mobileNumber}</td>
+                  <td className="p-1 border">{end.memberClockin}</td>
+                  <td className="p-1 border">{end.memberClockout}</td>
+                  <td className="p-1 border">{end.presentHours}</td>
+                </tr>
+              </tbody>
+            ))}
           </table>
         </div>
       </div>
