@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:wght@100;500&display=swap");
+
+@import "tailwindcss";
+@plugin "daisyui";
+body {
+  font-family: "Poppins", sans-serif;
+  @apply bg-gray-50 h-screen;
+}
+.my-button {
+  @apply px-4 py-2 rounded-md text-gray-700 hover:scale-105 hover:underline hover:duration-500 hover:bg-sky-200 list-disc w-36;
+}
+.delete-button {
+  @apply bg-red-500 rounded text-white hover:cursor-pointer hover:scale-105 duration-300 p-0.5;
+}
+
+.edit-button {
+  @apply bg-sky-500 text-white cursor-pointer rounded hover:scale-105 duration-300 p-0.5;
+}
+
+.view-button {
+  @apply bg-green-500 rounded text-white cursor-pointer hover:scale-105 duration-300 p-0.5;
+}
