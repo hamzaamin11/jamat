@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/Store.tsx";
 import { PersistGate } from "redux-persist/integration/react";
-import { Bounce, Slide, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

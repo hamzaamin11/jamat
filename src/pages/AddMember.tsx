@@ -3,8 +3,8 @@ import { InputField } from "../components/Inputs/InputField";
 import {
   FaAddressBook,
   FaBriefcase,
-  FaImage,
   FaRegIdCard,
+  FaRegImage,
   FaUser,
   FaUsers,
 } from "react-icons/fa";
@@ -32,7 +32,6 @@ const initialState = {
   dob: "",
   age: "",
   profession: "",
-  image: "",
 };
 
 type ALLZONET = {
@@ -56,9 +55,31 @@ export const AddMember = () => {
 
   const [getDistrict, setGetDistrict] = useState<ALLDISTRICTT[] | null>(null);
 
+  const [updateImage, setUpdateImage] = useState<File | null>(null);
+
+  console.log(updateImage, "file");
+
   const [loading, setLoading] = useState(false);
 
-  console.log("loading", loading);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUpdateImage(e.target.files[0]);
+    }
+  };
+
+  const handleUploadImage = () => {
+    if (!updateImage) {
+      alert("Please select an image first.");
+      return;
+    }
+    const formData = new FormData();
+
+    console.log(formData, "Before");
+
+    formData.append("image", updateImage);
+
+    console.log(formData, "AFTER");
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -99,7 +120,7 @@ export const AddMember = () => {
 
   const handleGetmembers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getMembers/${25}`);
+      const res = await axios.get(`${BASE_URL}/user/getMembers`);
       console.log(res.data);
     } catch (error) {
       console.log(error);
@@ -118,7 +139,6 @@ export const AddMember = () => {
       !formData.email.trim() ||
       !formData.fatherName.trim() ||
       !formData.fullName.trim() ||
-      !formData.image.trim() ||
       !formData.mobileNumber.trim() ||
       !formData.profession.trim() ||
       !formData.zone.trim()
@@ -139,6 +159,7 @@ export const AddMember = () => {
       setLoading(false);
       console.log(res.data);
       handleGetmembers();
+      handleUploadImage();
       toast.success("User Added successfully");
       setFormData(initialState);
     } catch (error) {
@@ -278,16 +299,31 @@ export const AddMember = () => {
             initial=" Please select district"
           />
 
-          <InputField
+          <div className="flex flex-col  mt-1 ">
+            <span className=" text-gray-800 text-xs font-semibold pb-1">
+              Select Image
+            </span>
+            <label className="flex border  rounded">
+              <span className="label text-gray-600 font-medium p-1 w-16 pl-4">
+                <FaRegImage size={25} />
+              </span>
+              <input
+                type="file"
+                className=" p-2 w-full rounded-r bg-white  outline"
+                onChange={handleFileChange}
+              />
+            </label>
+          </div>
+          {/* <InputField
             labelName="Image*"
             icon={<FaImage size={25} color="#6B7280" />}
             placeHolder={"Upload your image..."}
             fieldType="file"
             name="image"
             accept="image/*"
-            inputValue={formData?.image}
-            handleChange={handleChange}
-          />
+            // inputValue={}
+            handleChange={handleFileChange}
+          /> */}
 
           <InputField
             labelName="Address*"

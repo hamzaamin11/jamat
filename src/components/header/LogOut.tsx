@@ -1,11 +1,9 @@
 import { useEffect, useRef } from "react";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../redux/Hooks";
 import { logOut, resetStore } from "../../redux/UserSlice";
 
 export const ProfileLogOut = ({
-  isOpenModal,
   setIsOpenModal,
 }: {
   isOpenModal: () => void;

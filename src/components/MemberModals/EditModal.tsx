@@ -3,8 +3,8 @@ import { ChangeEvent, useEffect, useState } from "react";
 import {
   FaAddressBook,
   FaBriefcase,
-  FaImage,
   FaRegIdCard,
+  FaRegImage,
   FaUser,
   FaUsers,
 } from "react-icons/fa";
@@ -36,7 +36,6 @@ type MemberT = {
   dob: string;
   age: string;
   profession: string;
-  image: string;
 };
 
 type getZoneT = {
@@ -68,6 +67,16 @@ export const EditModal = ({
   const [allDistrict, setAllDistrict] = useState<getDestrictT[] | null>(null);
 
   const [formData, setFormData] = useState(viewDetail);
+
+  const [updateImage, setUpdateImage] = useState<File | null>(null);
+
+  console.log(updateImage);
+
+  const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUpdateImage(e.target.files[0]);
+    }
+  };
 
   console.log("formData", formData);
 
@@ -262,16 +271,21 @@ export const EditModal = ({
               initial="Please select district"
             />
 
-            {/* <InputField
-              labelName="Image*"
-              icon={<FaImage size={25} color="#6B7280" />}
-              placeHolder={"Upload your image..."}
-              fieldType="file"
-              name="image"
-              accept="image/*"
-              inputValue={formData?.image ?? ""}
-              handleChange={handleChange}
-            /> */}
+            <div className="flex flex-col  mt-1 ">
+              <span className=" text-gray-800 text-xs font-semibold pb-1">
+                Select Image
+              </span>
+              <label className="flex border  rounded">
+                <span className="label text-gray-600 font-medium p-1 w-16 pl-4">
+                  <FaRegImage size={25} />
+                </span>
+                <input
+                  type="file"
+                  className=" p-2 w-full rounded-r bg-white  outline"
+                  onChange={handleChangeFile}
+                />
+              </label>
+            </div>
 
             <InputField
               labelName="Address*"

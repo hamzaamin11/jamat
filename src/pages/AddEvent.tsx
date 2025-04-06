@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { InputField } from "../components/Inputs/InputField";
-import { FaImage, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import {
   MdEventAvailable,
   MdOutlineDescription,
