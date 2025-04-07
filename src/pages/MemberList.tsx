@@ -59,10 +59,6 @@ export const MemberList = () => {
 
   const token = currentUser?.token;
 
-  const [filterVal, setFilterVal] = useState<number>(10);
-
-  console.log(filterVal);
-
   const [searchData, setSearchData] = useState("");
 
   console.log("searchData", searchData);

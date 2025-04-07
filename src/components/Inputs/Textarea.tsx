@@ -15,7 +15,6 @@ export const TextArea = ({
   placeHolder,
   inputValue,
 
-
   handleChange,
 }: InputFieldProps) => {
   return (

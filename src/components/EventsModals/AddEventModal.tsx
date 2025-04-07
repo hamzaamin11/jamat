@@ -1,82 +1,109 @@
 import { ChangeEvent, useState } from "react";
 
+import { FaRegImage, FaUser } from "react-icons/fa";
+
 import {
-  FaAddressBook,
-  FaBriefcase,
-  FaImage,
-  FaRegIdCard,
-  FaUser,
-  FaUsers,
-} from "react-icons/fa";
-import { MdOutlineSmartphone } from "react-icons/md";
+  MdEventAvailable,
+  MdOutlineDescription,
+  MdOutlineSmartphone,
+} from "react-icons/md";
+
 import { IoLocationSharp, IoMailSharp } from "react-icons/io5";
-import { CiCalculator2 } from "react-icons/ci";
+
 import { FaCalendarDays } from "react-icons/fa6";
-import { PiStudent } from "react-icons/pi";
+
 import { InputField } from "../Inputs/InputField";
-import { OptionField } from "../Inputs/OptionField";
+
 import { AddButton } from "../Buttons/AddButton";
+
 import { Title } from "../title/Title";
+
 import axios from "axios";
+
 import { BASE_URL } from "../../Contents/URL";
+
 import { useAppSelector } from "../../redux/Hooks";
+
 import { toast } from "react-toastify";
 
-type MemberT = {
+import { TextArea } from "../Inputs/Textarea";
+
+type GETEVENTT = {
   id: number;
-  fullName: string;
-  fatherName: string;
-  district: string;
-  zone: string;
-  mobileNumber: string;
-  address: string;
-  education: string;
-  email: string;
-  cnic: string;
-  dob: string;
-  age: string;
-  profession: string;
+  eventName: string;
+  currentDate: string;
+  location: string;
+  focalPersonName: string;
+  focalPersonNumber: string;
+  focalPersonEmail: string;
+  infoPersonName: string;
+  infoPersonNumber: string;
+  infoPersonEmail: string;
   image: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  presentTime: string;
+  eventType: "oneTimeEvent | recursiveEvent";
 };
 
-const zoneData = [
-  { label: "Please Select Zone", value: "" },
-  { label: "Hafizabad", value: "hafizabad" },
-  { label: "Gujranwala", value: "gujranwala" },
-];
-const districtDate = [
-  { label: "Please Select District", value: "" },
-  { label: "Hafizabad", value: "hafizabad" },
-  { label: "Gujranwala", value: "gujranwala" },
-];
 type EditModalProps = {
   setModal: () => void;
-  viewDetail: MemberT | null;
-  handleGetmembers: () => void;
+  getEventDetail: GETEVENTT | null;
+  handleGetEvent: () => void;
 };
-export const EditModal = ({
+export const AddEventModal = ({
   setModal,
-  viewDetail,
-  handleGetmembers,
+  getEventDetail,
+  handleGetEvent,
 }: EditModalProps) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
+
   const token = currentUser?.token;
-  const [formData, setFormData] = useState(viewDetail);
-  console.log("formData", formData);
+  console.log("=>", getEventDetail);
+
+  const [updateEvent, setUpdateEvent] = useState(getEventDetail);
+
+  console.log(updateEvent, "update Event >>>");
+
+  const [updateImage, setUpdateImage] = useState<File | null>(null);
+
+  console.log("updateEvent", updateEvent);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUpdateImage(e.target.files[0]);
+    }
+  };
+
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value } as MemberT);
+    setUpdateEvent({ ...updateEvent, [name]: value } as GETEVENTT);
+  };
+
+  const handleUploadImage = () => {
+    if (!updateImage) {
+      alert("Please select an image first.");
+      return;
+    }
+    const formData = new FormData();
+
+    console.log(formData, "Before");
+
+    formData.append("image", updateImage);
+
+    console.log(formData, "AFTER");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `${BASE_URL}/user/updateMember/${formData?.id}`,
-        formData,
+        `${BASE_URL}/user/updateMember/${updateEvent?.id}`,
+        updateEvent,
         {
           headers: {
             Authorization: token,
@@ -85,158 +112,181 @@ export const EditModal = ({
       );
       console.log(res.data);
       toast.success("Member updated successfully");
-      handleGetmembers();
+      handleUploadImage();
+      handleGetEvent();
       setModal();
     } catch (error) {
       console.log(error);
       setModal();
     }
   };
+
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
       <div className="mx-3 bg-white text-gray-700 rounded w-full">
-        <Title setModal={setModal}>Update Member Registration</Title>
+        <Title setModal={setModal}>Update Event</Title>
 
         <form
           onSubmit={handleSubmit}
           className="border border-gray-400 rounded py-4  "
         >
-          <div className="grid grid-cols-3 gap-4  mx-3">
+          <h2 className="mx-3 text-lg font-semibold underline">
+            Event Information*
+          </h2>
+          <div className="grid lg:grid-cols-2 gap-4  mx-3">
+            <InputField
+              labelName="Event Name*"
+              icon={<MdEventAvailable size={25} color="#1E90FF" />} // Blue
+              placeHolder={"Enter event name..."}
+              fieldType="text"
+              name="eventName"
+              inputValue={updateEvent?.eventName ?? ""}
+              handleChange={handleChange}
+            />
+            <InputField
+              labelName="Event Date*"
+              icon={<FaCalendarDays size={25} color="#28A745" />} // Green
+              placeHolder={"Enter your phone number ..."}
+              fieldType="date"
+              name="date"
+              inputValue={updateEvent?.currentDate ?? ""}
+              handleChange={handleChange}
+            />
+            <InputField
+              labelName="Location*"
+              icon={<IoLocationSharp size={25} color="#DC3545" />} // Red
+              placeHolder={"Enter your address..."}
+              fieldType="text"
+              name="location"
+              inputValue={updateEvent?.location ?? ""}
+              handleChange={handleChange}
+            />
+
+            <div className="flex flex-col  mt-1 ">
+              <span className=" text-gray-800 text-xs font-semibold pb-1">
+                Select Image
+              </span>
+              <label className="flex border  rounded">
+                <span className="label text-gray-600 font-medium p-1 w-16 pl-4">
+                  <FaRegImage size={25} />
+                </span>
+                <input
+                  type="file"
+                  className=" p-2 w-full rounded-r bg-white  outline"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                />
+              </label>
+            </div>
+
+            <div className="">
+              <TextArea
+                labelName="Description*"
+                icon={<MdOutlineDescription size={25} color="#FFC107" />} // Yellow
+                placeHolder={"Enter your description..."}
+                fieldType="text"
+                name="description"
+                inputValue={updateEvent?.description ?? ""}
+                handleChange={handleChange}
+              />
+            </div>
+          </div>
+          <h2 className="mx-3 text-lg font-semibold underline pt-3">
+            Focal Person Information*
+          </h2>
+          <div className="grid lg:grid-cols-3 gap-4  mx-3">
             <InputField
               labelName="Full Name*"
               icon={<FaUser size={25} color="#495057" />}
-              placeHolder={"Enter your name..."}
+              placeHolder={"Enter your  name..."}
               fieldType="text"
-              name="userName"
-              inputValue={formData?.fullName ?? ""}
+              name="focalPersonName"
+              inputValue={updateEvent?.focalPersonName ?? ""}
               handleChange={handleChange}
             />
-
-            <InputField
-              labelName="Father Name*"
-              icon={<FaUsers size={25} color="#495057" />}
-              placeHolder={"Enter your father name..."}
-              fieldType="text"
-              name="fatherName"
-              inputValue={formData?.fatherName ?? ""}
-              handleChange={handleChange}
-            />
-
             <InputField
               labelName="Phone Number*"
-              icon={<MdOutlineSmartphone size={25} color="#059669" />}
+              icon={<MdOutlineSmartphone size={25} color="#0D9488" />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
-              name="mobileNumber"
-              inputValue={formData?.mobileNumber ?? ""}
+              name="focalPersonNumber"
+              inputValue={updateEvent?.focalPersonNumber ?? ""}
               handleChange={handleChange}
             />
-
             <InputField
               labelName="Email*"
               icon={<IoMailSharp size={25} color="#1E40AF" />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
-              name="email"
-              inputValue={formData?.email ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="CNIC*"
-              icon={<FaRegIdCard size={25} color="#1E40AF" />}
-              placeHolder={"Enter your CNIC ..."}
-              fieldType="text"
-              name="cnic"
-              inputValue={formData?.cnic ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="Age*"
-              icon={<CiCalculator2 size={25} color="#0D9488" />}
-              placeHolder={"Enter your age ..."}
-              fieldType="number"
-              name="age"
-              inputValue={formData?.age ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="Date of Birth*"
-              icon={<FaCalendarDays size={25} color="#DC2626" />}
-              placeHolder={"Enter your date of birth ..."}
-              fieldType="date"
-              name="dob"
-              inputValue={formData?.dob.slice(0, 10) ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="Education*"
-              icon={<PiStudent size={25} color="#1E40AF" />}
-              placeHolder={"Enter your education..."}
-              fieldType="text"
-              name="education"
-              inputValue={formData?.education ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="Professional*"
-              icon={<FaBriefcase size={25} color="#D97706" />}
-              placeHolder={"Enter your profession..."}
-              fieldType="text"
-              name="professional"
-              inputValue={formData?.profession ?? ""}
-              handleChange={handleChange}
-            />
-
-            <OptionField
-              labelName="Zone*"
-              handlerChange={handleChange}
-              name="zone"
-              inputValue={formData?.zone ?? ""}
-              optionData={zoneData}
-              icon={<FaBriefcase size={25} color="#D97706" />}
-            />
-
-            <OptionField
-              labelName="District*"
-              handlerChange={handleChange}
-              name="district"
-              inputValue={formData?.district ?? ""}
-              optionData={districtDate}
-              icon={<IoLocationSharp size={25} color="#DC2626" />}
-            />
-
-            <InputField
-              labelName="Image*"
-              icon={<FaImage size={25} color="#6B7280" />}
-              placeHolder={"Upload your image..."}
-              fieldType="file"
-              name="image"
-              accept="image/*"
-              inputValue={formData?.image ?? ""}
-              handleChange={handleChange}
-            />
-
-            <InputField
-              labelName="Address*"
-              icon={<FaAddressBook size={25} color="#495057" />}
-              placeHolder={"Enter your address..."}
-              fieldType="text"
-              name="address"
-              inputValue={formData?.address ?? ""}
+              name="focalPersonEmail"
+              inputValue={updateEvent?.focalPersonEmail ?? ""}
               handleChange={handleChange}
             />
           </div>
+          <h2 className="mx-3 text-lg font-semibold underline pt-3">
+            Contact Person Information*
+          </h2>
+          <div className="grid lg:grid-cols-3 gap-4  mx-3">
+            <InputField
+              labelName="Full Name*"
+              icon={<FaUser size={25} color="#495057" />}
+              placeHolder={"Enter your name..."}
+              fieldType="text"
+              name="infoPersonName"
+              inputValue={updateEvent?.infoPersonName ?? ""}
+              handleChange={handleChange}
+            />
+            <InputField
+              labelName="Phone Number*"
+              icon={<MdOutlineSmartphone size={25} color="#0D9488" />}
+              placeHolder={"Enter your phone number ..."}
+              fieldType="number"
+              name="infoPersonNumber"
+              inputValue={updateEvent?.infoPersonNumber ?? ""}
+              handleChange={handleChange}
+            />
+            <InputField
+              labelName="Email*"
+              icon={<IoMailSharp size={25} color="#1E40AF" />}
+              placeHolder={"Enter your email ..."}
+              fieldType="text"
+              name="infoPersonEmail"
+              inputValue={updateEvent?.infoPersonEmail ?? ""}
+              handleChange={handleChange}
+            />
+          </div>
+          <div className="mx-3  pt-3 flex lg:flex-row flex-col items-center  ">
+            <h1 className="text-lg font-semibold underline ">Event Type*</h1>
+            <div className=" ml-5 lg:space-x-3 space-x-5">
+              <input
+                type="radio"
+                name="eventType"
+                className="radio border-gray-500 text-sky-500"
+                value={"oneTimeEvent"}
+                // checked={
+                //   updateEvent?.eventType === "oneTimeEvent | recursiveEvent"
+                // }
+                onChange={handleChange}
+              />
+              <label>One Time Event</label>
+              <input
+                type="radio"
+                name="eventType"
+                className="radio border-gray-500 text-sky-500"
+                value={"recursiveEvent"}
+                // checked={
+                //   updateEvent?.eventType === "oneTimeEvent | recursiveEvent"
+                // }
+                onChange={handleChange}
+              />
+              <label>Recursive Event</label>
+            </div>
+          </div>
           <div className="flex items-center justify-center pt-5">
-            <AddButton label=" Update Registration" />
+            <AddButton label="Add Event" />
           </div>
         </form>
       </div>
     </div>
   );
 };
-

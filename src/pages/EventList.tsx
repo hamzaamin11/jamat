@@ -13,15 +13,22 @@ import { ViewButton } from "../components/Buttons/ViewButton";
 import { EditButton } from "../components/Buttons/EditButton";
 
 import { DeleteButton } from "../components/Buttons/DeleteButton";
-import { useEffect, useState } from "react";
+
+import { ChangeEvent, useEffect, useState } from "react";
+
 import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 
-import { EditModal } from "../components/MemberModals/EditModal";
 import { ViewEventModal } from "../components/EventsModals/ViewEventDetail";
+
 import axios from "axios";
+
 import { BASE_URL } from "../Contents/URL";
+
 import { useAppSelector } from "../redux/Hooks";
+
 import { toast } from "react-toastify";
+
+import { AddEventModal } from "../components/EventsModals/AddEventModal";
 
 type GETEVENTT = {
   id: number;
@@ -43,9 +50,12 @@ type GETEVENTT = {
 };
 
 type ISOPENMODALT = "editEvent" | "deleteEvent" | "viewEvent" | "";
+
 export const EventList = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
+
   const token = currentUser?.token;
+
   const [getEvent, setGetEvent] = useState<GETEVENTT[] | null>(null);
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
@@ -54,15 +64,39 @@ export const EventList = () => {
 
   const [catchId, setCatchId] = useState<number | null>(null);
 
+  const [searchEvent, setSearchEvent] = useState("");
+
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
 
+  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearchEvent(e.target.value);
+  };
+
+  const handleSearchbar = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/searchEvent`, {
+        headers: {
+          Authorization: token,
+        },
+        params: { q: searchEvent },
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleViewClick = (detail: GETEVENTT) => {
     handleToggleViewModal("viewEvent");
     setViewDetail(detail);
   };
 
+  const handleUpdateClick = (detail: GETEVENTT) => {
+    handleToggleViewModal("editEvent");
+    setViewDetail(detail);
+  };
   const handleGetEvent = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/getEvent/${10}`, {
@@ -93,7 +127,7 @@ export const EventList = () => {
       );
       console.log(res.data);
       handleGetEvent();
-      toast.info("Event has been deleted successfully")
+      toast.info("Event has been deleted successfully");
     } catch (error) {
       console.log(error);
     }
@@ -101,6 +135,9 @@ export const EventList = () => {
   useEffect(() => {
     handleGetEvent();
   }, []);
+  useEffect(() => {
+    handleSearchbar();
+  }, [searchEvent]);
   return (
     <div className="text-gray-800 mx-3 w-full">
       <div className="flex items-center justify-between pt-2">
@@ -111,7 +148,8 @@ export const EventList = () => {
       </div>
       <div className="flex items-center justify-between">
         <div className=""></div>
-        <Search />
+
+        <Search searchData={searchEvent} handleSearch={handleChangeSearch} />
       </div>
 
       <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
@@ -149,9 +187,7 @@ export const EventList = () => {
               <td className="p-2 border">
                 <div className="flex items-center justify-center gap-2">
                   <ViewButton handleView={() => handleViewClick(events)} />
-                  <EditButton
-                    handleUpdate={() => handleToggleViewModal("editEvent")}
-                  />
+                  <EditButton handleUpdate={() => handleUpdateClick(events)} />
                   <DeleteButton
                     handleDelete={() => handleDeleteButton(events?.id)}
                   />
@@ -188,7 +224,11 @@ export const EventList = () => {
         )}
 
         {isOpenModal === "editEvent" && (
-          <EditModal setModal={() => setIsOpenModal("")} />
+          <AddEventModal
+            setModal={() => setIsOpenModal("")}
+            getEventDetail={viewDetail}
+            handleGetEvent={handleGetEvent}
+          />
         )}
       </div>
     </div>

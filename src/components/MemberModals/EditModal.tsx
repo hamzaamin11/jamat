@@ -78,6 +78,20 @@ export const EditModal = ({
     }
   };
 
+  const handleUploadImage = () => {
+    if (!updateImage) {
+      alert("Please select an image first.");
+      return;
+    }
+    const formData = new FormData();
+
+    console.log(formData, "Before");
+
+    formData.append("image", updateImage);
+
+    console.log(formData, "AFTER");
+  };
+
   console.log("formData", formData);
 
   const handleChange = (
@@ -104,6 +118,7 @@ export const EditModal = ({
       toast.success("Member updated successfully");
       handleGetmembers();
       setModal();
+      handleUploadImage();
     } catch (error) {
       console.log(error);
       setModal();

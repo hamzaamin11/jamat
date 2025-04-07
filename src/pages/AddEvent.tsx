@@ -1,21 +1,30 @@
 import { ChangeEvent, useState } from "react";
+
 import { InputField } from "../components/Inputs/InputField";
-import { FaUser } from "react-icons/fa";
+
+import { FaRegImage, FaUser } from "react-icons/fa";
 import {
   MdEventAvailable,
   MdOutlineDescription,
   MdOutlineSmartphone,
 } from "react-icons/md";
+
 import { IoLocationSharp, IoMailSharp } from "react-icons/io5";
 
 import { FaCalendarDays } from "react-icons/fa6";
 
 import { AddButton } from "../components/Buttons/AddButton";
+
 import { TextArea } from "../components/Inputs/Textarea";
+
 import axios from "axios";
+
 import { BASE_URL } from "../Contents/URL";
+
 import { useAppSelector } from "../redux/Hooks";
+
 import { toast } from "react-toastify";
+
 const initialState = {
   eventName: "",
   date: "",
@@ -33,15 +42,17 @@ const initialState = {
 export const AddEvent = () => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
-  const [eventData, setEventData] = useState(initialState);
-
   const token = currentUser?.token;
 
-  const [imagePath, setImagePath] = useState<{ image: null | File }>({
-    image: null, // Initially null, but can be a File later
-  });
+  const [eventData, setEventData] = useState(initialState);
 
-  const finalData = { ...eventData, ...imagePath };
+  const [updateImage, setUpdateImage] = useState<File | null>(null);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUpdateImage(e.target.files[0]);
+    }
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -51,12 +62,20 @@ export const AddEvent = () => {
     setEventData({ ...eventData, [name]: value });
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Get the first selected file
-    if (file) {
-      setImagePath((prev) => ({ ...prev, image: file }));
+  const handleUploadImage = () => {
+    if (!updateImage) {
+      alert("Please select an image first.");
+      return;
     }
+    const formData = new FormData();
+
+    console.log(formData, "Before");
+
+    formData.append("image", updateImage);
+
+    console.log(formData, "AFTER");
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -68,6 +87,7 @@ export const AddEvent = () => {
       console.log(res.data);
       toast.success("Event added successfully");
       setEventData(initialState);
+      handleUploadImage();
     } catch (error) {
       console.log(error);
     }
@@ -112,16 +132,23 @@ export const AddEvent = () => {
             inputValue={eventData?.location}
             handleChange={handleChange}
           />
-          {/* <InputField
-            labelName="Image*"
-            icon={<FaImage size={25} color="#6F42C1" />} // Purple
-            placeHolder={"Upload image..."}
-            fieldType="file"
-            name="image"
-            accept="image/*"
-            inputValue={eventData?.image}
-            handleChange={handleImageChange}
-          /> */}
+
+          <div className="flex flex-col  mt-1 ">
+            <span className=" text-gray-800 text-xs font-semibold pb-1">
+              Select Image
+            </span>
+            <label className="flex border  rounded">
+              <span className="label text-gray-600 font-medium p-1 w-16 pl-4">
+                <FaRegImage size={25} />
+              </span>
+              <input
+                type="file"
+                className=" p-2 w-full rounded-r bg-white  outline"
+                onChange={handleFileChange}
+                accept="image/*"
+              />
+            </label>
+          </div>
 
           <div className="">
             <TextArea
