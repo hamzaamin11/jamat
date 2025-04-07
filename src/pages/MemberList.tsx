@@ -25,7 +25,9 @@ import { EditModal } from "../components/MemberModals/EditModal";
 import { BASE_URL } from "../Contents/URL";
 
 import axios from "axios";
+
 import { useAppSelector } from "../redux/Hooks";
+
 import { toast } from "react-toastify";
 
 type MemberT = {
@@ -46,6 +48,7 @@ type MemberT = {
 };
 
 type ISOPENMODALT = "EDIT" | "DELETE" | "VIEW";
+
 export const MemberList = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
@@ -54,6 +57,9 @@ export const MemberList = () => {
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
   const [viewDetail, setViewDetail] = useState<MemberT | null>(null);
+
+  const [pageNo, setPageNo] = useState(1);
+
 
   const [userId, setUSerId] = useState(Number);
 
@@ -76,6 +82,15 @@ export const MemberList = () => {
     handleToggleViewModal("VIEW");
     setViewDetail(detail);
   };
+
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handleEditClick = (detail: MemberT) => {
     console.log("***", { detail });
 
@@ -90,7 +105,7 @@ export const MemberList = () => {
         headers: {
           Authorization: token,
         },
-        params: { page: 1 },
+        params: { page: { pageNo } },
       });
       console.log(res.data);
       setMembers(res.data);
@@ -139,7 +154,7 @@ export const MemberList = () => {
   };
   useEffect(() => {
     handleGetmembers();
-  }, []);
+  }, [pageNo]);
 
   useEffect(() => {
     handleSearchbar();
@@ -204,7 +219,11 @@ export const MemberList = () => {
 
       <div className="flex items-center justify-between">
         <ShowData total={members?.length} />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div>
         {isOpenModal === "DELETE" && (

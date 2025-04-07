@@ -1,33 +1,71 @@
-import { Search } from "../components/Search/Search";
-
 import { Pagination } from "../components/pagination/Pagination";
 
 import { ShowData } from "../components/ShowDataNumber/ShowData";
 
 import { IoLocationSharp } from "react-icons/io5";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { OptionField } from "../components/Inputs/OptionField";
+
 import { AddButton } from "../components/Buttons/AddButton";
+
 import { InputField } from "../components/Inputs/InputField";
+
 import { FaCalendarDays } from "react-icons/fa6";
+import { useAppSelector } from "../redux/Hooks";
+import axios from "axios";
+import { BASE_URL } from "../Contents/URL";
 
-const districtData = [
-  { label: "Select Event", value: "" },
-  { label: "IT Expo", value: "itExpo" },
-  { label: "Tech Expo", value: "techExpo" },
-];
+type EventType = {
+  id: number;
+  eventName: string;
+  currentDate: string;
+  location: string;
+  focalPersonName: string;
+  focalPersonNumber: string;
+  focalPersonEmail: string;
+  infoPersonName: string;
+  infoPersonNumber: string;
+  infoPersonEmail: string;
+  image: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  presentTime: string;
+  eventType: "oneTimeEvent | recursiveEvent";
+};
 
-const numbers = ["10", "25", "50", "100"];
 const initialState = {
   eventName: "",
   dateFrom: "",
   dateTo: "",
 };
 export const EventReport = () => {
+  const { currentUser } = useAppSelector((state) => state?.officeState);
+
+  const token = currentUser?.token;
+
   const [formData, setFormData] = useState(initialState);
 
   console.log("date", formData);
+
+  const [allEvents, setAllEvents] = useState<EventType[] | null>(null);
+
+  const handleGetAllEvents = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/getEvent/${10}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(res.data);
+      setAllEvents(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -35,6 +73,10 @@ export const EventReport = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  useEffect(() => {
+    handleGetAllEvents();
+  }, []);
   return (
     <div className="text-gray-800 mx-3 w-full">
       <div className="flex items-center justify-between pt-2">
@@ -47,8 +89,13 @@ export const EventReport = () => {
           handlerChange={handleChange}
           name="eventName"
           inputValue={formData.eventName}
-          optionData={districtData}
+          optionData={allEvents?.map((event) => ({
+            id: event?.id,
+            label: event?.eventName,
+            value: event?.eventName,
+          }))}
           icon={<IoLocationSharp size={25} color="#DC2626" />}
+          initial={"Please Select Event"}
         />
 
         <InputField
@@ -74,16 +121,10 @@ export const EventReport = () => {
       <div className="flex items-center justify-between">
         <div className="">
           <span>Show</span>
-          <span className="bg-gray-200 rounded mx-1 p-1">
-            <select>
-              {numbers.map((num, index) => (
-                <option key={index}>{num}</option>
-              ))}
-            </select>
-          </span>
+          <span className="bg-gray-200 rounded mx-1 p-1"></span>
           <span>entries</span>
         </div>
-        <Search />
+        {/* <Search /> */}
       </div>
       <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
         {/* Table Header */}

@@ -1,14 +1,19 @@
-import { useState } from "react";
-
-export const Pagination = () => {
-  const [page, setPage] = useState(1);
-
+type PageType = {
+  handleIncrementPageButton?: () => void;
+  handleDecrementPageButton?: () => void;
+  page?: number;
+};
+export const Pagination = ({
+  handleIncrementPageButton,
+  handleDecrementPageButton,
+  page,
+}: PageType) => {
   return (
     <div>
       <div className="join flex items-center justify-end my-2 gap-2 ">
         <button
           className="join-item btn bg-sky-500 border-sky-600"
-          onClick={() => setPage(page > 1 ? page - 1 : 1)}
+          onClick={handleDecrementPageButton}
         >
           «
         </button>
@@ -17,7 +22,7 @@ export const Pagination = () => {
         </button>
         <button
           className="join-item btn bg-sky-500 border-sky-600"
-          onClick={() => setPage(page + 1)}
+          onClick={handleIncrementPageButton}
         >
           »
         </button>
