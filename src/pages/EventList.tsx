@@ -83,11 +83,12 @@ export const EventList = () => {
         },
         params: { q: searchEvent },
       });
-      console.log(res.data);
+      setGetEvent(res.data);
     } catch (error) {
       console.log(error);
     }
   };
+  
   const handleViewClick = (detail: GETEVENTT) => {
     handleToggleViewModal("viewEvent");
     setViewDetail(detail);
@@ -97,6 +98,7 @@ export const EventList = () => {
     handleToggleViewModal("editEvent");
     setViewDetail(detail);
   };
+  
   const handleGetEvent = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/getEvent/${10}`, {
@@ -110,10 +112,12 @@ export const EventList = () => {
       console.log(error);
     }
   };
+
   const handleDeleteButton = (id: number) => {
     handleToggleViewModal("deleteEvent");
     setCatchId(id);
   };
+
   const handleDeleteEvent = async () => {
     try {
       const res = await axios.patch(
@@ -132,12 +136,15 @@ export const EventList = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     handleGetEvent();
   }, []);
+
   useEffect(() => {
     handleSearchbar();
   }, [searchEvent]);
+
   return (
     <div className="text-gray-800 mx-3 w-full">
       <div className="flex items-center justify-between pt-2">

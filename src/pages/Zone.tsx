@@ -10,7 +10,7 @@ import { EditButton } from "../components/Buttons/EditButton";
 
 import { DeleteButton } from "../components/Buttons/DeleteButton";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 
@@ -22,7 +22,6 @@ import { BASE_URL } from "../Contents/URL";
 import { useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
 
-const numbers = ["10", "25", "50", "100"];
 type AllZoneT = {
   id: number;
   zone: string;
@@ -40,6 +39,8 @@ export const Zone = () => {
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
+  const [searchBar, setSearchBar] = useState("");
+
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
@@ -47,7 +48,24 @@ export const Zone = () => {
     handleToggleViewModal("EDIT");
     setUpdateZone(detail);
   };
+  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearchBar(e.target.value);
+  };
 
+  const handleSearchbar = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/searchZones`, {
+        headers: {
+          Authorization: token,
+        },
+        params: { q: searchBar },
+      });
+      setAllZone(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleDeleteClick = (id: AllZoneT) => {
     handleToggleViewModal("DELETE");
     setUpdateZone(id);
@@ -88,6 +106,10 @@ export const Zone = () => {
   useEffect(() => {
     handleGetallzone();
   }, []);
+
+  useEffect(() => {
+    handleSearchbar();
+  }, [searchBar]);
   return (
     <div className="text-gray-700 mx-3 w-full">
       <div className="flex items-center justify-between pt-2">
@@ -99,18 +121,8 @@ export const Zone = () => {
         />
       </div>
       <div className="flex items-center justify-between">
-        <div className="">
-          <span>Show</span>
-          <span className="bg-gray-200 rounded mx-1 p-1">
-            <select>
-              {numbers.map((num, index) => (
-                <option key={index}>{num}</option>
-              ))}
-            </select>
-          </span>
-          <span>entries</span>
-        </div>
-        <Search />
+        <div className=""></div>
+        <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
 
       <table className="w-full border border-gray-300  border-separate border-spacing-0 rounded overflow-hidden">

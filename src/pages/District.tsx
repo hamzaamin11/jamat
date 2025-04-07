@@ -9,10 +9,9 @@ import { ShowData } from "../components/ShowDataNumber/ShowData";
 import { EditButton } from "../components/Buttons/EditButton";
 
 import { DeleteButton } from "../components/Buttons/DeleteButton";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 
-import { EditModal } from "../components/MemberModals/EditModal";
 import { AddDistrict } from "../components/DistrictModal/AddDistrict";
 import { EditDistrict } from "../components/DistrictModal/EditDistrict";
 import axios from "axios";
@@ -20,7 +19,6 @@ import { BASE_URL } from "../Contents/URL";
 import { useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
 
-const numbers = ["10", "25", "50", "100"];
 type districtT = {
   district: string;
   id: number;
@@ -38,6 +36,13 @@ export const District = () => {
   const [districtID, setDistrictID] = useState<number>();
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
+
+  const [searchBar, setSeachBar] = useState("");
+
+  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSeachBar(e.target.value);
+  };
 
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
@@ -99,18 +104,8 @@ export const District = () => {
         />
       </div>
       <div className="flex items-center justify-between">
-        <div className="">
-          <span>Show</span>
-          <span className="bg-gray-200 rounded mx-1 p-1">
-            <select>
-              {numbers.map((num, index) => (
-                <option key={index}>{num}</option>
-              ))}
-            </select>
-          </span>
-          <span>entries</span>
-        </div>
-        <Search />
+        <div className=""></div>
+        <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
 
       <table className="w-full border border-gray-300  border-separate border-spacing-0 rounded overflow-hidden">
