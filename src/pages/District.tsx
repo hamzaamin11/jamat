@@ -44,6 +44,20 @@ export const District = () => {
     setSeachBar(e.target.value);
   };
 
+  const handleSearchbar = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/searchDistricts`, {
+        headers: {
+          Authorization: token,
+        },
+        params: { q: searchBar },
+      });
+      setDistricts(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
@@ -93,6 +107,10 @@ export const District = () => {
   useEffect(() => {
     handleGetdistricts();
   }, []);
+
+  useEffect(() => {
+    handleSearchbar();
+  }, [searchBar]);
   return (
     <div className="text-gray-700 mx-3 w-full">
       <div className="flex items-center justify-between pt-2">

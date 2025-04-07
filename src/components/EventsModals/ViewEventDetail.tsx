@@ -1,5 +1,9 @@
 import { Title } from "../title/Title";
 import imageProfile from "../../assets/Avatar.png";
+import axios from "axios";
+import { BASE_URL } from "../../Contents/URL";
+import { useAppSelector } from "../../redux/Hooks";
+import { useEffect } from "react";
 type GETEVENTT = {
   id: number;
   eventName: string;
@@ -24,6 +28,29 @@ type ModalTProps = {
 };
 
 export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
+  const { currentUser } = useAppSelector((state) => state.officeState);
+
+  const token = currentUser?.token;
+
+  const handleGetImage = async () => {
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/user/member-image/${viewDetail?.id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetImage();
+  }, []);
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10 ">
       <div className="w-full flex justify-center max-h-full ">

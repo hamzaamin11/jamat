@@ -67,18 +67,25 @@ export const AddMember = () => {
     }
   };
 
-  const handleUploadImage = () => {
+  const handleUploadImage = async () => {
     if (!updateImage) {
       alert("Please select an image first.");
       return;
     }
     const formData = new FormData();
 
-    console.log(formData, "Before");
-
     formData.append("image", updateImage);
-
-    console.log(formData, "AFTER");
+    try {
+      const res = await axios.post(`${BASE_URL}/user/uploadImage`, formData, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (
