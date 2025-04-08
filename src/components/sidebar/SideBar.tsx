@@ -178,7 +178,7 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
               </Link>
               <Link
                 className={`my-button ${
-                  pathname === "/progressReport" && "bg-sky-200"
+                  pathname === "/eventReport" && "bg-sky-200"
                 }`}
                 to={"/eventReport"}
               >
@@ -186,7 +186,7 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
               </Link>
               <Link
                 className={`my-button ${
-                  pathname === "/attendanceReports" && "bg-sky-200"
+                  pathname === "/presentReports" && "bg-sky-200"
                 }`}
                 to={"/presentReports"}
               >
