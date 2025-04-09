@@ -64,6 +64,8 @@ export const MemberList = () => {
 
   const [viewDetail, setViewDetail] = useState<MemberT | null>(null);
 
+  console.log("awais bhai ki image", viewDetail);
+
   const [pageNo, setPageNo] = useState(1);
 
   const [userId, setUSerId] = useState(Number);
@@ -78,7 +80,7 @@ export const MemberList = () => {
     setTimeout(() => {
       dispatch(navigationSuccess("MemberList"));
     }, 1000);
-  }, []);
+  }, [pageNo]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -112,12 +114,14 @@ export const MemberList = () => {
 
   const handleGetmembers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getMembers`, {
-        headers: {
-          Authorization: token,
-        },
-        params: { page: { pageNo } },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getMembers?page=${pageNo}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       console.log(res.data);
       setMembers(res.data);
     } catch (error) {

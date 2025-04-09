@@ -81,27 +81,6 @@ export const AddMember = () => {
     }
   };
 
-  const handleUploadImage = async () => {
-    if (!updateImage) {
-      alert("Please select an image first.");
-      return;
-    }
-    const formData = new FormData();
-
-    formData.append("image", updateImage);
-    try {
-      const res = await axios.post(`${BASE_URL}/user/uploadImage`, formData, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -150,6 +129,23 @@ export const AddMember = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = new FormData();
+    data.append("fullName", formData.fullName);
+    data.append("fatherName", formData.fatherName);
+    data.append("email", formData.email);
+    data.append("age", formData.age);
+    data.append("cnic", formData.cnic);
+    data.append("address", formData.address);
+    data.append("dob", formData.dob);
+    data.append("education", formData.education);
+    data.append("mobileNumber", formData.mobileNumber);
+    data.append("profession", formData.profession);
+    data.append("district", formData.district);
+    data.append("zone", formData.zone);
+    if (updateImage) {
+      data.append("image", updateImage);
+    }
+
     if (
       !formData.address.trim() ||
       !formData.age.trim() ||
@@ -162,27 +158,25 @@ export const AddMember = () => {
       !formData.fullName.trim() ||
       !formData.mobileNumber.trim() ||
       !formData.profession.trim() ||
-      !formData.zone.trim()
+      !formData.zone.trim() ||
+      !updateImage
     ) {
       return toast.error("Required field must be filled");
     }
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/user/registerMember`,
-        formData,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/user/registerMember`, data, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setLoading(false);
       console.log(res.data);
       handleGetmembers();
-      handleUploadImage();
       toast.success("User Added successfully");
       setFormData(initialState);
+      setUpdateImage(null);
     } catch (error) {
       console.log(error);
       setLoading(false);

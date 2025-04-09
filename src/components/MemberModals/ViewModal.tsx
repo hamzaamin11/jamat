@@ -90,7 +90,7 @@ export const ViewUserDetailModal = ({ setModal, viewDetail }: ModalTProps) => {
             </div>
             <img
               className="w-28 h-28   rounded-full border-4 bg-sky-500 border-gray-400 object-cover"
-              src={imageProfile || viewDetail?.image}
+              src={viewDetail?.image || imageProfile}
               alt="Profile"
             />
           </div>

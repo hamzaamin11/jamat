@@ -78,20 +78,6 @@ export const EditModal = ({
     }
   };
 
-  const handleUploadImage = () => {
-    if (!updateImage) {
-      alert("Please select an image first.");
-      return;
-    }
-    const formData = new FormData();
-
-    console.log(formData, "Before");
-
-    formData.append("image", updateImage);
-
-    console.log(formData, "AFTER");
-  };
-
   console.log("formData", formData);
 
   const handleChange = (
@@ -104,10 +90,27 @@ export const EditModal = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = new FormData();
+    data.append("fullName", formData?.fullName ?? "");
+    data.append("fatherName", formData?.fatherName ?? "");
+    data.append("email", formData?.email ?? "");
+    data.append("age", formData?.age ?? "");
+    data.append("cnic", formData?.cnic ?? "");
+    data.append("address", formData?.address ?? "");
+    data.append("dob", formData?.dob ?? "");
+    data.append("education", formData?.education ?? "");
+    data.append("mobileNumber", formData?.mobileNumber ?? "");
+    data.append("profession", formData?.profession ?? "");
+    data.append("district", formData?.district ?? "");
+    data.append("zone", formData?.zone ?? "");
+    if (updateImage) {
+      data.append("image", updateImage);
+    }
+
     try {
       const res = await axios.put(
         `${BASE_URL}/user/updateMember/${formData?.id}`,
-        formData,
+        data,
         {
           headers: {
             Authorization: token,
@@ -118,7 +121,6 @@ export const EditModal = ({
       toast.success("Member updated successfully");
       handleGetmembers();
       setModal();
-      handleUploadImage();
     } catch (error) {
       console.log(error);
       setModal();
@@ -173,7 +175,7 @@ export const EditModal = ({
               icon={<FaUser size={25} color="#495057" />}
               placeHolder={"Enter your name..."}
               fieldType="text"
-              name="userName"
+              name="fullName"
               inputValue={formData?.fullName ?? ""}
               handleChange={handleChange}
             />
@@ -253,7 +255,7 @@ export const EditModal = ({
               icon={<FaBriefcase size={25} color="#D97706" />}
               placeHolder={"Enter your profession..."}
               fieldType="text"
-              name="professional"
+              name="profession"
               inputValue={formData?.profession ?? ""}
               handleChange={handleChange}
             />
