@@ -38,6 +38,8 @@ export const StartEventDetail = ({
 }: StartEventProps) => {
   const [isOpenModal, setIsOpenModal] = useState<EVENTOPENT | "">("");
 
+  console.log(detailEvent, "eventDetail");
+
   const handleToggleViewModal = (active: EVENTOPENT) => {
     // Prevents event bubbling
     setIsOpenModal((prev) => (prev === active ? "" : active));
@@ -58,7 +60,7 @@ export const StartEventDetail = ({
           {/* Event Image */}
           <div className="p-2 border rounded">
             <img
-              src={image ?? detailEvent?.image}
+              src={detailEvent?.image || image}
               className=" bg-sky-500  border border-gray-300 object-cover"
               alt="Event"
             />

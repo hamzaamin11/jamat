@@ -17,8 +17,10 @@ import { OptionField } from "../components/Inputs/OptionField";
 import { AddButton } from "../components/Buttons/AddButton";
 import axios from "axios";
 import { BASE_URL } from "../Contents/URL";
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 const initialState = {
   fullName: "",
   fatherName: "",
@@ -47,6 +49,10 @@ type ALLDISTRICTT = {
 export const AddMember = () => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const token = currentUser?.token;
 
   const [formData, setFormData] = useState(initialState);
@@ -60,6 +66,14 @@ export const AddMember = () => {
   console.log(updateImage, "file");
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    document.title = "(Jamat)Registration Member";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("Registration"));
+    }, 1000);
+  }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -179,8 +193,10 @@ export const AddMember = () => {
     handleGetdistrict();
   }, []);
 
+  if (loader) return <Loading />;
+
   return (
-    <div className="mx-3 text-gray-700 w-full">
+    <div className="px-3 text-gray-700 w-full">
       <h1 className=" font-semibold text-2xl py-2">Register Member</h1>
 
       <form

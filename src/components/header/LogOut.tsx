@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import { useAppDispatch } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { logOut, resetStore } from "../../redux/UserSlice";
 
 export const ProfileLogOut = ({
@@ -10,6 +10,9 @@ export const ProfileLogOut = ({
   setIsOpenModal: (value: string) => void;
 }) => {
   const dispatch = useAppDispatch();
+
+  const { currentUser } = useAppSelector((state) => state.officeState);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,7 +45,7 @@ export const ProfileLogOut = ({
             onClick={handleClose} // Close dropdown on click
             className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 text-gray-800 hover:cursor-pointer"
           >
-            <FiUser className="text-gray-800" /> Hamza amin
+            <FiUser className="text-gray-700" /> {currentUser?.name}
           </span>
         </li>
 

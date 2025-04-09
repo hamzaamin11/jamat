@@ -26,9 +26,11 @@ import { BASE_URL } from "../Contents/URL";
 
 import axios from "axios";
 
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 
 import { toast } from "react-toastify";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 
 type MemberT = {
   id: number;
@@ -50,6 +52,10 @@ type MemberT = {
 type ISOPENMODALT = "EDIT" | "DELETE" | "VIEW";
 
 export const MemberList = () => {
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
   const [members, setMembers] = useState<MemberT[] | null>(null);
@@ -60,14 +66,19 @@ export const MemberList = () => {
 
   const [pageNo, setPageNo] = useState(1);
 
-
   const [userId, setUSerId] = useState(Number);
 
   const token = currentUser?.token;
 
   const [searchData, setSearchData] = useState("");
 
-  console.log("searchData", searchData);
+  useEffect(() => {
+    document.title = "(Jamat)MemberList";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("MemberList"));
+    }, 1000);
+  }, []);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -159,8 +170,10 @@ export const MemberList = () => {
   useEffect(() => {
     handleSearchbar();
   }, [searchData]);
+
+  if (loader) return <Loading />;
   return (
-    <div className="text-gray-700 mx-3 w-full">
+    <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-2xl font-semibold">Members List</h1>
         <Link to={"/registermember"}>

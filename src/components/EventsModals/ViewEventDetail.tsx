@@ -31,6 +31,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
   const token = currentUser?.token;
+  console.log("view", viewDetail);
 
   const handleGetImage = async () => {
     try {
@@ -88,9 +89,10 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                 </h2>
               </div>
             </div>
+
             <img
               className="w-28 h-28   rounded-full border-4 bg-sky-500 border-gray-400 object-cover"
-              src={imageProfile}
+              src={viewDetail?.image || imageProfile}
               alt="Profile"
             />
           </div>

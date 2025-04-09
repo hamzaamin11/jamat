@@ -24,11 +24,13 @@ import axios from "axios";
 
 import { BASE_URL } from "../Contents/URL";
 
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 
 import { toast } from "react-toastify";
 
 import { AddEventModal } from "../components/EventsModals/AddEventModal";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 
 type GETEVENTT = {
   id: number;
@@ -54,6 +56,10 @@ type ISOPENMODALT = "editEvent" | "deleteEvent" | "viewEvent" | "";
 export const EventList = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const token = currentUser?.token;
 
   const [getEvent, setGetEvent] = useState<GETEVENTT[] | null>(null);
@@ -69,6 +75,14 @@ export const EventList = () => {
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
+
+  useEffect(() => {
+    document.title = "(Jamat)EventList";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("EventList"));
+    }, 1000);
+  }, []);
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -88,7 +102,7 @@ export const EventList = () => {
       console.log(error);
     }
   };
-  
+
   const handleViewClick = (detail: GETEVENTT) => {
     handleToggleViewModal("viewEvent");
     setViewDetail(detail);
@@ -98,10 +112,10 @@ export const EventList = () => {
     handleToggleViewModal("editEvent");
     setViewDetail(detail);
   };
-  
+
   const handleGetEvent = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getEvent/${10}`, {
+      const res = await axios.get(`${BASE_URL}/user/getEvent`, {
         headers: {
           Authorization: token,
         },
@@ -145,8 +159,9 @@ export const EventList = () => {
     handleSearchbar();
   }, [searchEvent]);
 
+  if (loader) return <Loading />;
   return (
-    <div className="text-gray-800 mx-3 w-full">
+    <div className="text-gray-800 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-2xl font-semibold ">Events List</h1>
         <Link to={"/addevent"}>
@@ -161,14 +176,18 @@ export const EventList = () => {
 
       <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
         {/* Table Header */}
-        <thead className="bg-sky-500 text-gray-700 ro">
+        <thead className="bg-sky-500 ">
           <tr>
-            <th className="p-2 border">Event Name</th>
-            <th className="p-2 border">Date</th>
-            <th className="p-2 border">Location</th>
-            <th className="p-2 border">Start Time</th>
-            <th className="p-2 border">End Time</th>
-            <th className="p-2 border">Actions</th>
+            <th className="p-2 border text-white border-gray-700">
+              Event Name
+            </th>
+            <th className="p-2 border text-white border-gray-700">Date</th>
+            <th className="p-2 border text-white border-gray-700">Location</th>
+            <th className="p-2 border text-white border-gray-700">
+              Start Time
+            </th>
+            <th className="p-2 border text-white border-gray-700">End Time</th>
+            <th className="p-2 border text-white border-gray-700">Actions</th>
           </tr>
         </thead>
 

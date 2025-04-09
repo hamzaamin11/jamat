@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { StartEventDetail } from "../components/StartEventModals/StarteventDetail";
 import axios from "axios";
 import { BASE_URL } from "../Contents/URL";
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 
 type STARTEVENTProps = "START";
 
@@ -34,6 +36,10 @@ export const StartEvent = () => {
 
   const token = currentUser?.token;
 
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const currentTime = new Date().toLocaleTimeString();
 
   const [search, setSearch] = useState("");
@@ -50,6 +56,14 @@ export const StartEvent = () => {
   const handleToggleViewModal = (active: STARTEVENTProps) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
+
+  useEffect(() => {
+    document.title = "(Jamat)StartEvent";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("StartEvent"));
+    }, 1000);
+  }, []);
 
   const handleSearchbar = async () => {
     try {
@@ -107,6 +121,8 @@ export const StartEvent = () => {
 
     getDetailEvent();
   }, [search]);
+
+  if (loader) return <Loading />;
 
   return (
     <div className="text-gray-700 w-full  px-2 py-2">

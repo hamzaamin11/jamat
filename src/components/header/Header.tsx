@@ -6,12 +6,15 @@ import loginAvatar from "../../assets/Avatar.png";
 import React, { useState } from "react";
 import { ProfileLogOut } from "./LogOut";
 
+
 export interface IHeaderProps extends React.ComponentPropsWithoutRef<"div"> {
   isOpen: boolean;
   toggleSideBar: () => void;
 }
 type viewModalT = "VIEW";
 export const Header = ({ isOpen, toggleSideBar }: IHeaderProps) => {
+ 
+
   const [viewModal, setViewModal] = useState<viewModalT | "">("");
 
   const handleToggleViewModal = (active: viewModalT) => {

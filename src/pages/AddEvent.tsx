@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { InputField } from "../components/Inputs/InputField";
 
@@ -21,9 +21,11 @@ import axios from "axios";
 
 import { BASE_URL } from "../Contents/URL";
 
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 
 import { toast } from "react-toastify";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 
 const initialState = {
   eventName: "",
@@ -36,10 +38,15 @@ const initialState = {
   infoPersonNumber: "",
   infoPersonEmail: "",
   description: "",
+  image: "",
   eventType: "oneTimeEvent",
 };
 
 export const AddEvent = () => {
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const { currentUser } = useAppSelector((state) => state.officeState);
 
   const token = currentUser?.token;
@@ -53,6 +60,15 @@ export const AddEvent = () => {
       setUpdateImage(e.target.files[0]);
     }
   };
+
+  
+  useEffect(() => {
+    document.title = "(Jamat)AddEvent";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("AddEvent"));
+    }, 1000);
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,8 +94,24 @@ export const AddEvent = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = new FormData();
+    data.append("eventName", eventData.eventName);
+    data.append("date", eventData.date);
+    data.append("eventType", eventData.eventType);
+    data.append("description", eventData.description);
+    data.append("location", eventData.location);
+    data.append("focalPersonEmail", eventData.focalPersonEmail);
+    data.append("focalPersonName", eventData.focalPersonName);
+    data.append("focalPersonNumber", eventData.focalPersonNumber);
+    data.append("infoPersonEmail", eventData.infoPersonEmail);
+    data.append("infoPersonName", eventData.infoPersonEmail);
+    data.append("infoPersonNumber", eventData.infoPersonNumber);
+    if (updateImage) {
+      data.append("image", updateImage);
+    }
+    console.log("data", data);
     try {
-      const res = await axios.post(`${BASE_URL}/user/addEvent`, eventData, {
+      const res = await axios.post(`${BASE_URL}/user/addEvent`, data, {
         headers: {
           Authorization: token,
         },
@@ -92,9 +124,9 @@ export const AddEvent = () => {
       console.log(error);
     }
   };
-
+  if (loader) return <Loading />;
   return (
-    <div className="mx-3 text-gray-700 w-full">
+    <div className="px-3 text-gray-700 w-full">
       <h1 className=" font-semibold text-2xl py-2">Add Event</h1>
 
       <form
@@ -143,6 +175,7 @@ export const AddEvent = () => {
               </span>
               <input
                 type="file"
+                name="image"
                 className=" p-2 w-full rounded-r bg-white  outline"
                 onChange={handleFileChange}
                 accept="image/*"

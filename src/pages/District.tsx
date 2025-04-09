@@ -16,8 +16,10 @@ import { AddDistrict } from "../components/DistrictModal/AddDistrict";
 import { EditDistrict } from "../components/DistrictModal/EditDistrict";
 import axios from "axios";
 import { BASE_URL } from "../Contents/URL";
-import { useAppSelector } from "../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
+import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
+import { Loading } from "../components/NavigationLoader/Loading";
 
 type districtT = {
   district: string;
@@ -25,6 +27,10 @@ type districtT = {
 };
 type ISOPENMODALT = "EDIT" | "DELETE" | "ADD";
 export const District = () => {
+  const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const dispatch = useAppDispatch();
+
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
   const token = currentUser?.token;
@@ -38,6 +44,14 @@ export const District = () => {
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
   const [searchBar, setSeachBar] = useState("");
+
+  useEffect(() => {
+    document.title = "(Jamat)District";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("districtList"));
+    }, 1000);
+  }, []);
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -111,8 +125,10 @@ export const District = () => {
   useEffect(() => {
     handleSearchbar();
   }, [searchBar]);
+
+  if (loader) return <Loading />;
   return (
-    <div className="text-gray-700 mx-3 w-full">
+    <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-2xl font-semibold">District List</h1>
 
