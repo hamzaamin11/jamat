@@ -14,7 +14,7 @@ import { InputField } from "../components/Inputs/InputField";
 
 import { FaCalendarDays } from "react-icons/fa6";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { BASE_URL } from "../Contents/URL";
 
@@ -23,6 +23,8 @@ import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { Search } from "../components/Search/Search";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
+import { toast } from "react-toastify";
 
 type IndividualType = {
   id: number;
@@ -70,6 +72,8 @@ export const PresentReport = () => {
 
   const { loader } = useAppSelector((state) => state?.NavigateSate);
 
+  const [pageNo, setPageNo] = useState(1);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -78,7 +82,7 @@ export const PresentReport = () => {
     setTimeout(() => {
       dispatch(navigationSuccess("PresentReports"));
     }, 1000);
-  }, []);
+  }, [pageNo]);
   const token = currentUser?.token;
 
   const [formData, setFormData] = useState(initialState);
@@ -96,8 +100,6 @@ export const PresentReport = () => {
     setSearchBar(e.target.value);
   };
 
-  console.log("date", formData);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
@@ -113,7 +115,6 @@ export const PresentReport = () => {
           Authorization: token,
         },
       });
-      console.log(res.data);
       setAllEvents(res.data);
     } catch (error) {
       console.log(error);
@@ -122,22 +123,39 @@ export const PresentReport = () => {
 
   const getIndividualMembersReports = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/individualMemberReport`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/individualMemberReport?page=${pageNo}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       console.log(res.data);
+      console.log("update");
       setIndividualReports(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setIndividualReports(null);
     }
+  };
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
   };
 
   useEffect(() => {
     handleGetAllEvents();
-    getIndividualMembersReports();
   }, []);
+
+  useEffect(() => {
+    getIndividualMembersReports();
+  }, [pageNo]);
   if (loader) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
@@ -206,7 +224,10 @@ export const PresentReport = () => {
         {/* Table Body */}
         {individualReports?.map((report, index) => (
           <tbody className="text-center bg-white">
-            <tr className="hover:bg-gray-100 transition duration-300">
+            <tr
+              className="hover:bg-gray-100 transition duration-300"
+              key={report?.id}
+            >
               <td className="p-2 border ">{index + 1}</td>
               <td className="p-2 border">{report.fullName}</td>
               <td className="p-2 border ">{report.mobileNumber}</td>
@@ -220,9 +241,19 @@ export const PresentReport = () => {
         ))}
       </table>
 
+      {(!individualReports || individualReports.length === 0) && (
+        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+          No report records available at the moment!
+        </span>
+      )}
+
       <div className="flex items-center justify-between">
         <ShowData />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div className="flex items-center justify-center">
         <AddButton label="Print" />

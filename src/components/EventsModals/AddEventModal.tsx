@@ -43,6 +43,7 @@ type GETEVENTT = {
   description: string;
   startTime: string;
   endTime: string;
+  date?: string;
   presentTime: string;
   eventType: "oneTimeEvent | recursiveEvent";
 };
@@ -64,6 +65,8 @@ export const AddEventModal = ({
 
   const [updateEvent, setUpdateEvent] = useState(getEventDetail);
 
+  console.log(updateEvent, "update");
+
   console.log(updateEvent, "update Event >>>");
 
   const [updateImage, setUpdateImage] = useState<File | null>(null);
@@ -75,7 +78,7 @@ export const AddEventModal = ({
       setUpdateImage(e.target.files[0]);
     }
   };
-
+  console.log();
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -84,26 +87,42 @@ export const AddEventModal = ({
     setUpdateEvent({ ...updateEvent, [name]: value } as GETEVENTT);
   };
 
-  const handleUploadImage = () => {
-    if (!updateImage) {
-      alert("Please select an image first.");
-      return;
-    }
-    const formData = new FormData();
+  // const handleUploadImage = () => {
+  //   if (!updateImage) {
+  //     alert("Please select an image first.");
+  //     return;
+  //   }
+  //   const formData = new FormData();
 
-    console.log(formData, "Before");
+  //   console.log(formData, "Before");
 
-    formData.append("image", updateImage);
+  //   formData.append("image", updateImage);
 
-    console.log(formData, "AFTER");
-  };
+  //   console.log(formData, "AFTER");
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const data = new FormData();
+    data.append("eventName", updateEvent?.eventName ?? "");
+    data.append("date", updateEvent?.date ?? "");
+    data.append("eventType", updateEvent?.eventType ?? "");
+    data.append("description", updateEvent?.description ?? "");
+    data.append("location", updateEvent?.location ?? "");
+    data.append("focalPersonEmail", updateEvent?.focalPersonEmail ?? "");
+    data.append("focalPersonName", updateEvent?.focalPersonName ?? "");
+    data.append("focalPersonNumber", updateEvent?.focalPersonNumber ?? "");
+    data.append("infoPersonEmail", updateEvent?.infoPersonEmail ?? "");
+    data.append("infoPersonName", updateEvent?.infoPersonEmail ?? "");
+    data.append("infoPersonNumber", updateEvent?.infoPersonNumber ?? "");
+    if (updateImage) {
+      data.append("image", updateImage);
+    }
     try {
       const res = await axios.put(
-        `${BASE_URL}/user/updateMember/${updateEvent?.id}`,
-        updateEvent,
+        `${BASE_URL}/user/updateEvent/${updateEvent?.id}`,
+        data,
         {
           headers: {
             Authorization: token,
@@ -112,7 +131,6 @@ export const AddEventModal = ({
       );
       console.log(res.data);
       toast.success("Member updated successfully");
-      handleUploadImage();
       handleGetEvent();
       setModal();
     } catch (error) {
@@ -149,7 +167,7 @@ export const AddEventModal = ({
               placeHolder={"Enter your phone number ..."}
               fieldType="date"
               name="date"
-              inputValue={updateEvent?.currentDate ?? ""}
+              inputValue={updateEvent?.date ?? ""}
               handleChange={handleChange}
             />
             <InputField

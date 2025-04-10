@@ -10,12 +10,14 @@ import { FaBriefcase } from "react-icons/fa";
 import { ChangeEvent, useEffect, useState } from "react";
 import { OptionField } from "../components/Inputs/OptionField";
 import { AddButton } from "../components/Buttons/AddButton";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { Search } from "../components/Search/Search";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
+import { toast } from "react-toastify";
 
 type MemberData = {
   id: number;
@@ -53,14 +55,6 @@ export const MemberReport = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    document.title = "(Jamat)MemberReports";
-    dispatch(navigationStart());
-    setTimeout(() => {
-      dispatch(navigationSuccess("Membereports"));
-    }, 1000);
-  }, []);
-
   const token = currentUser?.token;
 
   const [formData, setFormData] = useState(initialState);
@@ -72,6 +66,8 @@ export const MemberReport = () => {
   const [memberReports, setMemberReports] = useState<MemberData[] | null>(null);
 
   const [searchBar, setSearchBar] = useState("");
+
+  const [pageNo, setPageNo] = useState(1);
 
   const handleGetzone = async () => {
     try {
@@ -87,13 +83,24 @@ export const MemberReport = () => {
     }
   };
 
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handleGetDistrict = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getDistrict`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getDistrict?page=${pageNo}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       console.log(res.data);
       setAllDistricts(res.data);
     } catch (error) {
@@ -120,6 +127,14 @@ export const MemberReport = () => {
     }
   };
 
+  useEffect(() => {
+    document.title = "(Jamat)MemberReports";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("Membereports"));
+    }, 1000);
+  }, [pageNo]);
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -129,7 +144,7 @@ export const MemberReport = () => {
   const handleGetMembersReports = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/membersReport?page=1&district=${formData.district}&zone=${formData.zone}`,
+        `${BASE_URL}/user/membersReport?page=${pageNo}&district=${formData.district}&zone=${formData.zone}`,
         {
           headers: {
             Authorization: token,
@@ -138,7 +153,10 @@ export const MemberReport = () => {
       );
       setMemberReports(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setMemberReports(null);
     }
   };
 
@@ -146,7 +164,7 @@ export const MemberReport = () => {
     handleGetzone();
     handleGetDistrict();
     handleGetMembersReports();
-  }, [formData.zone,formData.district]);
+  }, [formData.zone, formData.district, pageNo]);
 
   useEffect(() => {
     handleSearchbar();
@@ -209,6 +227,7 @@ export const MemberReport = () => {
         </thead>
 
         {/* Table Body */}
+
         {memberReports?.map((member, index) => (
           <tbody className="text-center bg-white" key={member?.id}>
             <tr className="hover:bg-gray-100 transition duration-300">
@@ -223,10 +242,19 @@ export const MemberReport = () => {
           </tbody>
         ))}
       </table>
+      {(!memberReports || memberReports.length === 0) && (
+        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+          No report records available at the moment!
+        </span>
+      )}
 
       <div className="flex items-center justify-between">
         <ShowData total={memberReports?.length} />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div className="flex items-center justify-center">
         <AddButton label="Print" />

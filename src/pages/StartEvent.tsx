@@ -51,7 +51,7 @@ export const StartEvent = () => {
   const [detailEvent, setDetailEvent] = useState<EventType | null>(null);
 
   console.log(detailEvent, "ID");
-
+  console.log(eventID);
   const [isOpenModal, setIsOpenModal] = useState<STARTEVENTProps | "">("");
   const handleToggleViewModal = (active: STARTEVENTProps) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
@@ -118,7 +118,6 @@ export const StartEvent = () => {
   useEffect(() => {
     handleSearchbar();
     setAllEvent(null);
-
     getDetailEvent();
   }, [search]);
 
@@ -143,7 +142,7 @@ export const StartEvent = () => {
         </button>
       </form>
 
-      {allEvent && allEvent.length > 1 && (
+      {allEvent && allEvent.length > 0 && (
         <div className="bg-white min-w-[87rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto">
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             Upcoming Events

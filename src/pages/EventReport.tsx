@@ -14,11 +14,13 @@ import { InputField } from "../components/Inputs/InputField";
 
 import { FaCalendarDays } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { Search } from "../components/Search/Search";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
+import { toast } from "react-toastify";
 
 type EventType = {
   id: number;
@@ -53,19 +55,11 @@ export const EventReport = () => {
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    document.title = "(Jamat)EventReports";
-    dispatch(navigationStart());
-    setTimeout(() => {
-      dispatch(navigationSuccess("Eventreports"));
-    }, 1000);
-  }, []);
-
   const token = currentUser?.token;
 
   const [formData, setFormData] = useState(initialState);
 
-  console.log("date", formData.dateFrom);
+  const [pageNo, setPageNo] = useState(1);
 
   const [allEvents, setAllEvents] = useState<EventType[] | null>(null);
 
@@ -112,16 +106,24 @@ export const EventReport = () => {
         params: { q: searchBar },
       });
       console.log(res.data);
-      // setReportEvents(res.data);
+      setReportEvents(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handleReportEvents = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/eventReport?eventName=${formData.eventName}&form=${formData.dateFrom}&to=${formData.dateTo}`,
+        `${BASE_URL}/user/eventReport?eventName=${formData.eventName}&form=${formData.dateFrom}&to=${formData.dateTo}&page=${pageNo}`,
         {
           headers: {
             Authorization: token,
@@ -130,9 +132,19 @@ export const EventReport = () => {
       );
       setReportEvents(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setReportEvents(null);
     }
   };
+  useEffect(() => {
+    document.title = "(Jamat)EventReports";
+    dispatch(navigationStart());
+    setTimeout(() => {
+      dispatch(navigationSuccess("Eventreports"));
+    }, 1000);
+  }, [pageNo]);
 
   useEffect(() => {
     handleGetAllEvents();
@@ -140,7 +152,8 @@ export const EventReport = () => {
 
   useEffect(() => {
     handleReportEvents();
-  }, [formData.eventName, formData.dateFrom, formData.dateTo]);
+  }, [formData.eventName, formData.dateFrom, formData.dateTo, pageNo]);
+
   useEffect(() => {
     handleSearchBar();
   }, [searchBar]);
@@ -233,9 +246,19 @@ export const EventReport = () => {
         ))}
       </table>
 
+      {(!reportEvents || reportEvents.length === 0) && (
+        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+          No event records available at the moment!
+        </span>
+      )}
+
       <div className="flex items-center justify-between">
         <ShowData />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div className="flex items-center justify-center">
         <AddButton label="Print" />

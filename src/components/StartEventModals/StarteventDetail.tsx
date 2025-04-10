@@ -61,7 +61,7 @@ export const StartEventDetail = ({
           <div className="p-2 border rounded">
             <img
               src={detailEvent?.image || image}
-              className=" bg-sky-500  border border-gray-300 object-cover"
+              className=" bg-sky-500  border border-gray-300 object-cover h-64 w-full"
               alt="Event"
             />
           </div>

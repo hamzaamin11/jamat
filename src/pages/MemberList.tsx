@@ -24,13 +24,14 @@ import { EditModal } from "../components/MemberModals/EditModal";
 
 import { BASE_URL } from "../Contents/URL";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 
 import { toast } from "react-toastify";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
 
 type MemberT = {
   id: number;
@@ -60,11 +61,11 @@ export const MemberList = () => {
 
   const [members, setMembers] = useState<MemberT[] | null>(null);
 
+  console.log(members);
+
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
   const [viewDetail, setViewDetail] = useState<MemberT | null>(null);
-
-  console.log("awais bhai ki image", viewDetail);
 
   const [pageNo, setPageNo] = useState(1);
 
@@ -122,10 +123,13 @@ export const MemberList = () => {
           },
         }
       );
-      console.log(res.data);
+
       setMembers(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setMembers(null);
     }
   };
 
@@ -263,10 +267,6 @@ export const MemberList = () => {
             viewDetail={viewDetail}
             handleGetmembers={handleGetmembers}
           />
-          // <ViewUserDetailModal
-          //   setModal={() => setIsOpenModal("")}
-          //   viewDetail={viewDetail}
-          // />
         )}
       </div>
     </div>

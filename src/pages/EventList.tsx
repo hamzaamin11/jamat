@@ -20,7 +20,7 @@ import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 
 import { ViewEventModal } from "../components/EventsModals/ViewEventDetail";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { BASE_URL } from "../Contents/URL";
 
@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import { AddEventModal } from "../components/EventsModals/AddEventModal";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
 
 type GETEVENTT = {
   id: number;
@@ -63,6 +64,7 @@ export const EventList = () => {
   const token = currentUser?.token;
 
   const [getEvent, setGetEvent] = useState<GETEVENTT[] | null>(null);
+  console.log("page", getEvent);
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
@@ -71,6 +73,8 @@ export const EventList = () => {
   const [catchId, setCatchId] = useState<number | null>(null);
 
   const [searchEvent, setSearchEvent] = useState("");
+
+  const [pageNo, setPageNo] = useState(1);
 
   const handleToggleViewModal = (active: ISOPENMODALT) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
@@ -82,7 +86,7 @@ export const EventList = () => {
     setTimeout(() => {
       dispatch(navigationSuccess("EventList"));
     }, 1000);
-  }, []);
+  }, [pageNo]);
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -103,6 +107,14 @@ export const EventList = () => {
     }
   };
 
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handleViewClick = (detail: GETEVENTT) => {
     handleToggleViewModal("viewEvent");
     setViewDetail(detail);
@@ -115,7 +127,7 @@ export const EventList = () => {
 
   const handleGetEvent = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getEvent`, {
+      const res = await axios.get(`${BASE_URL}/user/getEvent?page=${pageNo}`, {
         headers: {
           Authorization: token,
         },
@@ -123,7 +135,10 @@ export const EventList = () => {
       console.log(res.data);
       setGetEvent(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setGetEvent(null);
     }
   };
 
@@ -153,7 +168,7 @@ export const EventList = () => {
 
   useEffect(() => {
     handleGetEvent();
-  }, []);
+  }, [pageNo]);
 
   useEffect(() => {
     handleSearchbar();
@@ -231,7 +246,11 @@ export const EventList = () => {
 
       <div className="flex items-center justify-between">
         <ShowData total={getEvent?.length} />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div>
         {isOpenModal === "deleteEvent" && (

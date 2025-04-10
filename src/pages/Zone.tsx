@@ -17,12 +17,13 @@ import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 import { AddZone } from "../components/ZoneModal/AddZone";
 
 import { EditZone } from "../components/ZoneModal/EditZone";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
 
 type AllZoneT = {
   id: number;
@@ -44,6 +45,8 @@ export const Zone = () => {
   const [updateZone, setUpdateZone] = useState<AllZoneT | null>(null);
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
+
+  const [pageNo, setPageNo] = useState(1);
 
   const [searchBar, setSearchBar] = useState("");
 
@@ -67,6 +70,14 @@ export const Zone = () => {
     setSearchBar(e.target.value);
   };
 
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handleSearchbar = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/searchZones`, {
@@ -87,14 +98,17 @@ export const Zone = () => {
 
   const handleGetallzone = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getZone`, {
+      const res = await axios.get(`${BASE_URL}/user/getZone?page=${pageNo}`, {
         headers: {
           Authorization: token,
         },
       });
       setAllZone(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setAllZone(null);
     }
   };
 
@@ -119,7 +133,7 @@ export const Zone = () => {
 
   useEffect(() => {
     handleGetallzone();
-  }, []);
+  }, [pageNo]);
 
   useEffect(() => {
     handleSearchbar();
@@ -175,7 +189,11 @@ export const Zone = () => {
 
       <div className="flex items-center justify-between">
         <ShowData total={allZone?.length} />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div>
         {isOpenModal === "DELETE" && (

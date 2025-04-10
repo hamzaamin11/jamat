@@ -2,9 +2,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { AddButton } from "../Buttons/AddButton";
 import { Title } from "../title/Title";
 import { IoSearchCircleOutline } from "react-icons/io5";
-import axios from "axios";
-import { useAppSelector } from "../../redux/Hooks";
+import axios, { AxiosError } from "axios";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { BASE_URL } from "../../Contents/URL";
+import { toast } from "react-toastify";
+import { authFailure } from "../../redux/UserSlice";
 
 type MemberAttendanceT = {
   id: number;
@@ -40,6 +42,8 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
   const token = currentUser?.token;
+
+  const dispatch = useAppDispatch();
 
   const [searchMember, setSearchMember] = useState<MemberAttendanceT[] | null>(
     null
@@ -96,8 +100,12 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
       );
       console.log(res.data);
       handleGetAllLeaveMembers();
+      toast.success("Leave member added successfully");
+      setLeaveMember(null);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 

@@ -5,6 +5,7 @@ import { IoSearchCircleOutline } from "react-icons/io5";
 import axios from "axios";
 import { BASE_URL } from "../../Contents/URL";
 import { useAppSelector } from "../../redux/Hooks";
+import { toast } from "react-toastify";
 
 interface JOINPROPS {
   updateModal: () => void;
@@ -82,6 +83,8 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
       );
       console.log(res.data);
       handleGetAllMembers();
+      toast.success("Member added successfully!");
+      setAddMember(null);
     } catch (error) {
       console.log(error);
     }

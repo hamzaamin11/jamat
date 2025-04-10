@@ -14,12 +14,13 @@ import { DeleteModal } from "../components/DeleteModal/DeleteModal";
 
 import { AddDistrict } from "../components/DistrictModal/AddDistrict";
 import { EditDistrict } from "../components/DistrictModal/EditDistrict";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
 
 type districtT = {
   district: string;
@@ -44,6 +45,8 @@ export const District = () => {
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
   const [searchBar, setSeachBar] = useState("");
+
+  const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
     document.title = "(Jamat)District";
@@ -81,6 +84,14 @@ export const District = () => {
     setDetail(detail);
   };
 
+  const handleIncrementPageButton = () => {
+    setPageNo(pageNo + 1);
+  };
+
+  const handleDecrementPageButton = () => {
+    setPageNo(pageNo > 1 ? pageNo - 1 : 1);
+  };
+
   const handledeleteButton = (id: number) => {
     handleToggleViewModal("DELETE");
     setDistrictID(id);
@@ -88,14 +99,20 @@ export const District = () => {
 
   const handleGetdistricts = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getDistrict`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getDistrict?page=${pageNo}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       setDistricts(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setDistricts(null);
     }
   };
 
@@ -120,7 +137,7 @@ export const District = () => {
 
   useEffect(() => {
     handleGetdistricts();
-  }, []);
+  }, [pageNo]);
 
   useEffect(() => {
     handleSearchbar();
@@ -178,7 +195,11 @@ export const District = () => {
 
       <div className="flex items-center justify-between">
         <ShowData total={districts?.length} />
-        <Pagination />
+        <Pagination
+          handleDecrementPageButton={handleDecrementPageButton}
+          handleIncrementPageButton={handleIncrementPageButton}
+          page={pageNo}
+        />
       </div>
       <div>
         {isOpenModal === "DELETE" && (
