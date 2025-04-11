@@ -160,6 +160,19 @@ export const MemberReport = () => {
     }
   };
 
+  const handlePrintForm = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/download-report`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleGetzone();
     handleGetDistrict();
@@ -257,7 +270,7 @@ export const MemberReport = () => {
         />
       </div>
       <div className="flex items-center justify-center">
-        <AddButton label="Print" />
+        <AddButton label="Print" handleClick={() => handlePrintForm()} />
       </div>
     </div>
   );
