@@ -1,10 +1,10 @@
 import React from "react";
 
 type ButtonProps<T = void> = {
-  label: string;
+  label: string | React.ReactNode;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement>, param?: T) => void;
   param?: T;
-  loading?: boolean;
+  loading: boolean;
 };
 
 export const AddButton = <T,>({
@@ -20,7 +20,7 @@ export const AddButton = <T,>({
         className="bg-sky-500 text-white p-2 rounded hover:cursor-pointer hover:scale-105 duration-300"
         onClick={(e) => handleClick?.(e, param)}
       >
-        {loading ? "loading..." : label}
+        {label}
       </button>
     </div>
   );

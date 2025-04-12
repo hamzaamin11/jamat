@@ -1,11 +1,10 @@
 // import loginAvatar from "../assets/Avatar.png";
 import { RxHamburgerMenu } from "react-icons/rx";
-import headerLogo from "../../assets/Logo.png";
+import headerLogo from "../../assets/jamat logo .png";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import loginAvatar from "../../assets/Avatar.png";
 import React, { useState } from "react";
 import { ProfileLogOut } from "./LogOut";
-
 
 export interface IHeaderProps extends React.ComponentPropsWithoutRef<"div"> {
   isOpen: boolean;
@@ -13,8 +12,6 @@ export interface IHeaderProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 type viewModalT = "VIEW";
 export const Header = ({ isOpen, toggleSideBar }: IHeaderProps) => {
- 
-
   const [viewModal, setViewModal] = useState<viewModalT | "">("");
 
   const handleToggleViewModal = (active: viewModalT) => {
@@ -24,10 +21,10 @@ export const Header = ({ isOpen, toggleSideBar }: IHeaderProps) => {
   return (
     <div className="bg-sky-500 max-w-full h-14 pt-1 px-2 relative  w-full">
       <div className="flex items-center justify-between ">
-        <div className="flex gap-2 items-center ml-2 w-48  ">
+        <div className="flex gap-2 items-center ml-2 w-44  ">
           {!isOpen && (
             <div className="w-full">
-              <img src={headerLogo} alt="logo" className="w-32 h-11" />
+              <img src={headerLogo} alt="logo" className="w-28 h-11 ml-4" />
             </div>
           )}
 

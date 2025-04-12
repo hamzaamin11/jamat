@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import setAuthToken from "../SetAuthToken";
 
 import { Navigate } from "react-router-dom";
-;
 import { toast } from "react-toastify";
 
 import { InputField } from "../components/Inputs/InputField";
@@ -73,15 +72,15 @@ export const Login = () => {
   if (loader) return <Loading />;
   return (
     <div>
-      <div className=" bg-sky-500 min-h-80 flex items-center justify-between  ">
-        <div className="p-8 pl-12">
-          <h1 className="text-5xl text-white">
+      <div className=" bg-sky-500 min-h-64 overflow-y-hidden flex items-center justify-center  ">
+        <div className="">
+          <h1 className="text-5xl  text-white font-semibold font-serif">
             Welcome To Event Management Portal
           </h1>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="shadow bg-white p-6 h-96 w-[28rem] absolute right-24 top-52 rounded-lg text-gray-700  "
+          className="shadow bg-white p-6 h-[22rem]  overflow-y-hidden w-[28rem] absolute right-24 top-52 rounded-lg text-gray-700  "
         >
           <h2 className="text-2xl font-serif ">Welcome Back</h2>
           <h1 className="text-5xl font-serif text-gray-800 pb-2">Login now</h1>
@@ -123,7 +122,7 @@ export const Login = () => {
           )}
         </form>
       </div>
-      <img src={jamat} alt="office Team" className="h-[24rem] pl-20" />
+      <img src={jamat} alt="office Team" className="max-h-[20rem] pl-20 mt-4" />
     </div>
   );
 };

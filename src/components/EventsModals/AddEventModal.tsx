@@ -18,15 +18,17 @@ import { AddButton } from "../Buttons/AddButton";
 
 import { Title } from "../title/Title";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import { BASE_URL } from "../../Contents/URL";
 
-import { useAppSelector } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 
 import { toast } from "react-toastify";
 
 import { TextArea } from "../Inputs/Textarea";
+import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 
 type GETEVENTT = {
   id: number;
@@ -60,25 +62,21 @@ export const AddEventModal = ({
 }: EditModalProps) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
+  const dispatch = useAppDispatch();
+
   const token = currentUser?.token;
-  console.log("=>", getEventDetail);
 
   const [updateEvent, setUpdateEvent] = useState(getEventDetail);
 
-  console.log(updateEvent, "update");
-
-  console.log(updateEvent, "update Event >>>");
-
   const [updateImage, setUpdateImage] = useState<File | null>(null);
 
-  console.log("updateEvent", updateEvent);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setUpdateImage(e.target.files[0]);
     }
   };
-  console.log();
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
@@ -86,20 +84,6 @@ export const AddEventModal = ({
     const { name, value } = e.target;
     setUpdateEvent({ ...updateEvent, [name]: value } as GETEVENTT);
   };
-
-  // const handleUploadImage = () => {
-  //   if (!updateImage) {
-  //     alert("Please select an image first.");
-  //     return;
-  //   }
-  //   const formData = new FormData();
-
-  //   console.log(formData, "Before");
-
-  //   formData.append("image", updateImage);
-
-  //   console.log(formData, "AFTER");
-  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -119,6 +103,7 @@ export const AddEventModal = ({
     if (updateImage) {
       data.append("image", updateImage);
     }
+    setLoading(true);
     try {
       const res = await axios.put(
         `${BASE_URL}/user/updateEvent/${updateEvent?.id}`,
@@ -130,12 +115,16 @@ export const AddEventModal = ({
         }
       );
       console.log(res.data);
-      toast.success("Member updated successfully");
+      toast.success("Event updated successfully");
       handleGetEvent();
       setModal();
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
       setModal();
+      setLoading(false);
     }
   };
 
@@ -154,7 +143,7 @@ export const AddEventModal = ({
           <div className="grid lg:grid-cols-2 gap-4  mx-3">
             <InputField
               labelName="Event Name*"
-              icon={<MdEventAvailable size={25} color="#1E90FF" />} // Blue
+              icon={<MdEventAvailable size={25} />} // Blue
               placeHolder={"Enter event name..."}
               fieldType="text"
               name="eventName"
@@ -163,7 +152,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Event Date*"
-              icon={<FaCalendarDays size={25} color="#28A745" />} // Green
+              icon={<FaCalendarDays size={25} />} // Green
               placeHolder={"Enter your phone number ..."}
               fieldType="date"
               name="date"
@@ -172,7 +161,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Location*"
-              icon={<IoLocationSharp size={25} color="#DC3545" />} // Red
+              icon={<IoLocationSharp size={25} />} // Red
               placeHolder={"Enter your address..."}
               fieldType="text"
               name="location"
@@ -200,7 +189,7 @@ export const AddEventModal = ({
             <div className="">
               <TextArea
                 labelName="Description*"
-                icon={<MdOutlineDescription size={25} color="#FFC107" />} // Yellow
+                icon={<MdOutlineDescription size={25} />} // Yellow
                 placeHolder={"Enter your description..."}
                 fieldType="text"
                 name="description"
@@ -215,7 +204,7 @@ export const AddEventModal = ({
           <div className="grid lg:grid-cols-3 gap-4  mx-3">
             <InputField
               labelName="Full Name*"
-              icon={<FaUser size={25} color="#495057" />}
+              icon={<FaUser size={25} />}
               placeHolder={"Enter your  name..."}
               fieldType="text"
               name="focalPersonName"
@@ -224,7 +213,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Phone Number*"
-              icon={<MdOutlineSmartphone size={25} color="#0D9488" />}
+              icon={<MdOutlineSmartphone size={25} />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
               name="focalPersonNumber"
@@ -233,7 +222,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Email*"
-              icon={<IoMailSharp size={25} color="#1E40AF" />}
+              icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
               name="focalPersonEmail"
@@ -247,7 +236,7 @@ export const AddEventModal = ({
           <div className="grid lg:grid-cols-3 gap-4  mx-3">
             <InputField
               labelName="Full Name*"
-              icon={<FaUser size={25} color="#495057" />}
+              icon={<FaUser size={25} />}
               placeHolder={"Enter your name..."}
               fieldType="text"
               name="infoPersonName"
@@ -256,7 +245,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Phone Number*"
-              icon={<MdOutlineSmartphone size={25} color="#0D9488" />}
+              icon={<MdOutlineSmartphone size={25} />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
               name="infoPersonNumber"
@@ -265,7 +254,7 @@ export const AddEventModal = ({
             />
             <InputField
               labelName="Email*"
-              icon={<IoMailSharp size={25} color="#1E40AF" />}
+              icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
               name="infoPersonEmail"
@@ -301,7 +290,18 @@ export const AddEventModal = ({
             </div>
           </div>
           <div className="flex items-center justify-center pt-5">
-            <AddButton label="Add Event" />
+            <AddButton
+              label={
+                loading ? (
+                  <div className="flex items-center justify-between gap-1.5">
+                    loading <ClipLoader size={18} color="white" />
+                  </div>
+                ) : (
+                  "Add Event"
+                )
+              }
+              loading={loading}
+            />
           </div>
         </form>
       </div>

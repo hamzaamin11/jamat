@@ -53,7 +53,9 @@ type MemberT = {
 type ISOPENMODALT = "EDIT" | "DELETE" | "VIEW";
 
 export const MemberList = () => {
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
+  // const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -106,14 +108,13 @@ export const MemberList = () => {
   };
 
   const handleEditClick = (detail: MemberT) => {
-    console.log("***", { detail });
-
     handleToggleViewModal("EDIT");
 
     setViewDetail(detail);
   };
 
   const handleGetmembers = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${BASE_URL}/user/getMembers?page=${pageNo}`,
@@ -125,11 +126,13 @@ export const MemberList = () => {
       );
 
       setMembers(res.data);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setMembers(null);
+      setLoading(false);
     }
   };
 
@@ -153,7 +156,9 @@ export const MemberList = () => {
       toast.info("Member deleted successfully");
       handleGetmembers();
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -168,7 +173,9 @@ export const MemberList = () => {
       console.log(res.data);
       setMembers(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
   useEffect(() => {
@@ -176,16 +183,18 @@ export const MemberList = () => {
   }, [pageNo]);
 
   useEffect(() => {
-    handleSearchbar();
+    if (searchData) {
+      handleSearchbar();
+    }
   }, [searchData]);
 
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-2xl font-semibold">Members List</h1>
         <Link to={"/registermember"}>
-          <AddButton label="Add Member" />
+          <AddButton label="Add Member" loading={loading} />
         </Link>
       </div>
       <div className="flex items-center justify-between">

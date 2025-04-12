@@ -21,10 +21,7 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
 
   const navigate = useNavigate();
 
-  console.log(activeBtns);
-
   const { pathname } = useLocation();
-  console.log(pathname);
 
   const toggleButtonActive = (activeBtn: TActivButton) => {
     setActiveBtns((prev) => (prev === activeBtn ? "" : activeBtn));

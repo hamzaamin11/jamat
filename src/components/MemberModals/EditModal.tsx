@@ -6,7 +6,7 @@ import {
   FaRegIdCard,
   FaRegImage,
   FaUser,
-  FaUsers,
+  FaUserTie,
 } from "react-icons/fa";
 import { MdOutlineSmartphone } from "react-icons/md";
 import { IoLocationSharp, IoMailSharp } from "react-icons/io5";
@@ -17,10 +17,12 @@ import { InputField } from "../Inputs/InputField";
 import { OptionField } from "../Inputs/OptionField";
 import { AddButton } from "../Buttons/AddButton";
 import { Title } from "../title/Title";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../../Contents/URL";
-import { useAppSelector } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
+import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 
 type MemberT = {
   id: number;
@@ -62,6 +64,8 @@ export const EditModal = ({
 
   const token = currentUser?.token;
 
+  const dispatch = useAppDispatch();
+
   const [allZone, setAllzone] = useState<getZoneT[] | null>(null);
 
   const [allDistrict, setAllDistrict] = useState<getDestrictT[] | null>(null);
@@ -70,15 +74,13 @@ export const EditModal = ({
 
   const [updateImage, setUpdateImage] = useState<File | null>(null);
 
-  console.log(updateImage);
+  const [loading, setLoading] = useState(false);
 
   const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setUpdateImage(e.target.files[0]);
     }
   };
-
-  console.log("formData", formData);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -107,6 +109,24 @@ export const EditModal = ({
       data.append("image", updateImage);
     }
 
+    if (
+      !formData?.address.trim() ||
+      !formData?.age.trim() ||
+      !formData?.cnic.trim() ||
+      !formData?.district.trim() ||
+      !formData?.dob.trim() ||
+      !formData?.education.trim() ||
+      !formData?.email.trim() ||
+      !formData?.fatherName.trim() ||
+      !formData?.fullName.trim() ||
+      !formData?.mobileNumber.trim() ||
+      !formData?.profession.trim() ||
+      !formData?.zone.trim() ||
+      !updateImage
+    ) {
+      return toast.error("Required field must be filled");
+    }
+    setLoading(true);
     try {
       const res = await axios.put(
         `${BASE_URL}/user/updateMember/${formData?.id}`,
@@ -121,9 +141,13 @@ export const EditModal = ({
       toast.success("Member updated successfully");
       handleGetmembers();
       setModal();
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
       setModal();
+      setLoading(false);
     }
   };
 
@@ -134,10 +158,12 @@ export const EditModal = ({
           Authorization: token,
         },
       });
-      console.log(res.data);
+
       setAllzone(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -148,10 +174,12 @@ export const EditModal = ({
           Authorization: token,
         },
       });
-      console.log(res.data);
+
       setAllDistrict(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -182,7 +210,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Father Name*"
-              icon={<FaUsers size={25} color="#495057" />}
+              icon={<FaUserTie size={25} />}
               placeHolder={"Enter your father name..."}
               fieldType="text"
               name="fatherName"
@@ -192,7 +220,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Phone Number*"
-              icon={<MdOutlineSmartphone size={25} color="#059669" />}
+              icon={<MdOutlineSmartphone size={25} />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
               name="mobileNumber"
@@ -202,7 +230,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Email*"
-              icon={<IoMailSharp size={25} color="#1E40AF" />}
+              icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
               name="email"
@@ -212,7 +240,7 @@ export const EditModal = ({
 
             <InputField
               labelName="CNIC*"
-              icon={<FaRegIdCard size={25} color="#1E40AF" />}
+              icon={<FaRegIdCard size={25} />}
               placeHolder={"Enter your CNIC ..."}
               fieldType="text"
               name="cnic"
@@ -222,7 +250,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Age*"
-              icon={<CiCalculator2 size={25} color="#0D9488" />}
+              icon={<CiCalculator2 size={25} />}
               placeHolder={"Enter your age ..."}
               fieldType="number"
               name="age"
@@ -232,7 +260,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Date of Birth*"
-              icon={<FaCalendarDays size={25} color="#DC2626" />}
+              icon={<FaCalendarDays size={25} />}
               placeHolder={"Enter your date of birth ..."}
               fieldType="date"
               name="dob"
@@ -242,7 +270,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Education*"
-              icon={<PiStudent size={25} color="#1E40AF" />}
+              icon={<PiStudent size={25} />}
               placeHolder={"Enter your education..."}
               fieldType="text"
               name="education"
@@ -252,7 +280,7 @@ export const EditModal = ({
 
             <InputField
               labelName="Professional*"
-              icon={<FaBriefcase size={25} color="#D97706" />}
+              icon={<FaBriefcase size={25} />}
               placeHolder={"Enter your profession..."}
               fieldType="text"
               name="profession"
@@ -270,7 +298,7 @@ export const EditModal = ({
                 label: zone.zone,
                 value: zone.zone,
               }))}
-              icon={<FaBriefcase size={25} color="#D97706" />}
+              icon={<FaBriefcase size={25} />}
               initial="Please select zone"
             />
 
@@ -284,7 +312,7 @@ export const EditModal = ({
                 label: district.district,
                 value: district.district,
               }))}
-              icon={<IoLocationSharp size={25} color="#DC2626" />}
+              icon={<IoLocationSharp size={25} />}
               initial="Please select district"
             />
 
@@ -315,7 +343,18 @@ export const EditModal = ({
             />
           </div>
           <div className="flex items-center justify-center pt-5">
-            <AddButton label="Update Registration" />
+            <AddButton
+              label={
+                loading ? (
+                  <div className="flex items-center justify-between gap-1.5">
+                    loading <ClipLoader size={18} color="white" />
+                  </div>
+                ) : (
+                  "Update Registration"
+                )
+              }
+              loading={loading}
+            />
           </div>
         </form>
       </div>

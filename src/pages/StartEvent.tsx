@@ -3,11 +3,14 @@ import { PiClockLight } from "react-icons/pi";
 import { AddButton } from "../components/Buttons/AddButton";
 import { useEffect, useState } from "react";
 import { StartEventDetail } from "../components/StartEventModals/StarteventDetail";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 type STARTEVENTProps = "START";
 
@@ -37,6 +40,8 @@ export const StartEvent = () => {
   const token = currentUser?.token;
 
   const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -77,7 +82,9 @@ export const StartEvent = () => {
       console.log(res.data);
       setAllEvent(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -94,12 +101,15 @@ export const StartEvent = () => {
       });
       setDetailEvent(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
   const handleStartEvent = async () => {
     handleToggleViewModal("START");
+    setLoading(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/user/startEvent/${eventID}`,
@@ -111,14 +121,20 @@ export const StartEvent = () => {
         }
       );
       console.log(res.data);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setLoading(false);
     }
   };
   useEffect(() => {
-    handleSearchbar();
-    setAllEvent(null);
-    getDetailEvent();
+    if (search) {
+      handleSearchbar();
+      setAllEvent(null);
+      getDetailEvent();
+    }
   }, [search]);
 
   if (loader) return <Loading />;
@@ -197,7 +213,19 @@ export const StartEvent = () => {
             </p>
           </div>
           <div className="flex items-center justify-center pt-6">
-            <AddButton label="Start Now" handleClick={handleStartEvent} />
+            <AddButton
+              handleClick={handleStartEvent}
+              label={
+                loading ? (
+                  <div className="flex items-center justify-between gap-1.5">
+                    loading <ClipLoader size={18} color="white" />
+                  </div>
+                ) : (
+                  "Start Now"
+                )
+              }
+              loading={loading}
+            />
           </div>
         </div>
       )}

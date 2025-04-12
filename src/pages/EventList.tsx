@@ -57,14 +57,13 @@ type ISOPENMODALT = "editEvent" | "deleteEvent" | "viewEvent" | "";
 export const EventList = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
   const token = currentUser?.token;
 
   const [getEvent, setGetEvent] = useState<GETEVENTT[] | null>(null);
-  console.log("page", getEvent);
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");
 
@@ -103,7 +102,9 @@ export const EventList = () => {
       });
       setGetEvent(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -125,7 +126,8 @@ export const EventList = () => {
     setViewDetail(detail);
   };
 
-  const handleGetEvent = async () => {
+  const handleGetEvents = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/user/getEvent?page=${pageNo}`, {
         headers: {
@@ -134,11 +136,13 @@ export const EventList = () => {
       });
       console.log(res.data);
       setGetEvent(res.data);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setGetEvent(null);
+      setLoading(false);
     }
   };
 
@@ -159,28 +163,32 @@ export const EventList = () => {
         }
       );
       console.log(res.data);
-      handleGetEvent();
+      handleGetEvents();
       toast.info("Event has been deleted successfully");
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
   useEffect(() => {
-    handleGetEvent();
+    handleGetEvents();
   }, [pageNo]);
 
   useEffect(() => {
-    handleSearchbar();
+    if (searchEvent) {
+      handleSearchbar();
+    }
   }, [searchEvent]);
 
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
   return (
     <div className="text-gray-800 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
         <h1 className="text-2xl font-semibold ">Events List</h1>
         <Link to={"/addevent"}>
-          <AddButton label="Add Event" />
+          <AddButton label="Add Event" loading={loading} />
         </Link>
       </div>
       <div className="flex items-center justify-between">
@@ -272,7 +280,7 @@ export const EventList = () => {
           <AddEventModal
             setModal={() => setIsOpenModal("")}
             getEventDetail={viewDetail}
-            handleGetEvent={handleGetEvent}
+            handleGetEvent={handleGetEvents}
           />
         )}
       </div>

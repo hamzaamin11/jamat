@@ -6,7 +6,7 @@ import {
   FaRegIdCard,
   FaRegImage,
   FaUser,
-  FaUsers,
+  FaUserTie,
 } from "react-icons/fa";
 import { MdOutlineSmartphone } from "react-icons/md";
 import { IoLocationSharp, IoMailSharp } from "react-icons/io5";
@@ -15,12 +15,14 @@ import { FaCalendarDays } from "react-icons/fa6";
 import { PiStudent } from "react-icons/pi";
 import { OptionField } from "../components/Inputs/OptionField";
 import { AddButton } from "../components/Buttons/AddButton";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 import { toast } from "react-toastify";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
+import { authFailure } from "../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 const initialState = {
   fullName: "",
   fatherName: "",
@@ -63,8 +65,6 @@ export const AddMember = () => {
 
   const [updateImage, setUpdateImage] = useState<File | null>(null);
 
-  console.log(updateImage, "file");
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -100,7 +100,9 @@ export const AddMember = () => {
       });
       setGetallzone(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -111,10 +113,12 @@ export const AddMember = () => {
           Authorization: token,
         },
       });
-      console.log(res.data);
+
       setGetDistrict(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -123,7 +127,9 @@ export const AddMember = () => {
       const res = await axios.get(`${BASE_URL}/user/getMembers`);
       console.log(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -178,7 +184,9 @@ export const AddMember = () => {
       setFormData(initialState);
       setUpdateImage(null);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
       setLoading(false);
     }
   };
@@ -200,7 +208,7 @@ export const AddMember = () => {
         <div className="grid lg:grid-cols-3 gap-4  mx-3">
           <InputField
             labelName="Full Name*"
-            icon={<FaUser size={25} color="#495057" />}
+            icon={<FaUser size={25} />}
             placeHolder={"Enter your name..."}
             fieldType="text"
             name="fullName"
@@ -210,7 +218,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Father Name*"
-            icon={<FaUsers size={25} color="#495057" />}
+            icon={<FaUserTie size={25} />}
             placeHolder={"Enter your father name..."}
             fieldType="text"
             name="fatherName"
@@ -220,7 +228,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Phone Number*"
-            icon={<MdOutlineSmartphone size={25} color="#059669" />}
+            icon={<MdOutlineSmartphone size={25} />}
             placeHolder={"Enter your phone number ..."}
             fieldType="number"
             name="mobileNumber"
@@ -230,7 +238,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Email*"
-            icon={<IoMailSharp size={25} color="#1E40AF" />}
+            icon={<IoMailSharp size={25} />}
             placeHolder={"Enter your email ..."}
             fieldType="text"
             name="email"
@@ -240,7 +248,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="CNIC*"
-            icon={<FaRegIdCard size={25} color="#1E40AF" />}
+            icon={<FaRegIdCard size={25} />}
             placeHolder={"Enter your CNIC ..."}
             fieldType="text"
             name="cnic"
@@ -250,7 +258,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Age*"
-            icon={<CiCalculator2 size={25} color="#0D9488" />}
+            icon={<CiCalculator2 size={25} />}
             placeHolder={"Enter your age ..."}
             fieldType="number"
             name="age"
@@ -260,7 +268,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Date of Birth*"
-            icon={<FaCalendarDays size={25} color="#DC2626" />}
+            icon={<FaCalendarDays size={25} />}
             placeHolder={"Enter your date of birth ..."}
             fieldType="date"
             name="dob"
@@ -270,7 +278,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Education*"
-            icon={<PiStudent size={25} color="#1E40AF" />}
+            icon={<PiStudent size={25} />}
             placeHolder={"Enter your education..."}
             fieldType="text"
             name="education"
@@ -280,7 +288,7 @@ export const AddMember = () => {
 
           <InputField
             labelName="Professional*"
-            icon={<FaBriefcase size={25} color="#D97706" />}
+            icon={<FaBriefcase size={25} />}
             placeHolder={"Enter your profession..."}
             fieldType="text"
             name="profession"
@@ -298,7 +306,7 @@ export const AddMember = () => {
               label: zone.zone ?? "",
               value: zone.zone ?? "",
             }))}
-            icon={<FaBriefcase size={25} color="#D97706" />}
+            icon={<FaBriefcase size={25} />}
             initial=" Please select zone"
           />
 
@@ -312,7 +320,7 @@ export const AddMember = () => {
               label: district?.district, // Common key for display
               value: district.district, // Common key for value
             }))}
-            icon={<IoLocationSharp size={25} color="#DC2626" />}
+            icon={<IoLocationSharp size={25} />}
             initial=" Please select district"
           />
 
@@ -331,16 +339,6 @@ export const AddMember = () => {
               />
             </label>
           </div>
-          {/* <InputField
-            labelName="Image*"
-            icon={<FaImage size={25} color="#6B7280" />}
-            placeHolder={"Upload your image..."}
-            fieldType="file"
-            name="image"
-            accept="image/*"
-            // inputValue={}
-            handleChange={handleFileChange}
-          /> */}
 
           <InputField
             labelName="Address*"
@@ -353,7 +351,18 @@ export const AddMember = () => {
           />
         </div>
         <div className="flex items-center justify-center pt-5">
-          <AddButton label="Registration Now" loading={loading} />
+          <AddButton
+            label={
+              loading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Add Registration"
+              )
+            }
+            loading={loading}
+          />
         </div>
       </form>
     </div>
