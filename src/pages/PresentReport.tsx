@@ -64,8 +64,8 @@ const currentDate =
 
 const initialState = {
   eventName: "",
-  dateFrom: currentDate,
-  dateTo: currentDate,
+  dateFrom: "",
+  dateTo: "",
 };
 export const PresentReport = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
@@ -124,7 +124,7 @@ export const PresentReport = () => {
   const getIndividualMembersReports = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/individualMemberReport?page=${pageNo}`,
+        `${BASE_URL}/user/individualMemberReport?page=${pageNo}&eventName=${formData.eventName}&from=${formData.dateFrom}&to=${formData.dateTo}`,
         {
           headers: {
             Authorization: token,
@@ -155,7 +155,7 @@ export const PresentReport = () => {
 
   useEffect(() => {
     getIndividualMembersReports();
-  }, [pageNo]);
+  }, [pageNo, formData.eventName, formData.dateTo, formData.dateFrom]);
   if (loader) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">

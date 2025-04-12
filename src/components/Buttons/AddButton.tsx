@@ -4,7 +4,7 @@ type ButtonProps<T = void> = {
   label: string | React.ReactNode;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement>, param?: T) => void;
   param?: T;
-  loading: boolean;
+  loading?: boolean;
 };
 
 export const AddButton = <T,>({
