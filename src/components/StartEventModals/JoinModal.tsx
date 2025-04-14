@@ -7,6 +7,7 @@ import { BASE_URL } from "../../Contents/URL";
 import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
 import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 
 interface JOINPROPS {
   updateModal: () => void;
@@ -38,6 +39,8 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
   const dispatch = useAppDispatch();
 
   const [searchPerson, setSearchPerson] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const [searchMember, setSearchMember] = useState<MemberT[] | null>(null);
 
@@ -81,6 +84,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
   };
 
   const handleAddMember = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/user/joinEvent/${eventID}/${addMember?.id}`,
@@ -89,13 +93,14 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
       );
       console.log(res.data);
       handleGetAllMembers();
-
+      setLoading(false);
       toast.success("Member added successfully!");
       setAddMember(null);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
+      setLoading(false);
     }
   };
 
@@ -222,7 +227,19 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
           </div>
         )}
         <div className="pt-3">
-          <AddButton handleClick={handleAddMember} label="Add Now" />
+          <AddButton
+            label={
+              loading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Add Now"
+              )
+            }
+            loading={loading}
+            handleClick={handleAddMember}
+          />
         </div>
         <div className="py-3">
           <span className="text-sm text-gray-800 font-semibold ">

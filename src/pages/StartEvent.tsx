@@ -131,7 +131,7 @@ export const StartEvent = () => {
     }
   };
   useEffect(() => {
-    if (search) {
+    if (search.length) {
       handleSearchbar();
       getDetailEvent();
     }

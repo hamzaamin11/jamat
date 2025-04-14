@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { BASE_URL } from "../../Contents/URL";
 import { toast } from "react-toastify";
 import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 
 type MemberAttendanceT = {
   id: number;
@@ -48,7 +49,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
   const [searchMember, setSearchMember] = useState<MemberAttendanceT[] | null>(
     null
   );
-
+  const [loading, setLoading] = useState(false);
   const [searchPerson, setSearchPerson] = useState("");
 
   const [leaveMember, setLeaveMember] = useState<MemberAttendanceT | null>(
@@ -67,7 +68,9 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
       });
       setSearchMember(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -89,11 +92,14 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
       console.log(res.data);
       setListLeaveMember(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
   const handleSelectLeaveMember = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/user/joinEvent/${eventID}/${leaveMember?.id}`
@@ -102,10 +108,12 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
       handleGetAllLeaveMembers();
       toast.success("Leave member added successfully");
       setLeaveMember(null);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
+      setLoading(false);
     }
   };
 
@@ -234,7 +242,19 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
           </div>
         )}
         <div className="pt-3">
-          <AddButton label="Leave Now" handleClick={handleSelectLeaveMember} />
+          <AddButton
+            label={
+              loading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Leave Now"
+              )
+            }
+            loading={loading}
+            handleClick={handleSelectLeaveMember}
+          />
         </div>
         <div className="py-3">
           <span className="text-sm text-gray-800 font-semibold ">

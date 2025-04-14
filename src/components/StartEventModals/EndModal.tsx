@@ -1,11 +1,15 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AddButton } from "../Buttons/AddButton";
 
 import { Title } from "../title/Title";
 
 import { BASE_URL } from "../../Contents/URL";
-import { useAppSelector } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { ChangeEvent, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 
 type MemberEvent = {
   id: number;
@@ -61,11 +65,16 @@ interface JOINPROPS {
 }
 
 export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
+  const navigate = useNavigate();
   const { currentUser } = useAppSelector((state) => state.officeState);
 
   const token = currentUser?.token;
 
+  const dispatch = useAppDispatch();
+
   const [endNote, setEndnote] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const [leaveMembers, setLeaveMembers] = useState<MemberEvent[] | null>(null);
 
@@ -80,7 +89,9 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
       });
       setEventData(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -94,11 +105,14 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
       setLeaveMembers(res.data);
       console.log(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
-  console.log(leaveMembers, "hamaz");
+
   const handleEndEvent = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/user/endEvent/${eventID}`,
@@ -111,8 +125,14 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
       );
       console.log(res.data);
       handleGetEndEventMemebers();
+      setLoading(false);
+      setEndnote("");
+      navigate("/");
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setLoading(false);
     }
   };
 
@@ -158,7 +178,19 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
         </div>
 
         <div className="flex items-center justify-center">
-          <AddButton label="End Events" handleClick={handleEndEvent} />
+          <AddButton
+            label={
+              loading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "End Event"
+              )
+            }
+            loading={loading}
+            handleClick={handleEndEvent}
+          />
         </div>
         <div className="py-3">
           <span className="text-sm text-gray-800 font-semibold ">
