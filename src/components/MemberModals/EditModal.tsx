@@ -111,7 +111,7 @@ export const EditModal = ({
 
     if (
       !formData?.address.trim() ||
-      !formData?.age.trim() ||
+      // !formData?.age.trim() ||
       !formData?.cnic.trim() ||
       !formData?.district.trim() ||
       !formData?.dob.trim() ||
