@@ -32,7 +32,7 @@ type AllZoneT = {
 type ISOPENMODALT = "EDIT" | "DELETE" | "ADD";
 
 export const Zone = () => {
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -97,6 +97,7 @@ export const Zone = () => {
   };
 
   const handleGetallzone = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/user/getZone?page=${pageNo}`, {
         headers: {
@@ -104,11 +105,13 @@ export const Zone = () => {
         },
       });
       setAllZone(res.data);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setAllZone(null);
+      setLoading(false);
     }
   };
 
@@ -127,7 +130,9 @@ export const Zone = () => {
       handleGetallzone();
       toast.info("Zone has been deleted successfully");
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -139,7 +144,7 @@ export const Zone = () => {
     handleSearchbar();
   }, [searchBar]);
 
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">

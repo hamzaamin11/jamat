@@ -36,7 +36,7 @@ import { authFailure } from "../redux/UserSlice";
 type GETEVENTT = {
   id: number;
   eventName: string;
-  currentDate: string;
+  date: string;
   location: string;
   focalPersonName: string;
   focalPersonNumber: string;
@@ -219,7 +219,7 @@ export const EventList = () => {
           <tbody key={events?.id} className="text-center bg-white">
             <tr className="hover:bg-gray-100 transition duration-300">
               <td className="p-2 border ">{events.eventName}</td>
-              <td className="p-2 border">{events.currentDate}</td>
+              <td className="p-2 border">{events.date}</td>
               <td className="p-2 border">{events?.location}</td>
               <td className="p-2 border ">
                 <span className="">

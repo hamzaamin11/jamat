@@ -33,7 +33,7 @@ import { ClipLoader } from "react-spinners";
 type GETEVENTT = {
   id: number;
   eventName: string;
-  currentDate: string;
+  date: string;
   location: string;
   focalPersonName: string;
   focalPersonNumber: string;
@@ -45,11 +45,9 @@ type GETEVENTT = {
   description: string;
   startTime: string;
   endTime: string;
-  date?: string;
   presentTime: string;
   eventType: "oneTimeEvent | recursiveEvent";
 };
-
 type EditModalProps = {
   setModal: () => void;
   getEventDetail: GETEVENTT | null;

@@ -51,8 +51,6 @@ const initialState = {
 export const MemberReport = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
-
   const dispatch = useAppDispatch();
 
   const token = currentUser?.token;
@@ -66,6 +64,8 @@ export const MemberReport = () => {
   const [memberReports, setMemberReports] = useState<MemberData[] | null>(null);
 
   const [searchBar, setSearchBar] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const [pageNo, setPageNo] = useState(1);
 
@@ -142,6 +142,7 @@ export const MemberReport = () => {
   };
 
   const handleGetMembersReports = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${BASE_URL}/user/membersReport?page=${pageNo}&district=${formData.district}&zone=${formData.zone}`,
@@ -152,26 +153,175 @@ export const MemberReport = () => {
         }
       );
       setMemberReports(res.data);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setMemberReports(null);
+      setLoading(false);
     }
   };
 
-  const handlePrintForm = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/download-report`, {
-        headers: {
-          Authorization: token,
-        },
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const downloadFile = (url: string, filename: string) => {
+  //   try {
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.download = filename;
+  //     link.style.display = "none";
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+
+  //     // Clean up the blob URL
+  //     URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.log("Download failed.", error);
+  //   }
+  // };
+
+  // const handlePrintForm = async () => {
+  //   try {
+  //     const res = await axios.get(`${BASE_URL}/download-report`, {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //       responseType: "blob", // necessary for binary data like PDF
+  //     });
+
+  //     const blob = new Blob([res.data], { type: "application/pdf" });
+  //     const url = URL.createObjectURL(blob);
+
+  //     downloadFile(url, "member-report.pdf");
+
+  //     console.log("PDF downloaded successfully");
+  //   } catch (error) {
+  //     console.log("Error downloading PDF:", error);
+  //   }
+  // };
+
+  function printDiv() {
+    const printCss = `
+      @page {
+        size: A4 portrait;
+       
+      }
+  
+      body {
+        font-family: 'Arial', sans-serif;
+        font-size: 11pt;
+        color: #000;
+      }
+  
+      .print-container {
+        width: 100%;
+        padding: 0;
+      }
+  
+      .print-header {
+        text-align: center;
+       
+      }
+  
+      .print-header h1 {
+    
+        font-size: 25pt;
+        font-weight: bold;
+      }
+  
+      .print-header h2 {
+        
+        font-size: 20pt;
+        font-weight: normal;
+      }
+  
+      .date-range {
+        text-align: left;
+        font-size: 14pt;
+        display:flex;
+        justify-content:space-between;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #000; /* full table border */
+      }
+  
+      thead {
+        background-color: #ccc;
+        color: #000;
+      }
+  
+      thead th {
+        border: 2px solid #000;
+        text-align: left;
+        font-size: 10pt;
+      }
+  
+      tbody tr {
+        border: 2px solid #000;
+      }
+  
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      tbody td {
+        border: 2px solid #000;
+        text-align: left;
+        font-size: 10pt;
+      }
+  
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 10pt;
+        padding: 10px 0;
+        border-top: 1px solid #ccc;
+      }
+  
+      
+  
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+    `;
+
+    const printContents = document?.getElementById("myDiv")?.outerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = `
+      <div class="print-container">
+        <div class="print-header">
+          <h1>Jamat Event Management</h1>
+          <h2>Event Report</h2>
+        </div>
+        <div class="date-range">
+          <strong>From: 01-04-2024 </strong> &nbsp;&nbsp; <strong>To: 14-04-2025</strong>
+        </div>
+        ${printContents}
+        <div class="footer"></div>
+      </div>
+    `;
+
+    const printStyleElement = document.createElement("style");
+    printStyleElement.type = "text/css";
+    printStyleElement.appendChild(document.createTextNode(printCss));
+    document.head.appendChild(printStyleElement);
+
+    window.print();
+    location.reload();
+
+    window.onafterprint = function () {
+      document.body.innerHTML = originalContents;
+      document.head.removeChild(printStyleElement);
+    };
+  }
 
   useEffect(() => {
     handleGetzone();
@@ -183,7 +333,7 @@ export const MemberReport = () => {
     handleSearchbar();
   }, [searchBar]);
 
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <div className="text-gray-700 px-3 w-full">
@@ -202,7 +352,7 @@ export const MemberReport = () => {
             label: district?.district ?? "",
             value: district?.district ?? "",
           }))}
-          icon={<IoLocationSharp size={25} color="#DC2626" />}
+          icon={<IoLocationSharp size={25} />}
           initial={"Please Select District"}
         />
         <OptionField
@@ -215,7 +365,7 @@ export const MemberReport = () => {
             label: zone?.zone,
             value: zone?.zone,
           }))}
-          icon={<FaBriefcase size={25} color="#D97706" />}
+          icon={<FaBriefcase size={25} />}
           initial={"Please Select Zone"}
         />
       </div>
@@ -223,7 +373,10 @@ export const MemberReport = () => {
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
+      <table
+        id="myDiv"
+        className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
+      >
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ro">
           <tr>
@@ -270,7 +423,7 @@ export const MemberReport = () => {
         />
       </div>
       <div className="flex items-center justify-center">
-        <AddButton label="Print" handleClick={() => handlePrintForm()} />
+        <AddButton label={"Print"} handleClick={printDiv} />
       </div>
     </div>
   );

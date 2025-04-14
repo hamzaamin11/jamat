@@ -3,10 +3,12 @@ import { InputField } from "../Inputs/InputField";
 import { Title } from "../title/Title";
 import { AddButton } from "../Buttons/AddButton";
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../../Contents/URL";
-import { useAppSelector } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
+import { authFailure } from "../../redux/UserSlice";
+import { ClipLoader } from "react-spinners";
 type detailT = {
   district: string;
   id: number;
@@ -22,9 +24,14 @@ export const EditDistrict = ({
   handleGetdistrict,
 }: ADDZONEProps) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
-  console.log(detail, "Edit");
+
   const token = currentUser?.token;
+
   const [dist, setDist] = useState(detail);
+
+  const [btnLoading, setBtnLoading] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -34,6 +41,7 @@ export const EditDistrict = ({
   };
 
   const handleClick = async () => {
+    setBtnLoading(true);
     try {
       const res = await axios.put(
         `${BASE_URL}/user/updateDistrict/${dist?.id}`,
@@ -44,12 +52,16 @@ export const EditDistrict = ({
           },
         }
       );
+      setBtnLoading(false);
       console.log(res.data);
       handleGetdistrict();
       toast.success("District updated successfully");
       setModal();
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setBtnLoading(false);
     }
   };
 
@@ -69,7 +81,19 @@ export const EditDistrict = ({
           />
         </div>
         <div className="flex items-center justify-center pb-4">
-          <AddButton handleClick={handleClick} label="Update" />
+          <AddButton
+            label={
+              btnLoading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Update"
+              )
+            }
+            loading={btnLoading}
+            handleClick={handleClick}
+          />
         </div>
       </div>
     </div>

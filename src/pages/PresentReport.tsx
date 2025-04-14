@@ -25,6 +25,7 @@ import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
 import { authFailure } from "../redux/UserSlice";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 type IndividualType = {
   id: number;
@@ -59,8 +60,8 @@ type EventType = {
   eventType: "oneTimeEvent | recursiveEvent";
 };
 
-const currentDate =
-  new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
+// const currentDate =
+//   new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
 
 const initialState = {
   eventName: "",
@@ -70,9 +71,11 @@ const initialState = {
 export const PresentReport = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
+  const [printLoading, setPrintLoading] = useState(false);
 
   const [pageNo, setPageNo] = useState(1);
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -109,6 +112,7 @@ export const PresentReport = () => {
   };
 
   const handleGetAllEvents = async () => {
+    setPrintLoading(true);
     try {
       const res = await axios.get(`${BASE_URL}/user/getEvent`, {
         headers: {
@@ -116,12 +120,186 @@ export const PresentReport = () => {
         },
       });
       setAllEvents(res.data);
+      setPrintLoading(false);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setPrintLoading(false);
     }
   };
 
+  // const downloadFile = (url: string, filename: string) => {
+  //   try {
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.download = filename;
+  //     link.style.display = "none";
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+
+  //     // Clean up the blob URL
+  //     URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.log("Download failed.", error);
+  //     const axiosError = error as AxiosError<{ message: string }>;
+  //     dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+  //     toast.error(axiosError.response?.data?.message ?? "");
+  //   }
+  // };
+
+  // const handlePrintForm = async () => {
+  //   setPrintLoading(true);
+  //   try {
+  //     const res = await axios.get(`${BASE_URL}/download-report`, {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //       responseType: "blob", // necessary for binary data like PDF
+  //     });
+
+  //     const blob = new Blob([res.data], { type: "application/pdf" });
+  //     const url = URL.createObjectURL(blob);
+
+  //     downloadFile(url, "member-report.pdf");
+
+  //     console.log("PDF downloaded successfully");
+  //     setPrintLoading(false);
+  //   } catch (error) {
+  //     const axiosError = error as AxiosError<{ message: string }>;
+  //     dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+  //     toast.error(axiosError.response?.data?.message ?? "");
+  //     console.log("Error downloading PDF:", error);
+  //     setPrintLoading(false);
+  //   }
+  // };
+
+  function printDiv() {
+    const printCss = `
+      @page {
+        size: A4 portrait;
+       
+      }
+  
+      body {
+        font-family: 'Arial', sans-serif;
+        font-size: 11pt;
+        color: #000;
+      }
+  
+      .print-container {
+        width: 100%;
+        padding: 0;
+      }
+  
+      .print-header {
+        text-align: center;
+       
+      }
+  
+      .print-header h1 {
+    
+        font-size: 25pt;
+        font-weight: bold;
+      }
+  
+      .print-header h2 {
+        
+        font-size: 20pt;
+        font-weight: normal;
+      }
+  
+      .date-range {
+        text-align: left;
+        font-size: 14pt;
+        display:flex;
+        justify-content:space-between;
+      }
+  
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #000; /* full table border */
+      }
+  
+      thead {
+        background-color: #ccc;
+        color: #000;
+      }
+  
+      thead th {
+        border: 2px solid #000;
+        text-align: left;
+        font-size: 10pt;
+      }
+  
+      tbody tr {
+        border: 2px solid #000;
+      }
+  
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+  
+      tbody td {
+        border: 2px solid #000;
+        text-align: left;
+        font-size: 10pt;
+      }
+  
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 10pt;
+        padding: 10px 0;
+        border-top: 1px solid #ccc;
+      }
+  
+      
+  
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+    `;
+
+    const printContents = document?.getElementById("myDiv")?.outerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = `
+      <div class="print-container">
+        <div class="print-header">
+          <h1>Jamat Event Management</h1>
+          <h2>Event Report</h2>
+        </div>
+        <div class="date-range">
+          <strong>From: 01-04-2024 </strong> &nbsp;&nbsp; <strong>To: 14-04-2025</strong>
+        </div>
+        ${printContents}
+        <div class="footer"></div>
+      </div>
+    `;
+
+    const printStyleElement = document.createElement("style");
+    printStyleElement.type = "text/css";
+    printStyleElement.appendChild(document.createTextNode(printCss));
+    document.head.appendChild(printStyleElement);
+
+    window.print();
+    location.reload();
+
+    window.onafterprint = function () {
+      document.body.innerHTML = originalContents;
+      document.head.removeChild(printStyleElement);
+    };
+  }
+
   const getIndividualMembersReports = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${BASE_URL}/user/individualMemberReport?page=${pageNo}&eventName=${formData.eventName}&from=${formData.dateFrom}&to=${formData.dateTo}`,
@@ -133,12 +311,14 @@ export const PresentReport = () => {
       );
       console.log(res.data);
       console.log("update");
+      setLoading(false);
       setIndividualReports(res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setIndividualReports(null);
+      setLoading(false);
     }
   };
   const handleIncrementPageButton = () => {
@@ -156,7 +336,7 @@ export const PresentReport = () => {
   useEffect(() => {
     getIndividualMembersReports();
   }, [pageNo, formData.eventName, formData.dateTo, formData.dateFrom]);
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">
@@ -174,13 +354,13 @@ export const PresentReport = () => {
             label: event?.eventName,
             value: event?.eventName,
           }))}
-          icon={<IoLocationSharp size={25} color="#DC2626" />}
+          icon={<IoLocationSharp size={25} />}
           initial={"Please Select Event"}
         />
 
         <InputField
           labelName="Form*"
-          icon={<FaCalendarDays size={25} color="blue" />}
+          icon={<FaCalendarDays size={25} />}
           fieldType="date"
           placeHolder="date"
           name="dateFrom"
@@ -202,7 +382,7 @@ export const PresentReport = () => {
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
+      <table id="myDiv" className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ">
           <tr>
@@ -256,7 +436,19 @@ export const PresentReport = () => {
         />
       </div>
       <div className="flex items-center justify-center">
-        <AddButton label="Print" />
+        <AddButton
+          label={
+            printLoading ? (
+              <div className="flex items-center justify-between gap-1.5">
+                loading <ClipLoader size={18} color="white" />
+              </div>
+            ) : (
+              "Print"
+            )
+          }
+          loading={printLoading}
+          handleClick={printDiv}
+        />
       </div>
     </div>
   );

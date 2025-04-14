@@ -89,9 +89,10 @@ export const StartEvent = () => {
   };
 
   const handleSelectEvent = (event: EventType) => {
+    console.log("Event selected:", event);
+    setAllEvent(null);
     setSearch(event?.eventName);
     setEventID(event?.id);
-    setAllEvent(null);
   };
   console.log(allEvent, "allEvent");
   const getDetailEvent = async () => {
@@ -132,7 +133,6 @@ export const StartEvent = () => {
   useEffect(() => {
     if (search) {
       handleSearchbar();
-      setAllEvent(null);
       getDetailEvent();
     }
   }, [search]);
@@ -140,7 +140,10 @@ export const StartEvent = () => {
   if (loader) return <Loading />;
 
   return (
-    <div className="text-gray-700 w-full  px-2 py-2">
+    <div
+      className="text-gray-700 w-full  px-2 py-2"
+      onClick={(e) => e.stopPropagation()}
+    >
       {/* Title */}
       <h1 className="text-2xl font-semibold pt-4 text-gray-800">Start Event</h1>
 
@@ -158,7 +161,7 @@ export const StartEvent = () => {
         </button>
       </form>
 
-      {allEvent && allEvent.length > 0 && (
+      {allEvent && Object.keys(allEvent).length > 1 && (
         <div className="bg-white min-w-[87rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto">
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             Upcoming Events
@@ -182,7 +185,7 @@ export const StartEvent = () => {
       )}
 
       {/* Event Details Section */}
-      {detailEvent && Object.keys(detailEvent).length > 0 && (
+      {detailEvent && (
         <div className="bg-white shadow-lg rounded-lg p-6 mt-8 border border-gray-200 w-full">
           {/* Event Name */}
           <div className="flex items-center space-x-4 border-b pb-4">

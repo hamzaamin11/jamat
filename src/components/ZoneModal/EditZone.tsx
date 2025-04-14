@@ -10,6 +10,7 @@ import { BASE_URL } from "../../Contents/URL";
 import axios from "axios";
 import { useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 type UPDATEZONET = {
   id: number;
@@ -29,12 +30,15 @@ export const EditZone = ({
   const token = currentUser?.token;
   const [zone, setZone] = useState(updateZone);
 
+  const [btnLoading, setBtnLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setZone({ ...zone, [name]: value } as UPDATEZONET);
   };
 
   const handleUpdateZone = async () => {
+    setBtnLoading(true);
     try {
       const res = await axios.put(
         `${BASE_URL}/user/updateZone/${zone?.id}`,
@@ -45,12 +49,14 @@ export const EditZone = ({
           },
         }
       );
+      setBtnLoading(false);
       console.log(res.data);
       handleGetallzone();
       setModal();
       toast.success("Zone updated successfully");
     } catch (error) {
       console.log(error);
+      setBtnLoading(false);
     }
   };
   const handleClick = () => {
@@ -72,7 +78,19 @@ export const EditZone = ({
           />
         </div>
         <div className="flex items-center justify-center pb-4">
-          <AddButton handleClick={handleClick} label="Update" />
+          <AddButton
+            label={
+              btnLoading ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Update"
+              )
+            }
+            loading={btnLoading}
+            handleClick={handleClick}
+          />
         </div>
       </div>
     </div>

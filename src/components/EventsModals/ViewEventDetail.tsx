@@ -7,7 +7,7 @@ import { useEffect } from "react";
 type GETEVENTT = {
   id: number;
   eventName: string;
-  currentDate: string;
+  date: string;
   location: string;
   focalPersonName: string;
   focalPersonNumber: string;
@@ -77,7 +77,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                   Date:
                 </h1>
                 <h2 className=" text-gray-600 text-xs ">
-                  {viewDetail?.currentDate}
+                  {viewDetail?.date}
                 </h2>
               </div>
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">

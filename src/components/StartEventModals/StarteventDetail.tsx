@@ -69,23 +69,6 @@ export const StartEventDetail = ({
           {/* Event Details */}
           <div className="w-full">
             <p className="text-sm text-gray-700 leading-relaxed h-44 overflow-hidden">
-              {/* <strong>Tech Conference 2025</strong> is a premier event bringing
-              together industry leaders, tech enthusiasts, and innovators from
-              around the world. This event will showcase groundbreaking
-              advancements in{" "}
-              <strong>
-                artificial intelligence, blockchain, cybersecurity,
-              </strong>{" "}
-              and <strong>software development.</strong>
-            </p>
-            <p className="text-sm text-gray-700 leading-relaxed mt-2">
-              Attendees will gain valuable insights through interactive
-              workshops, keynote speeches by top experts, and networking
-              sessions with professionals across industries. Whether you're a
-              seasoned developer or new to tech,{" "}
-              <strong>Tech Conference 2025</strong> provides an unparalleled
-              opportunity to explore the future of digital transformation.
-            </p> */}
               {detailEvent?.description}
             </p>
             <p className="text-blue-500 font-medium mt-2">

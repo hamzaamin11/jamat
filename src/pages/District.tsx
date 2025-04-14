@@ -28,7 +28,7 @@ type districtT = {
 };
 type ISOPENMODALT = "EDIT" | "DELETE" | "ADD";
 export const District = () => {
-  const { loader } = useAppSelector((state) => state?.NavigateSate);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -98,6 +98,7 @@ export const District = () => {
   };
 
   const handleGetdistricts = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${BASE_URL}/user/getDistrict?page=${pageNo}`,
@@ -108,11 +109,13 @@ export const District = () => {
         }
       );
       setDistricts(res.data);
+      setLoading(false);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
       toast.error(axiosError.response?.data?.message ?? "");
       setDistricts(null);
+      setLoading(false);
     }
   };
 
@@ -143,7 +146,7 @@ export const District = () => {
     handleSearchbar();
   }, [searchBar]);
 
-  if (loader) return <Loading />;
+  if (loading) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
       <div className="flex items-center justify-between pt-2">

@@ -7,6 +7,7 @@ import axios from "axios";
 import { BASE_URL } from "../../Contents/URL";
 import { useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 interface ADDZONEProps {
   setModal: () => void;
@@ -20,6 +21,8 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
   const token = currentUser?.token;
   const [dist, setDist] = useState(initialState);
 
+  const [btnLoader, setBtnLoader] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -30,12 +33,14 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
     if (!dist.district.trim()) {
       return toast.error("Required field must be filled");
     }
+    setBtnLoader(true);
     try {
       const res = await axios.post(`${BASE_URL}/user/addDistrict`, dist, {
         headers: {
           Authorization: token,
         },
       });
+      setBtnLoader(false);
       console.log(res.data);
       setDist(initialState);
       handleGetdistrict();
@@ -43,6 +48,7 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
       setModal();
     } catch (error) {
       console.log(error);
+      setBtnLoader(false);
     }
   };
   return (
@@ -61,7 +67,19 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
           />
         </div>
         <div className="flex items-center justify-center pb-4">
-          <AddButton handleClick={handleClick} label="Save" />
+          <AddButton
+            label={
+              btnLoader ? (
+                <div className="flex items-center justify-between gap-1.5">
+                  loading <ClipLoader size={18} color="white" />
+                </div>
+              ) : (
+                "Save"
+              )
+            }
+            loading={btnLoader}
+            handleClick={handleClick}
+          />
         </div>
       </div>
     </div>

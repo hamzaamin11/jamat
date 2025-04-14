@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { AddButton } from "../Buttons/AddButton";
 import { Title } from "../title/Title";
 import { IoSearchCircleOutline } from "react-icons/io5";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../../Contents/URL";
-import { useAppSelector } from "../../redux/Hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { toast } from "react-toastify";
+import { authFailure } from "../../redux/UserSlice";
 
 interface JOINPROPS {
   updateModal: () => void;
@@ -33,6 +34,8 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
   const token = currentUser?.token;
+
+  const dispatch = useAppDispatch();
 
   const [searchPerson, setSearchPerson] = useState("");
 
@@ -71,9 +74,12 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
 
       setAddMemberList(res.data);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
+
   const handleAddMember = async () => {
     try {
       const res = await axios.post(
@@ -83,10 +89,13 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
       );
       console.log(res.data);
       handleGetAllMembers();
+
       toast.success("Member added successfully!");
       setAddMember(null);
     } catch (error) {
-      console.log(error);
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
