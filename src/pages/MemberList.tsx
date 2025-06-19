@@ -204,31 +204,31 @@ export const MemberList = () => {
 
       <table className="w-full border border-gray-300  border-separate border-spacing-0 rounded overflow-hidden">
         {/* Table Header */}
-        <thead className="bg-sky-500 text-gray-700 ">
+        <thead className="bg-sky-500 text-gray-700 text-sm ">
           <tr>
-            <th className="p-2 border text-white border-gray-700">Name</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 border text-white border-gray-700 ">Name</th>
+            <th className="p-1 border text-white border-gray-700">
               Father Name
             </th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 border text-white border-gray-700">
               Contact Number
             </th>
-            <th className="p-2 border text-white border-gray-700">District</th>
-            <th className="p-2 border text-white border-gray-700">Zone</th>
-            <th className="p-2 border text-white border-gray-700">Actions</th>
+            <th className="p-1 border text-white border-gray-700">District</th>
+            <th className="p-1 border text-white border-gray-700">Zone</th>
+            <th className="p-1 border text-white border-gray-700">Actions</th>
           </tr>
         </thead>
         {/* Table Body */}
 
         {members?.map((member) => (
-          <tbody key={member?.id} className="text-center bg-white">
+          <tbody key={member?.id} className="text-center bg-white text-sm ">
             <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-2 border ">{member?.fullName}</td>
-              <td className="p-2 border">{member?.fatherName}</td>
-              <td className="p-2 border">{member?.mobileNumber}</td>
-              <td className="p-2 border">{member?.district}</td>
-              <td className="p-2 border">{member?.zone}</td>
-              <td className="p-2 border">
+              <td className="p-1 border ">{member?.fullName}</td>
+              <td className="p-1 border">{member?.fatherName}</td>
+              <td className="p-1 border">{member?.mobileNumber}</td>
+              <td className="p-1 border">{member?.district}</td>
+              <td className="p-1 border">{member?.zone}</td>
+              <td className="p-1 border">
                 <div className="flex items-center justify-center gap-2">
                   <ViewButton handleView={() => handleViewClick(member)} />
                   <EditButton handleUpdate={() => handleEditClick(member)} />

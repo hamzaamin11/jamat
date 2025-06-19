@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AddButton } from "../Buttons/AddButton";
 import { Title } from "../title/Title";
 import { IoSearchCircleOutline } from "react-icons/io5";
@@ -48,6 +48,8 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const [addMemberList, setAddMemberList] = useState<MemberT[] | null>(null);
 
+  const memberRef = useRef<HTMLDivElement>(null);
+
   const handleSearchUser = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/searchMember`, {
@@ -79,7 +81,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -99,10 +101,29 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        memberRef.current &&
+        !memberRef.current.contains(event.target as Node)
+      ) {
+        setSearchMember(null); // Close dropdown when clicked outside
+      }
+    };
+
+    if (searchMember && searchMember.length > 0) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [searchMember]);
 
   useEffect(() => {
     handleSearchUser();
@@ -136,7 +157,10 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
           </button>
         </form>
         {searchMember && searchMember.length > 0 && (
-          <div className="bg-white w-[47rem] max-h-36 p-4 rounded-lg shadow-md absolute z-20  overflow-hidden overflow-y-auto ">
+          <div
+            ref={memberRef}
+            className="bg-white w-[47rem] max-h-36 p-4 rounded-lg shadow-md absolute z-20  overflow-hidden overflow-y-auto"
+          >
             <h2 className="text-lg font-semibold text-gray-700 mb-3">
               Add Members
             </h2>
@@ -145,11 +169,9 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                 <li
                   key={event?.id}
                   className="p-1 bg-gray-100 rounded-md hover:bg-gray-200 transition hover:cursor-pointer"
+                  onClick={() => handleSelectEvent(event)}
                 >
-                  <span
-                    onClick={() => handleSelectEvent(event)}
-                    className="text-gray-800 font-medium text-sm"
-                  >
+                  <span className="text-gray-800 font-medium text-sm">
                     {event?.fullName}
                   </span>
                 </li>

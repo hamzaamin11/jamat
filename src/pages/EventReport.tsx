@@ -391,22 +391,28 @@ export const EventReport = () => {
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ro">
           <tr>
-            <th className="p-2 border text-white border-gray-700">Sr#</th>
-            <th className="p-2 border text-white border-gray-700">Date</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              Sr#
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              Date
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Event Name
             </th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Event Type
             </th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Start Time
             </th>
-            <th className="p-2 border text-white border-gray-700">End Time</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              End Time
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Focal Person
             </th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Focal Person No#
             </th>
           </tr>
@@ -416,14 +422,16 @@ export const EventReport = () => {
         {reportEvents?.map((event, index) => (
           <tbody className="text-center bg-white">
             <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-2 border ">{index + 1}</td>
-              <td className="p-2 border">{event?.date}</td>
-              <td className="p-2 border ">{event.eventName}</td>
-              <td className="p-2 border">{event.eventType}</td>
-              <td className="p-2 border ">{event.startTime}</td>
-              <td className="p-2 border">{event.endTime}</td>
-              <td className="p-2 border">{event.focalPersonName}</td>
-              <td className="p-2 border">{event.focalPersonNumber} </td>
+              <td className="p-1 text-sm  border ">{index + 1}</td>
+              <td className="p-1 text-sm  border">{event?.date}</td>
+              <td className="p-1 text-sm  border ">{event.eventName}</td>
+              <td className="p-1 text-sm  border">{event.eventType}</td>
+              <td className="p-1 text-sm  border ">{event.startTime}</td>
+              <td className="p-1 text-sm  border">{event.endTime}</td>
+              <td className="p-1 text-sm  border">{event.focalPersonName}</td>
+              <td className="p-1 text-sm  border">
+                {event.focalPersonNumber}{" "}
+              </td>
             </tr>
           </tbody>
         ))}

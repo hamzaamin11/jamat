@@ -6,7 +6,6 @@ type OptionFieldProps = {
   name: string;
   inputValue: string;
   icon: React.ReactNode;
-  // optionData: option[] | null;
   optionData: option[] | undefined;
   initial: string;
 };

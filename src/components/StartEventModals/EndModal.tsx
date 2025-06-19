@@ -80,6 +80,8 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const [eventData, setEventData] = useState<EventType | null>(null);
 
+  
+
   const handleGetEventDetail = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/getEventById/${eventID}`, {

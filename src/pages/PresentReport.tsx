@@ -26,6 +26,7 @@ import { Loading } from "../components/NavigationLoader/Loading";
 import { authFailure } from "../redux/UserSlice";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import { FaUser } from "react-icons/fa";
 
 type IndividualType = {
   id: number;
@@ -60,6 +61,23 @@ type EventType = {
   eventType: "oneTimeEvent | recursiveEvent";
 };
 
+type MemberT = {
+  id: number;
+  fullName: string;
+  fatherName: string;
+  district: string;
+  zone: string;
+  mobileNumber: string;
+  address: string;
+  education: string;
+  email: string;
+  cnic: string;
+  dob: string;
+  age: string;
+  profession: string;
+  image: string;
+};
+
 // const currentDate =
 //   new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
 
@@ -91,6 +109,8 @@ export const PresentReport = () => {
   const [formData, setFormData] = useState(initialState);
 
   const [allEvents, setAllEvents] = useState<EventType[] | null>(null);
+
+  const [members, setMembers] = useState<MemberT[] | null>(null);
 
   const [individualReports, setIndividualReports] = useState<
     IndividualType[] | null
@@ -298,6 +318,29 @@ export const PresentReport = () => {
     };
   }
 
+  const handleGetmembers = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `${BASE_URL}/user/getMembers?page=${pageNo}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      setMembers(res.data);
+      setLoading(false);
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      dispatch(authFailure(axiosError.response?.data?.message ?? ""));
+      toast.error(axiosError.response?.data?.message ?? "");
+      setMembers(null);
+      setLoading(false);
+    }
+  };
+
   const getIndividualMembersReports = async () => {
     setLoading(true);
     try {
@@ -331,6 +374,7 @@ export const PresentReport = () => {
 
   useEffect(() => {
     handleGetAllEvents();
+    handleGetmembers();
   }, []);
 
   useEffect(() => {
@@ -343,7 +387,7 @@ export const PresentReport = () => {
         <h1 className="text-2xl font-semibold ">Individual Present Report</h1>
       </div>
 
-      <div className="grid grid-cols-3 items-center justify-center  gap-4">
+      <div className="grid grid-cols-4 items-center justify-center  gap-4">
         <OptionField
           labelName="Event Name*"
           handlerChange={handleChange}
@@ -356,6 +400,20 @@ export const PresentReport = () => {
           }))}
           icon={<IoLocationSharp size={25} />}
           initial={"Please Select Event"}
+        />
+
+        <OptionField
+          labelName="Member Name*"
+          handlerChange={handleChange}
+          name="eventName"
+          inputValue={formData.eventName}
+          optionData={members?.map((member) => ({
+            id: member?.id,
+            label: member?.fullName,
+            value: member?.fullName,
+          }))}
+          icon={<FaUser size={25} />}
+          initial={"Please Select Member "}
         />
 
         <InputField
@@ -382,20 +440,35 @@ export const PresentReport = () => {
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table id="myDiv" className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
+      <table
+        id="myDiv"
+        className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
+      >
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ">
           <tr>
-            <th className="p-2 border text-white border-gray-700 ">Sr#</th>
-            <th className="p-2 border text-white border-gray-700">Name</th>
-            <th className="p-2 border text-white border-gray-700">Contact</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 border text-white border-gray-700 text-sm ">
+              Sr#
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Name
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Contact
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
               Event Name
             </th>
-            <th className="p-2 border text-white border-gray-700">Date</th>
-            <th className="p-2 border text-white border-gray-700">Clock In</th>
-            <th className="p-2 border text-white border-gray-700">Clock Out</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Date
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Clock In
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Clock Out
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
               Present Hours
             </th>
           </tr>
@@ -408,14 +481,16 @@ export const PresentReport = () => {
               className="hover:bg-gray-100 transition duration-300"
               key={report?.id}
             >
-              <td className="p-2 border ">{index + 1}</td>
-              <td className="p-2 border">{report.fullName}</td>
-              <td className="p-2 border ">{report.mobileNumber}</td>
-              <td className="p-2 border">{report.eventName}</td>
-              <td className="p-2 border ">{report.date.slice(0, 10)}</td>
-              <td className="p-2 border">{report.memberClockin}</td>
-              <td className="p-2 border">{report.memberClockout}</td>
-              <td className="p-2 border">{report.presentHours}</td>
+              <td className="p-1 border text-sm ">{index + 1}</td>
+              <td className="p-1 border text-sm">{report.fullName}</td>
+              <td className="p-1 border  text-sm">{report.mobileNumber}</td>
+              <td className="p-1 border text-sm">{report.eventName}</td>
+              <td className="p-1 border text-sm ">
+                {report.date.slice(0, 10)}
+              </td>
+              <td className="p-1 border text-sm">{report.memberClockin}</td>
+              <td className="p-1 border text-sm">{report.memberClockout}</td>
+              <td className="p-1 border text-sm">{report.presentHours}</td>
             </tr>
           </tbody>
         ))}

@@ -295,7 +295,7 @@ export const AddEventModal = ({
                     loading <ClipLoader size={18} color="white" />
                   </div>
                 ) : (
-                  "Add Event"
+                  "Update Event"
                 )
               }
               loading={loading}

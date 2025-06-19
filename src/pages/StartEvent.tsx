@@ -1,7 +1,7 @@
 import { IoSearchCircleOutline } from "react-icons/io5";
 import { PiClockLight } from "react-icons/pi";
 import { AddButton } from "../components/Buttons/AddButton";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StartEventDetail } from "../components/StartEventModals/StarteventDetail";
 import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../Contents/URL";
@@ -55,6 +55,8 @@ export const StartEvent = () => {
 
   const [detailEvent, setDetailEvent] = useState<EventType | null>(null);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
   console.log(detailEvent, "ID");
   console.log(eventID);
   const [isOpenModal, setIsOpenModal] = useState<STARTEVENTProps | "">("");
@@ -69,6 +71,25 @@ export const StartEvent = () => {
       dispatch(navigationSuccess("StartEvent"));
     }, 1000);
   }, []);
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setAllEvent(null); // Close the dropdown/modal
+      }
+    };
+
+    if (allEvent && Object.keys(allEvent).length > 1) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [allEvent]);
 
   const handleSearchbar = async () => {
     try {
@@ -104,7 +125,7 @@ export const StartEvent = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -126,7 +147,7 @@ export const StartEvent = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setLoading(false);
     }
   };
@@ -162,7 +183,10 @@ export const StartEvent = () => {
       </form>
 
       {allEvent && Object.keys(allEvent).length > 1 && (
-        <div className="bg-white min-w-[87rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto">
+        <div
+          ref={modalRef}
+          className="bg-white min-w-[87rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto"
+        >
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             Upcoming Events
           </h2>
@@ -170,13 +194,11 @@ export const StartEvent = () => {
             {allEvent.map((event) => (
               <li
                 key={event?.id}
-                className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 transition"
+                className="p-2 text-sm bg-gray-100 rounded-md hover:bg-gray-200 transition"
+                onClick={() => handleSelectEvent(event)}
               >
-                <span
-                  onClick={() => handleSelectEvent(event)}
-                  className="text-gray-800 font-medium"
-                >
-                  {event?.eventName}
+                <span className="text-gray-800 font-medium">
+                  {event?.eventName} | {event.currentDate}
                 </span>
               </li>
             ))}

@@ -164,9 +164,15 @@ export const Zone = () => {
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ">
           <tr>
-            <th className="p-2 border text-white border-gray-700">Sr#</th>
-            <th className="p-2 border text-white border-gray-700">Zone</th>
-            <th className="p-2 border text-white border-gray-700">Actions</th>
+            <th className="p-1 text-sm border text-white border-gray-700">
+              Sr#
+            </th>
+            <th className="p-1 text-sm border text-white border-gray-700">
+              Zone
+            </th>
+            <th className="p-1 text-sm border text-white border-gray-700">
+              Actions
+            </th>
           </tr>
         </thead>
 
@@ -174,9 +180,9 @@ export const Zone = () => {
         {allZone?.map((zone, index) => (
           <tbody key={zone?.id} className="text-center bg-white">
             <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-2 border ">{index + 1}</td>
-              <td className="p-2 border ">{zone?.zone}</td>
-              <td className="p-2 border">
+              <td className="p-1 text-sm border ">{index + 1}</td>
+              <td className="p-1 text-sm border ">{zone?.zone}</td>
+              <td className="p-1 text-sm border">
                 <div className="flex items-center justify-center gap-2">
                   <EditButton handleUpdate={() => handleEditClick(zone)} />
                   <DeleteButton handleDelete={() => handleDeleteClick(zone)} />

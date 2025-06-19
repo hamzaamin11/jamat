@@ -36,6 +36,7 @@ const initialState = {
   dob: "",
   age: "",
   profession: "",
+  memberType: "",
 };
 
 type ALLZONET = {
@@ -47,6 +48,29 @@ type ALLDISTRICTT = {
   district: string;
   id: number;
 };
+
+const SelectMember = [
+  {
+    id: 1,
+    label: "Rukan",
+    value: "rukan",
+  },
+  {
+    id: 2,
+    label: "Umeedwar Rukan",
+    value: "umeedwar",
+  },
+  {
+    id: 3,
+    label: "Karkon",
+    value: "karkon",
+  },
+  {
+    id: 4,
+    label: "Hami",
+    value: "hami",
+  },
+];
 
 export const AddMember = () => {
   const { currentUser } = useAppSelector((state) => state.officeState);
@@ -348,6 +372,20 @@ export const AddMember = () => {
             name="address"
             inputValue={formData?.address}
             handleChange={handleChange}
+          />
+
+          <OptionField
+            labelName="Member Types*"
+            handlerChange={handleChange}
+            name="district"
+            inputValue={formData?.district}
+            optionData={SelectMember?.map((district) => ({
+              id: district.id,
+              label: district?.label, // Common key for display
+              value: district.value, // Common key for value
+            }))}
+            icon={<FaUser size={25} />}
+            initial="Select Member Type"
           />
         </div>
         <div className="flex items-center justify-center pt-5">

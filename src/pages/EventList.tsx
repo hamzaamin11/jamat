@@ -196,55 +196,57 @@ export const EventList = () => {
 
         <Search searchData={searchEvent} handleSearch={handleChangeSearch} />
       </div>
-
       <table className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden">
         {/* Table Header */}
         <thead className="bg-sky-500 ">
           <tr>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1.5 border text-white border-gray-700 text-sm">
               Event Name
             </th>
-            <th className="p-2 border text-white border-gray-700">Date</th>
-            <th className="p-2 border text-white border-gray-700">Location</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Date
+            </th>
+            <th className="p-1 border text-white  border-gray-700">Location</th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
               Start Time
             </th>
-            <th className="p-2 border text-white border-gray-700">End Time</th>
-            <th className="p-2 border text-white border-gray-700">Actions</th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              End Time
+            </th>
+            <th className="p-1 border text-white border-gray-700 text-sm">
+              Actions
+            </th>
           </tr>
         </thead>
 
         {/* Table Body */}
-        {getEvent?.map((events) => (
-          <tbody key={events?.id} className="text-center bg-white">
-            <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-2 border ">{events.eventName}</td>
-              <td className="p-2 border">{events.date}</td>
-              <td className="p-2 border">{events?.location}</td>
-              <td className="p-2 border ">
-                <span className="">
-                  {(events?.startTime === "00:00:00" && "--") ||
-                    events?.startTime}
-                </span>
+        <tbody className="text-center bg-white text-sm">
+          {getEvent?.map((events) => (
+            <tr
+              key={events.id}
+              className="hover:bg-gray-100 transition duration-300"
+            >
+              <td className="p-1 border text-sm">{events.eventName}</td>
+              <td className="p-1 border text-sm">{events.date}</td>
+              <td className="p-1 border text-sm">{events.location}</td>
+              <td className="p-1 border text-sm">
+                {(events.startTime === "00:00:00" && "--") || events.startTime}
               </td>
-              <td className="p-2 border ">
-                <span className="">
-                  {" "}
-                  {(events?.endTime === "00:00:00" && "--") || events?.endTime}
-                </span>
+              <td className="p-1 border text-sm">
+                {(events.endTime === "00:00:00" && "--") || events.endTime}
               </td>
-              <td className="p-2 border">
+              <td className="p-1 border text-sm">
                 <div className="flex items-center justify-center gap-2">
                   <ViewButton handleView={() => handleViewClick(events)} />
                   <EditButton handleUpdate={() => handleUpdateClick(events)} />
                   <DeleteButton
-                    handleDelete={() => handleDeleteButton(events?.id)}
+                    handleDelete={() => handleDeleteButton(events.id)}
                   />
                 </div>
               </td>
             </tr>
-          </tbody>
-        ))}
+          ))}
+        </tbody>
       </table>
       {(!getEvent || getEvent.length === 0) && (
         <span className="flex items-center justify-center border-b text-gray-700 p-2">

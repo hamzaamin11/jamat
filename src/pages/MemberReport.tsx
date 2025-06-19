@@ -380,15 +380,25 @@ export const MemberReport = () => {
         {/* Table Header */}
         <thead className="bg-sky-500 text-gray-700 ro">
           <tr>
-            <th className="p-2 border text-white border-gray-700">Sr#</th>
-            <th className="p-2 border text-white border-gray-700">Name</th>
-            <th className="p-2 border text-white border-gray-700">
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              Sr#
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              Name
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
               Father Name
             </th>
-            <th className="p-2 border text-white border-gray-700">Contact</th>
-            <th className="p-2 border text-white border-gray-700">Email</th>
-            <th className="p-2 border text-white border-gray-700">District</th>
-            <th className="p-2 border text-white border-gray-700">Zone</th>
+            <th className="p-1 border text-white border-gray-700">Contact</th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              Email
+            </th>
+            <th className="p-1 text-sm  border text-white border-gray-700">
+              District
+            </th>
+            <th className="p-1 text-sm border text-white border-gray-700">
+              Zone
+            </th>
           </tr>
         </thead>
 
@@ -397,13 +407,13 @@ export const MemberReport = () => {
         {memberReports?.map((member, index) => (
           <tbody className="text-center bg-white" key={member?.id}>
             <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-2 border ">{index + 1}</td>
-              <td className="p-2 border">{member?.fullName}</td>
-              <td className="p-2 border">{member?.fatherName}</td>
-              <td className="p-2 border ">{member?.mobileNumber}</td>
-              <td className="p-2 border ">{member?.email}</td>
-              <td className="p-2 border">{member?.district}</td>
-              <td className="p-2 border">{member?.zone}</td>
+              <td className="p-1 text-sm  border ">{index + 1}</td>
+              <td className="p-1 text-sm  border">{member?.fullName}</td>
+              <td className="p-1 text-sm  border">{member?.fatherName}</td>
+              <td className="p-1 text-sm  border ">{member?.mobileNumber}</td>
+              <td className="p-1 text-sm  border ">{member?.email}</td>
+              <td className="p-1 text-sm  border">{member?.district}</td>
+              <td className="p-1 text-sm  border">{member?.zone}</td>
             </tr>
           </tbody>
         ))}

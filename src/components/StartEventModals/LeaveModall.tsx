@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AddButton } from "../Buttons/AddButton";
 import { Title } from "../title/Title";
 import { IoSearchCircleOutline } from "react-icons/io5";
@@ -50,7 +50,10 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
     null
   );
   const [loading, setLoading] = useState(false);
+
   const [searchPerson, setSearchPerson] = useState("");
+
+  const memberRef = useRef<HTMLDivElement>(null);
 
   const [leaveMember, setLeaveMember] = useState<MemberAttendanceT | null>(
     null
@@ -59,7 +62,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
   const [listLeaveMember, setListLeaveMember] = useState<
     MemberAttendanceT[] | null
   >(null);
-  // console.log(listLeaveMember, "leave Mmber");
+
   const handleSearchUser = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/searchEventDetail`, {
@@ -70,7 +73,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -94,7 +97,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -116,6 +119,25 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        memberRef.current &&
+        !memberRef.current.contains(event.target as Node)
+      ) {
+        setSearchMember(null); // Close dropdown when clicked outside
+      }
+    };
+
+    if (searchMember && searchMember.length > 0) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [searchMember]);
 
   useEffect(() => {
     handleSearchUser();
@@ -152,7 +174,10 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
         </form>
 
         {searchMember && searchMember.length > 0 && (
-          <div className="bg-white w-[47rem] max-h-36 p-4 rounded-lg shadow-md absolute z-20  overflow-hidden overflow-y-auto ">
+          <div
+            className="bg-white w-[47rem] max-h-36 p-4 rounded-lg shadow-md absolute z-20  overflow-hidden overflow-y-auto "
+            ref={memberRef}
+          >
             <h2 className="text-lg font-semibold text-gray-700 mb-3">
               Leave Members
             </h2>
@@ -161,11 +186,9 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
                 <li
                   key={member?.id}
                   className="p-1 bg-gray-100 rounded-md hover:bg-gray-200 transition hover:cursor-pointer"
+                  onClick={() => handleSelectMember(member)}
                 >
-                  <span
-                    onClick={() => handleSelectMember(member)}
-                    className="text-gray-800 font-medium text-sm"
-                  >
+                  <span className="text-gray-800 font-medium text-sm">
                     {member?.fullName}
                   </span>
                 </li>

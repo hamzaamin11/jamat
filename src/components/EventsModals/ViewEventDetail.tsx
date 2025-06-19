@@ -76,9 +76,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                 <h1 className="text-xs text-gray-700 font-semibold w-24">
                   Date:
                 </h1>
-                <h2 className=" text-gray-600 text-xs ">
-                  {viewDetail?.date}
-                </h2>
+                <h2 className=" text-gray-600 text-xs ">{viewDetail?.date}</h2>
               </div>
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
                 <h1 className="text-xs font-semibold  text-gray-700  w-16">
@@ -169,11 +167,11 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
             </div>
           </div>
 
-          <div className="flex  items-center text-start  py-1">
-            <span className="text-xs font-semibold text-gray-700  w-[4.5rem]">
+          <div className="flex  gap-2 items-start text-start py-1">
+            <span className="text-xs font-semibold text-gray-700 w-[4.5rem]">
               Description:
             </span>
-            <div className="text-gray-600 text-xs  pl-4 h-4 ">
+            <div className="text-gray-600 text-xs pl-1">
               {viewDetail?.description}
             </div>
           </div>
