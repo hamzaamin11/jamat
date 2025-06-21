@@ -128,7 +128,7 @@ export const AddEventModal = ({
 
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
-      <div className="mx-3 bg-white text-gray-700 rounded w-full">
+      <div className="mx-3 bg-white text-gray-700 rounded w-full h-[35rem] overflow-y-auto ">
         <Title setModal={setModal}>Update Event</Title>
 
         <form
@@ -138,7 +138,7 @@ export const AddEventModal = ({
           <h2 className="mx-3 text-lg font-semibold underline">
             Event Information*
           </h2>
-          <div className="grid lg:grid-cols-2 gap-4  mx-3">
+          <div className="grid lg:grid-cols-3 gap-4   mx-3 ">
             <InputField
               labelName="Event Name*"
               icon={<MdEventAvailable size={25} />} // Blue
@@ -262,7 +262,7 @@ export const AddEventModal = ({
           </div>
           <div className="mx-3  pt-3 flex lg:flex-row flex-col items-center  ">
             <h1 className="text-lg font-semibold underline ">Event Type*</h1>
-            <div className=" ml-5 lg:space-x-3 space-x-5">
+            <div className=" ml-5 lg:space-x-3 space-x-5 flex mt-2 ">
               <input
                 type="radio"
                 name="eventType"

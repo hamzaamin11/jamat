@@ -50,6 +50,29 @@ type getDestrictT = {
   district: string;
 };
 
+const SelectMember = [
+  {
+    id: 1,
+    label: "Rukan",
+    value: "rukan",
+  },
+  {
+    id: 2,
+    label: "Umeedwar Rukan",
+    value: "umeedwar",
+  },
+  {
+    id: 3,
+    label: "Karkun",
+    value: "karkun",
+  },
+  {
+    id: 4,
+    label: "Hami",
+    value: "hami",
+  },
+];
+
 type EditModalProps = {
   setModal: () => void;
   viewDetail: MemberT | null;
@@ -189,7 +212,7 @@ export const EditModal = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
+    <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10 ">
       <div className="mx-3 bg-white text-gray-700 rounded w-full">
         <Title setModal={setModal}>Update Member Registration</Title>
 
@@ -197,7 +220,7 @@ export const EditModal = ({
           onSubmit={handleSubmit}
           className="border border-gray-400 rounded py-4  "
         >
-          <div className="grid grid-cols-3 gap-4  mx-3">
+          <div className="grid lg:grid-cols-3 gap-4 h-[25rem] overflow-y-auto  mx-3 ">
             <InputField
               labelName="Full Name*"
               icon={<FaUser size={25} color="#495057" />}
@@ -340,6 +363,19 @@ export const EditModal = ({
               name="address"
               inputValue={formData?.address ?? ""}
               handleChange={handleChange}
+            />
+            <OptionField
+              labelName="Member Types*"
+              handlerChange={handleChange}
+              name="memberType"
+              inputValue={""}
+              optionData={SelectMember?.map((member) => ({
+                id: member.id,
+                label: member?.label, // Common key for display
+                value: member.value, // Common key for value
+              }))}
+              icon={<FaUser size={25} />}
+              initial="Select Member Type"
             />
           </div>
           <div className="flex items-center justify-center pt-5">

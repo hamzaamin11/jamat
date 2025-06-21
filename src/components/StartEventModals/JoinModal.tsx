@@ -133,7 +133,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm z-30">
       <div
-        className="bg-white w-[50rem] p-6 border border-gray-200 rounded-lg shadow-lg"
+        className="bg-white lg:w-[50rem] w-[23rem]  p-6 border border-gray-200 rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title Section */}
@@ -183,7 +183,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
         {/* User Information Section */}
 
         {addMember && (
-          <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+          <div className="grid lg:grid-cols-2 gap-y-3 gap-x-4">
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Full Name:
@@ -240,11 +240,13 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               <p className="text-gray-700">{addMember?.currentTime}</p>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center ">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Address:
               </span>
-              <p className="text-gray-700">{addMember?.address}</p>
+              <p className="text-gray-700 w-64 overflow-hidden break-words">
+                {addMember?.address}
+              </p>
             </div>
           </div>
         )}
@@ -270,7 +272,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
           <div className="h-[9.5rem] overflow-y-auto">
             <table className="w-full border border-gray-300 overflow-hidden ">
               {/* Table Header */}
-              <thead className="bg-gray-300 text-sm text-gray-800 sticky top-0 z-10  ">
+              <thead className="bg-gray-300 lg:text-sm text-xs text-gray-800 sticky top-0 z-10  ">
                 <tr>
                   <th className="p-1 border">Name</th>
                   <th className="p-1 border">Father Name</th>
@@ -282,8 +284,9 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               </thead>
 
               {/* Table Body */}
+
               {addMemberList?.map((member) => (
-                <tbody className="text-center bg-white text-sm ">
+                <tbody className="text-center bg-white lg:text-sm text-xs">
                   <tr
                     className="hover:bg-gray-100 transition duration-300"
                     key={member.id}
@@ -300,6 +303,11 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                 </tbody>
               ))}
             </table>
+            {(!addMemberList || addMemberList.length === 0) && (
+              <span className="flex items-center justify-center border-b text-gray-700 p-2 lg:text-sm text-xs">
+                No member records available at the moment!
+              </span>
+            )}
           </div>
         </div>
       </div>

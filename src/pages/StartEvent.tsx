@@ -185,7 +185,7 @@ export const StartEvent = () => {
       {allEvent && Object.keys(allEvent).length > 1 && (
         <div
           ref={modalRef}
-          className="bg-white min-w-[87rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto"
+          className="bg-white lg:min-w-[87rem] min-w-[25rem] md:min-w-[30rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto"
         >
           <h2 className="text-lg font-semibold text-gray-700 mb-3">
             Upcoming Events
@@ -194,7 +194,7 @@ export const StartEvent = () => {
             {allEvent.map((event) => (
               <li
                 key={event?.id}
-                className="p-2 text-sm bg-gray-100 rounded-md hover:bg-gray-200 transition"
+                className="p-2 text-sm bg-gray-100 rounded-md hover:bg-gray-200 transition "
                 onClick={() => handleSelectEvent(event)}
               >
                 <span className="text-gray-800 font-medium">

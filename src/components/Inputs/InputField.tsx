@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 type InputFieldProps = {
   labelName: string;
   icon: React.ReactNode;
@@ -6,6 +8,7 @@ type InputFieldProps = {
   inputValue: string;
   fieldType: string;
   accept?: string;
+  inputRef?: RefObject<HTMLInputElement | null>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const InputField = ({
@@ -16,6 +19,7 @@ export const InputField = ({
   inputValue,
   fieldType,
   accept,
+  inputRef,
   handleChange,
 }: InputFieldProps) => {
   return (
@@ -28,6 +32,7 @@ export const InputField = ({
           {icon}
         </span>
         <input
+          ref={inputRef}
           type={fieldType}
           className=" p-2 w-full rounded-r bg-white  outline"
           placeholder={placeHolder}

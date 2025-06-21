@@ -341,7 +341,7 @@ export const MemberReport = () => {
         <h1 className="text-2xl font-semibold ">Registration Members Report</h1>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pb-2">
+      <div className="grid lg:grid-cols-2 grid-cols-1  gap-2 lg:gap-4 pb-2">
         <OptionField
           labelName="District*"
           handlerChange={handleChange}
@@ -366,58 +366,64 @@ export const MemberReport = () => {
             value: zone?.zone,
           }))}
           icon={<FaBriefcase size={25} />}
-          initial={"Please Select Zone"}
+          initial={"Select Zone"}
         />
       </div>
       <div className="flex items-center justify-between">
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table
-        id="myDiv"
-        className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
-      >
-        {/* Table Header */}
-        <thead className="bg-sky-500 text-gray-700 ro">
-          <tr>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Sr#
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Name
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Father Name
-            </th>
-            <th className="p-1 border text-white border-gray-700">Contact</th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Email
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              District
-            </th>
-            <th className="p-1 text-sm border text-white border-gray-700">
-              Zone
-            </th>
-          </tr>
-        </thead>
 
-        {/* Table Body */}
-
-        {memberReports?.map((member, index) => (
-          <tbody className="text-center bg-white" key={member?.id}>
-            <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-1 text-sm  border ">{index + 1}</td>
-              <td className="p-1 text-sm  border">{member?.fullName}</td>
-              <td className="p-1 text-sm  border">{member?.fatherName}</td>
-              <td className="p-1 text-sm  border ">{member?.mobileNumber}</td>
-              <td className="p-1 text-sm  border ">{member?.email}</td>
-              <td className="p-1 text-sm  border">{member?.district}</td>
-              <td className="p-1 text-sm  border">{member?.zone}</td>
+      <div className="w-full overflow-x-auto">
+        <table
+          id="myDiv"
+          className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
+        >
+          {/* Table Header */}
+          <thead className="bg-sky-500 text-gray-700 ro">
+            <tr>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Sr#
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Name
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Father Name
+              </th>
+              <th className="p-1 border text-white border-gray-700">Contact</th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Email
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                District
+              </th>
+              <th className="p-1 text-sm border text-white border-gray-700">
+                Zone
+              </th>
             </tr>
-          </tbody>
-        ))}
-      </table>
+          </thead>
+
+          {/* Table Body */}
+
+          {memberReports?.map((member, index) => (
+            <tbody
+              className="text-center bg-white  lg:text-sm text-xs"
+              key={member?.id}
+            >
+              <tr className="hover:bg-gray-100 transition duration-300">
+                <td className="p-1 text-sm  border ">{index + 1}</td>
+                <td className="p-1 text-sm  border">{member?.fullName}</td>
+                <td className="p-1 text-sm  border">{member?.fatherName}</td>
+                <td className="p-1 text-sm  border ">{member?.mobileNumber}</td>
+                <td className="p-1 text-sm  border ">{member?.email}</td>
+                <td className="p-1 text-sm  border">{member?.district}</td>
+                <td className="p-1 text-sm  border">{member?.zone}</td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
+      </div>
       {(!memberReports || memberReports.length === 0) && (
         <span className="flex items-center justify-center border-b text-gray-700 p-2">
           No report records available at the moment!

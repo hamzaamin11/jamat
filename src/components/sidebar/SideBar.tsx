@@ -9,6 +9,7 @@ import { HiOutlineDocumentReport } from "react-icons/hi";
 import { MdOutlineDashboard, MdOutlineEventAvailable } from "react-icons/md";
 type SideBarProps = {
   isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 type TActivButton =
   | "Dashboard"
@@ -16,7 +17,7 @@ type TActivButton =
   | "Events"
   | "configuration"
   | "Reports";
-export const SideBar = ({ isOpen }: SideBarProps) => {
+export const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   const [activeBtns, setActiveBtns] = useState<TActivButton | "">("");
 
   const navigate = useNavigate();
@@ -28,16 +29,17 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
   };
 
   useEffect(() => {
-    if (!isOpen) setActiveBtns("");
     setActiveBtns("Dashboard");
     navigate("/");
-  }, [isOpen]);
+  }, []);
 
   return (
     <div
       className={`${
-        isOpen ? "w-16" : "w-52"
-      } bg-white overflow-y-auto transition-all duration-300 ease-in-out flex flex-col items-center py-4 shadow-lg 
+        isOpen
+          ? " lg:w-16 w-0"
+          : "w-52 absolute z-50 lg:relative lg:z-0 min-h-full"
+      } bg-white overflow-y-auto transition-all duration-300 ease-in-out flex   flex-col items-center py-4 shadow-lg  
      `}
     >
       {!isOpen ? (
@@ -57,7 +59,7 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
         <div
           className={`flex items-center ${
             isOpen && "justify-between "
-          } gap-2 p-2  rounded cursor-pointer hover:bg-sky-500 border-b  transition m-1  text-gray-800 hover:text-white  `}
+          } gap-2 p-2  rounded cursor-pointer hover:bg-sky-500 border-b  transition m-2.5  text-gray-800 hover:text-white  `}
         >
           <MdOutlineDashboard size={20} />
         </div>
@@ -80,6 +82,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/registermember" && "bg-sky-200"
                 }`}
                 to={"/registermember"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Register Member
               </Link>
@@ -88,6 +95,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/memberlist" && "bg-sky-200"
                 }`}
                 to={"/memberlist"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Member List
               </Link>
@@ -120,6 +132,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                     pathname === "/addevent" && "bg-sky-200"
                   }`}
                   to={"/addevent"}
+                  onClick={() => {
+                    if (window.innerWidth < 1024) {
+                      setIsOpen(true);
+                    }
+                  }}
                 >
                   Add Event
                 </Link>
@@ -128,6 +145,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                     pathname === "/eventlist" && "bg-sky-200"
                   }`}
                   to={"/eventlist"}
+                  onClick={() => {
+                    if (window.innerWidth < 1024) {
+                      setIsOpen(true);
+                    }
+                  }}
                 >
                   Event List
                 </Link>
@@ -136,6 +158,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                     pathname === "/startevent" && "bg-sky-200"
                   }`}
                   to={"/startevent"}
+                  onClick={() => {
+                    if (window.innerWidth < 1024) {
+                      setIsOpen(true);
+                    }
+                  }}
                 >
                   Start Event
                 </Link>
@@ -170,6 +197,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/registrationReport" && "bg-sky-200"
                 }`}
                 to={"/registrationReport"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Registration Member Report
               </Link>
@@ -178,6 +210,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/eventReport" && "bg-sky-200"
                 }`}
                 to={"/eventReport"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Events Report
               </Link>
@@ -186,6 +223,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/presentReports" && "bg-sky-200"
                 }`}
                 to={"/presentReports"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Individual Present Report
               </Link>
@@ -212,12 +254,22 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
                   pathname === "/configuration" && "bg-sky-200"
                 }`}
                 to={"/configuration"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 District
               </Link>
               <Link
                 className={`my-button ${pathname === "/zone" && "bg-sky-200"}`}
                 to={"/zone"}
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsOpen(true);
+                  }
+                }}
               >
                 Zone
               </Link>

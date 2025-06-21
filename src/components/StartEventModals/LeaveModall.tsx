@@ -149,7 +149,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm z-30">
       <div
-        className="bg-white w-[50rem] p-6 border border-gray-200 rounded-lg shadow-lg"
+        className="bg-white  lg:w-[50rem] w-[23rem] p-6 border border-gray-200 rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title Section */}
@@ -199,7 +199,7 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
 
         {/* User Information Section */}
         {leaveMember && (
-          <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+          <div className="grid lg:grid-cols-2  gap-y-3 gap-x-4">
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Full Name:
@@ -284,9 +284,9 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
             Leave Member List
           </span>
           <div className="overflow-auto max-h-[147px] border border-gray-300 rounded">
-            <table className="w-full border border-gray-300 overflow-hidden ">
+            <table className="w-full border border-gray-300 overflow-hidden  ">
               {/* Table Header */}
-              <thead className="bg-gray-300 text-sm text-gray-800 sticky top-0 z-10 ">
+              <thead className="bg-gray-300 lg:text-sm text-xs text-gray-800 sticky top-0 z-10  ">
                 <tr className="relative">
                   <th className="p-1 border">Name</th>
                   <th className="p-1 border">Father Name</th>
@@ -299,9 +299,11 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
 
               {/* Table Body */}
               {listLeaveMember?.map((list) => (
-                <tbody className="text-center bg-white text-sm   ">
+                <tbody className="text-center bg-white lg:text-sm text-xs">
                   <tr className="hover:bg-gray-100 transition duration-300">
-                    <td className="p-1 border ">{list?.fullName}</td>
+                    <td className="p-1 border ">
+                      {list?.fullName.slice(0, 7)}
+                    </td>
                     <td className="p-1 border">{list?.fatherName}</td>
                     <td className="p-1 border">{list?.mobileNumber}</td>
                     <td className="p-1 border">{list?.memberClockin}</td>
@@ -312,6 +314,11 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
               ))}
             </table>
           </div>
+          {(!listLeaveMember || listLeaveMember.length === 0) && (
+            <span className="flex items-center justify-center border-b text-gray-700 p-2 lg:text-sm text-xs">
+              No member records available at the moment!
+            </span>
+          )}
         </div>
       </div>
     </div>

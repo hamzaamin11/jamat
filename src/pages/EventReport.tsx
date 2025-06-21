@@ -136,7 +136,7 @@ export const EventReport = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/eventReport?eventName=${formData.eventName}&form=${formData.dateFrom}&to=${formData.dateTo}&page=${pageNo}`,
+        `${BASE_URL}/user/eventReport?eventName=${formData.eventName}&from=${formData.dateFrom}&to=${formData.dateTo}&page=${pageNo}`,
         {
           headers: {
             Authorization: token,
@@ -345,7 +345,7 @@ export const EventReport = () => {
         <h1 className="text-2xl font-semibold ">Events Report</h1>
       </div>
 
-      <div className="grid grid-cols-3 items-center justify-center  gap-4">
+      <div className="grid lg:grid-cols-3 grid-cols-1 items-center justify-center  gap-2 lg:gap-4 pb-2">
         <OptionField
           labelName="Event Name*"
           handlerChange={handleChange}
@@ -384,59 +384,61 @@ export const EventReport = () => {
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table
-        id="myDiv"
-        className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
-      >
-        {/* Table Header */}
-        <thead className="bg-sky-500 text-gray-700 ro">
-          <tr>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Sr#
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Date
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Event Name
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Event Type
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Start Time
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              End Time
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Focal Person
-            </th>
-            <th className="p-1 text-sm  border text-white border-gray-700">
-              Focal Person No#
-            </th>
-          </tr>
-        </thead>
 
-        {/* Table Body */}
-        {reportEvents?.map((event, index) => (
-          <tbody className="text-center bg-white">
-            <tr className="hover:bg-gray-100 transition duration-300">
-              <td className="p-1 text-sm  border ">{index + 1}</td>
-              <td className="p-1 text-sm  border">{event?.date}</td>
-              <td className="p-1 text-sm  border ">{event.eventName}</td>
-              <td className="p-1 text-sm  border">{event.eventType}</td>
-              <td className="p-1 text-sm  border ">{event.startTime}</td>
-              <td className="p-1 text-sm  border">{event.endTime}</td>
-              <td className="p-1 text-sm  border">{event.focalPersonName}</td>
-              <td className="p-1 text-sm  border">
-                {event.focalPersonNumber}{" "}
-              </td>
+      <div className="w-full overflow-x-auto">
+        <table
+          id="myDiv"
+          className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
+        >
+          {/* Table Header */}
+          <thead className="bg-sky-500 text-gray-700 ro">
+            <tr>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Sr#
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Date
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Event Name
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Event Type
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Start Time
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                End Time
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Focal Person
+              </th>
+              <th className="p-1 text-sm  border text-white border-gray-700">
+                Focal Person No#
+              </th>
             </tr>
-          </tbody>
-        ))}
-      </table>
+          </thead>
 
+          {/* Table Body */}
+          {reportEvents?.map((event, index) => (
+            <tbody className="text-center bg-white">
+              <tr className="hover:bg-gray-100 transition duration-300">
+                <td className="p-1 text-sm  border ">{index + 1}</td>
+                <td className="p-1 text-sm  border">{event?.date}</td>
+                <td className="p-1 text-sm  border ">{event.eventName}</td>
+                <td className="p-1 text-sm  border">{event.eventType}</td>
+                <td className="p-1 text-sm  border ">{event.startTime}</td>
+                <td className="p-1 text-sm  border">{event.endTime}</td>
+                <td className="p-1 text-sm  border">{event.focalPersonName}</td>
+                <td className="p-1 text-sm  border">
+                  {event.focalPersonNumber}{" "}
+                </td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
+      </div>
       {(!reportEvents || reportEvents.length === 0) && (
         <span className="flex items-center justify-center border-b text-gray-700 p-2">
           No event records available at the moment!

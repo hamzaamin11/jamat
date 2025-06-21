@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { InputField } from "../components/Inputs/InputField";
 
@@ -50,6 +50,8 @@ export const AddEvent = () => {
   const dispatch = useAppDispatch();
 
   const { currentUser } = useAppSelector((state) => state.officeState);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const token = currentUser?.token;
 
@@ -118,6 +120,11 @@ export const AddEvent = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+
   if (loader) return <Loading />;
   return (
     <div className="px-3 text-gray-700 w-full">
@@ -137,6 +144,7 @@ export const AddEvent = () => {
             placeHolder={"Enter event name..."}
             fieldType="text"
             name="eventName"
+            inputRef={inputRef}
             inputValue={eventData?.eventName}
             handleChange={handleChange}
           />
@@ -255,7 +263,7 @@ export const AddEvent = () => {
         </div>
         <div className="mx-3  pt-3 flex lg:flex-row flex-col items-center  ">
           <h1 className="text-lg font-semibold underline ">Event Type*</h1>
-          <div className=" ml-5 lg:space-x-3 space-x-5">
+          <div className="lg:ml-5 ml-0  lg:space-x-3 space-x-2 text-sm ">
             <input
               type="radio"
               name="eventType"

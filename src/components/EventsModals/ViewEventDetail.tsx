@@ -54,22 +54,22 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
   }, []);
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10 ">
-      <div className="w-full flex justify-center max-h-full ">
-        <div className="bg-white w-full max-w-xl border border-gray-300 rounded-lg p-6 shadow-xl relative">
+      <div className="w-full flex justify-center max-h-full  ">
+        <div className="bg-white w-full max-w-xl border border-gray-300 rounded-lg p-6 shadow-xl relative overflow-y-auto">
           {/* Close Button */}
 
           {/* Title */}
           <Title setModal={setModal}>Event Information</Title>
 
           {/* Profile Section */}
-          <div className="flex  justify-between items-center text-center border-b py-2 text-gray-300">
+          <div className="flex  justify-between items-center text-center border-b py-2 text-gray-300 gap-2">
             <div className="flex flex-col gap-2 ">
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
                 <h1 className="text-xs text-gray-700 font-semibold w-24">
                   Event Name:
                 </h1>
                 <h2 className=" text-gray-600 text-xs pl-4">
-                  {viewDetail?.eventName}
+                  {viewDetail?.eventName.slice(0,23)}
                 </h2>
               </div>
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
@@ -83,13 +83,13 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                   Location:
                 </h1>
                 <h2 className=" text-gray-600 text-xs pl-12">
-                  {viewDetail?.location}
+                  {viewDetail?.location.slice(0,23)}
                 </h2>
               </div>
             </div>
 
             <img
-              className="w-28 h-28   rounded-full border-4 bg-sky-500 border-gray-400 object-cover"
+              className="lg:w-28 lg:h-28 w-20 h-20   rounded-full border-4 bg-sky-500 border-gray-400 object-cover"
               src={viewDetail?.image || imageProfile}
               alt="Profile"
             />
@@ -171,7 +171,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
             <span className="text-xs font-semibold text-gray-700 w-[4.5rem]">
               Description:
             </span>
-            <div className="text-gray-600 text-xs pl-1">
+            <div className="text-gray-600 text-xs pl-1 overflow-hidden break-words">
               {viewDetail?.description}
             </div>
           </div>

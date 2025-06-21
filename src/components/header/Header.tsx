@@ -9,13 +9,19 @@ import { ProfileLogOut } from "./LogOut";
 export interface IHeaderProps extends React.ComponentPropsWithoutRef<"div"> {
   isOpen: boolean;
   toggleSideBar: () => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 type viewModalT = "VIEW";
-export const Header = ({ isOpen, toggleSideBar }: IHeaderProps) => {
+export const Header = ({ isOpen, toggleSideBar, setIsOpen }: IHeaderProps) => {
   const [viewModal, setViewModal] = useState<viewModalT | "">("");
 
   const handleToggleViewModal = (active: viewModalT) => {
     setViewModal((prev) => (prev === active ? "" : active));
+  };
+
+  const handlesideBarClose = () => {
+    handleToggleViewModal("VIEW");
+    setIsOpen(true);
   };
 
   return (
@@ -43,7 +49,7 @@ export const Header = ({ isOpen, toggleSideBar }: IHeaderProps) => {
             <h4 className="">{"User"}</h4> */}
           </div>
           <img
-            onClick={() => handleToggleViewModal("VIEW")}
+            onClick={() => handlesideBarClose()}
             src={loginAvatar}
             alt="login"
             className="w-11 hover:cursor-pointer  active:scale-95 active:translate-y-1 transition duration-200"

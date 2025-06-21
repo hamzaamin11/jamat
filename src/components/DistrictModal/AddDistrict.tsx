@@ -2,7 +2,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import { InputField } from "../Inputs/InputField";
 import { Title } from "../title/Title";
 import { AddButton } from "../Buttons/AddButton";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../Contents/URL";
 import { useAppSelector } from "../../redux/Hooks";
@@ -18,7 +18,11 @@ const initialState = {
 };
 export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
+
   const token = currentUser?.token;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [dist, setDist] = useState(initialState);
 
   const [btnLoader, setBtnLoader] = useState(false);
@@ -51,6 +55,11 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
       setBtnLoader(false);
     }
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
       <div className="mx-3 bg-white text-gray-700 rounded">
@@ -62,6 +71,7 @@ export const AddDistrict = ({ setModal, handleGetdistrict }: ADDZONEProps) => {
             placeHolder="Add district here..."
             handleChange={handleChange}
             name="district"
+            inputRef={inputRef}
             inputValue={dist.district}
             fieldType="text"
           />

@@ -47,7 +47,7 @@ export const StartEventDetail = ({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-sm  bg-opacity-40 flex items-center justify-center z-10"
+      className="fixed inset-0 backdrop-blur-sm  bg-opacity-40 flex items-center justify-center z-10 top-0 "
       onClick={setModal} // Close modal when clicking outside
     >
       <div
@@ -61,7 +61,7 @@ export const StartEventDetail = ({
           <div className="p-2 border rounded">
             <img
               src={detailEvent?.image || image}
-              className=" bg-sky-500  border border-gray-300 object-cover h-64 w-full"
+              className=" bg-sky-500  border border-gray-300 object-cover lg:h-64 lg:w-full h-24 w-24 "
               alt="Event"
             />
           </div>
@@ -71,30 +71,30 @@ export const StartEventDetail = ({
             <p className="text-sm text-gray-700 leading-relaxed h-44 overflow-hidden">
               {detailEvent?.description}
             </p>
-            <p className="text-blue-500 font-medium mt-2">
+            {/* <p className="text-blue-500 font-medium mt-2">
               Join us and be part of the next big leap in technology!
-            </p>
-            <div className="space-x-5 flex items-center justify-center pt-4">
-              <button
-                onClick={() => handleToggleViewModal("JOIN")}
-                className="text-white bg-blue-600 rounded p-2 hover:cursor-pointer  duration-300 active:scale-95"
-              >
-                Join Event
-              </button>
-              <button
-                onClick={() => handleToggleViewModal("LEAVE")}
-                className="text-white bg-yellow-500 rounded p-2 hover:cursor-pointer  duration-300 active:scale-95"
-              >
-                Leave Event
-              </button>
-              <button
-                onClick={() => handleToggleViewModal("END")}
-                className="text-white bg-red-500 rounded p-2 hover:cursor-pointer duration-300 active:scale-95"
-              >
-                End Event
-              </button>
-            </div>
+            </p> */}
           </div>
+        </div>
+        <div className="space-x-5 flex items-center justify-center pt-4">
+          <button
+            onClick={() => handleToggleViewModal("JOIN")}
+            className="text-white bg-blue-600 rounded lg:p-2 py-1 px-2  hover:cursor-pointer  duration-300 active:scale-105 lg:text-lg text-sm"
+          >
+            Join Event
+          </button>
+          <button
+            onClick={() => handleToggleViewModal("LEAVE")}
+            className="text-white bg-yellow-500 rounded lg:p-2 py-1 px-2  hover:cursor-pointer  duration-300 active:scale-105 lg:text-lg text-sm"
+          >
+            Leave Event
+          </button>
+          <button
+            onClick={() => handleToggleViewModal("END")}
+            className="text-white bg-red-500 rounded lg:p-2 py-1 px-2  hover:cursor-pointer duration-300 active:scale-105 lg:text-lg text-sm"
+          >
+            End Event
+          </button>
         </div>
       </div>
       {isOpenModal === "JOIN" && (

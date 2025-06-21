@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { InputField } from "../components/Inputs/InputField";
 import {
   FaAddressBook,
@@ -62,8 +62,8 @@ const SelectMember = [
   },
   {
     id: 3,
-    label: "Karkon",
-    value: "karkon",
+    label: "Karkun",
+    value: "karkun",
   },
   {
     id: 4,
@@ -76,6 +76,10 @@ export const AddMember = () => {
   const { currentUser } = useAppSelector((state) => state.officeState);
 
   const { loader } = useAppSelector((state) => state?.NavigateSate);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  console.log(inputRef, "inputRef");
 
   const dispatch = useAppDispatch();
 
@@ -146,6 +150,10 @@ export const AddMember = () => {
     }
   };
 
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
+
   const handleGetmembers = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/getMembers`);
@@ -176,21 +184,7 @@ export const AddMember = () => {
       data.append("image", updateImage);
     }
 
-    if (
-      !formData.address.trim() ||
-      !formData.age.trim() ||
-      !formData.cnic.trim() ||
-      !formData.district.trim() ||
-      !formData.dob.trim() ||
-      !formData.education.trim() ||
-      !formData.email.trim() ||
-      !formData.fatherName.trim() ||
-      !formData.fullName.trim() ||
-      !formData.mobileNumber.trim() ||
-      !formData.profession.trim() ||
-      !formData.zone.trim() ||
-      !updateImage
-    ) {
+    if (!formData.fullName.trim() || !formData.mobileNumber.trim()) {
       return toast.error("Required field must be filled");
     }
     setLoading(true);
@@ -235,6 +229,7 @@ export const AddMember = () => {
             icon={<FaUser size={25} />}
             placeHolder={"Enter your name..."}
             fieldType="text"
+            inputRef={inputRef}
             name="fullName"
             inputValue={formData?.fullName}
             handleChange={handleChange}
@@ -274,7 +269,7 @@ export const AddMember = () => {
             labelName="CNIC*"
             icon={<FaRegIdCard size={25} />}
             placeHolder={"Enter your CNIC ..."}
-            fieldType="text"
+            fieldType="number"
             name="cnic"
             inputValue={formData?.cnic}
             handleChange={handleChange}
@@ -377,12 +372,12 @@ export const AddMember = () => {
           <OptionField
             labelName="Member Types*"
             handlerChange={handleChange}
-            name="district"
-            inputValue={formData?.district}
-            optionData={SelectMember?.map((district) => ({
-              id: district.id,
-              label: district?.label, // Common key for display
-              value: district.value, // Common key for value
+            name="memberType"
+            inputValue={formData?.memberType}
+            optionData={SelectMember?.map((member) => ({
+              id: member.id,
+              label: member?.label, // Common key for display
+              value: member.value, // Common key for value
             }))}
             icon={<FaUser size={25} />}
             initial="Select Member Type"

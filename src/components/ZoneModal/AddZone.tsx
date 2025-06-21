@@ -4,7 +4,7 @@ import { Title } from "../title/Title";
 
 import { AddButton } from "../Buttons/AddButton";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaBriefcase } from "react-icons/fa";
 import axios from "axios";
 import { BASE_URL } from "../../Contents/URL";
@@ -22,6 +22,10 @@ const initialState = {
 };
 export const AddZone = ({ setModal, handleGetallzone }: ADDZONEProps) => {
   const { currentUser } = useAppSelector((state) => state.officeState);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  console.log(inputRef, "zoneeeee");
 
   const token = currentUser?.token;
 
@@ -56,17 +60,22 @@ export const AddZone = ({ setModal, handleGetallzone }: ADDZONEProps) => {
       setBtnLoader(false);
     }
   };
+
+  useEffect(() => {
+    inputRef?.current?.focus();
+  }, []);
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
       <div className="mx-3 bg-white text-gray-700 rounded">
         <Title setModal={() => setModal()}>Add Zone</Title>
         <div className="mx-16 py-6">
           <InputField
-            labelName="District Name*"
+            labelName="Zone Name*"
             icon={<FaBriefcase size={25} color="#DC2626" />}
             placeHolder="Add Zone here..."
             handleChange={handleChange}
             name="zone"
+            inputRef={inputRef}
             inputValue={addZone.zone}
             fieldType="text"
           />

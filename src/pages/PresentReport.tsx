@@ -387,7 +387,7 @@ export const PresentReport = () => {
         <h1 className="text-2xl font-semibold ">Individual Present Report</h1>
       </div>
 
-      <div className="grid grid-cols-4 items-center justify-center  gap-4">
+      <div className="grid lg:grid-cols-4 grid-cols-1  items-center justify-center  gap-2 lg:gap-4 pb-2">
         <OptionField
           labelName="Event Name*"
           handlerChange={handleChange}
@@ -440,62 +440,64 @@ export const PresentReport = () => {
         <div className=""></div>
         <Search handleSearch={handleChangeSearch} searchData={searchBar} />
       </div>
-      <table
-        id="myDiv"
-        className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
-      >
-        {/* Table Header */}
-        <thead className="bg-sky-500 text-gray-700 ">
-          <tr>
-            <th className="p-1 border text-white border-gray-700 text-sm ">
-              Sr#
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Name
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Contact
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Event Name
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Date
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Clock In
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Clock Out
-            </th>
-            <th className="p-1 border text-white border-gray-700 text-sm">
-              Present Hours
-            </th>
-          </tr>
-        </thead>
 
-        {/* Table Body */}
-        {individualReports?.map((report, index) => (
-          <tbody className="text-center bg-white">
-            <tr
-              className="hover:bg-gray-100 transition duration-300"
-              key={report?.id}
-            >
-              <td className="p-1 border text-sm ">{index + 1}</td>
-              <td className="p-1 border text-sm">{report.fullName}</td>
-              <td className="p-1 border  text-sm">{report.mobileNumber}</td>
-              <td className="p-1 border text-sm">{report.eventName}</td>
-              <td className="p-1 border text-sm ">
-                {report.date.slice(0, 10)}
-              </td>
-              <td className="p-1 border text-sm">{report.memberClockin}</td>
-              <td className="p-1 border text-sm">{report.memberClockout}</td>
-              <td className="p-1 border text-sm">{report.presentHours}</td>
+      <div className="w-full overflow-x-auto">
+        <table
+          id="myDiv"
+          className="w-full border border-gray-300 rounded border-separate border-spacing-0 overflow-hidden"
+        >
+          {/* Table Header */}
+          <thead className="bg-sky-500 text-gray-700 ">
+            <tr>
+              <th className="p-1 border text-white border-gray-700 text-sm ">
+                Sr#
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Name
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Contact
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Event Name
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Date
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Clock In
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Clock Out
+              </th>
+              <th className="p-1 border text-white border-gray-700 text-sm">
+                Present Hours
+              </th>
             </tr>
-          </tbody>
-        ))}
-      </table>
+          </thead>
 
+          {/* Table Body */}
+          {individualReports?.map((report, index) => (
+            <tbody className="text-center bg-white">
+              <tr
+                className="hover:bg-gray-100 transition duration-300"
+                key={report?.id}
+              >
+                <td className="p-1 border text-sm ">{index + 1}</td>
+                <td className="p-1 border text-sm">{report.fullName}</td>
+                <td className="p-1 border  text-sm">{report.mobileNumber}</td>
+                <td className="p-1 border text-sm">{report.eventName}</td>
+                <td className="p-1 border text-sm ">
+                  {report.date.slice(0, 10)}
+                </td>
+                <td className="p-1 border text-sm">{report.memberClockin}</td>
+                <td className="p-1 border text-sm">{report.memberClockout}</td>
+                <td className="p-1 border text-sm">{report.presentHours}</td>
+              </tr>
+            </tbody>
+          ))}
+        </table>
+      </div>
       {(!individualReports || individualReports.length === 0) && (
         <span className="flex items-center justify-center border-b text-gray-700 p-2">
           No report records available at the moment!

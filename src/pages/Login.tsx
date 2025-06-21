@@ -73,17 +73,17 @@ export const Login = () => {
   if (loader) return <Loading />;
   return (
     <div>
-      <div className=" bg-sky-500 min-h-64 overflow-y-hidden flex items-center justify-center  ">
+      <div className=" bg-sky-500 lg:min-h-64 min-h-36  overflow-y-hidden flex items-center justify-center  ">
         <div className="">
-          <h1 className="text-5xl  text-white font-semibold font-serif">
+          <h1 className="lg:text-5xl text-lg   text-white font-semibold font-serif">
             Welcome To Event Management Portal
           </h1>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="shadow bg-white p-6 h-[22rem]  overflow-y-hidden w-[28rem] absolute right-24 top-52 rounded-lg text-gray-700  "
+          className="shadow bg-white p-6  lg:h-[22rem] max-h-full w-full  overflow-y-hidden lg:w-[28rem]   absolute lg:right-24 lg:top-52 top-45 lg:rounded-lg text-gray-700  "
         >
-          <h2 className="text-2xl font-serif ">Welcome Back</h2>
+          <h2 className="text-2xl font-serif  ">Welcome Back</h2>
           <h1 className="text-5xl font-serif text-gray-800 pb-2">Login now</h1>
           <div className="space-y-3 ">
             <InputField
@@ -123,7 +123,11 @@ export const Login = () => {
           )}
         </form>
       </div>
-      <img src={jamat} alt="office Team" className="max-h-[20rem] pl-20 mt-4" />
+      <img
+        src={jamat}
+        alt="office Team"
+        className="max-h-[20rem] pl-20 mt-4 hidden lg:block"
+      />
     </div>
   );
 };

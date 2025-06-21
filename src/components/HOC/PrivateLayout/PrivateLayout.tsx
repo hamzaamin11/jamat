@@ -13,10 +13,10 @@ export const PrivateLayout = ({ children }: IPrivateLayout) => {
 
   return (
     <div className="flex flex-col h-screen overflow-y-auto">
-      <Header isOpen={isOpen} toggleSideBar={toggleSideBar} />
+      <Header isOpen={isOpen} toggleSideBar={toggleSideBar} setIsOpen={setIsopen} />
       <div className="flex flex-col h-[calc(100%-3.5rem)] overflow-y-auto">
         <div className="flex flex-grow overflow-y-auto">
-          <SideBar isOpen={isOpen} />
+          <SideBar isOpen={isOpen} setIsOpen={setIsopen} />
           {children}
         </div>
       </div>

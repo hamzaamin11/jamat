@@ -34,21 +34,21 @@ export const ViewUserDetailModal = ({ setModal, viewDetail }: ModalTProps) => {
           <Title setModal={setModal}>Member Detail</Title>
 
           {/* Profile Section */}
-          <div className="flex  justify-between items-center text-center border-b py-2 text-gray-300">
+          <div className="flex  justify-between items-center text-center border-b py-2 gap-2 lg:gap-0 text-gray-300">
             <div className="flex flex-col gap-2 ">
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
                 <h1 className="text-xs text-gray-700 font-semibold w-24">
                   Full Name:
                 </h1>
-                <h2 className=" text-gray-600 text-xs pl-4">
-                  {viewDetail?.fullName}
+                <h2 className=" text-gray-600 text-xs  ">
+                  {viewDetail?.fullName.slice(0, 18)}
                 </h2>
               </div>
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
                 <h1 className="text-xs text-gray-700 font-semibold w-24">
                   Father Name:
                 </h1>
-                <h2 className=" text-gray-600 text-xs ">
+                <h2 className=" text-gray-600 text-xs">
                   {viewDetail?.fatherName}
                 </h2>
               </div>
@@ -56,13 +56,11 @@ export const ViewUserDetailModal = ({ setModal, viewDetail }: ModalTProps) => {
                 <h1 className="text-xs font-semibold  text-gray-700  w-16">
                   Email:
                 </h1>
-                <h2 className=" text-gray-600 text-xs pl-12">
-                  {viewDetail?.email}
-                </h2>
+                <h2 className=" text-gray-600 text-xs ">{viewDetail?.email}</h2>
               </div>
             </div>
             <img
-              className="w-28 h-28   rounded-full border-4 bg-sky-500 border-gray-400 object-cover"
+              className="lg:w-28 lg:h-28 w-20 h-20   rounded-full border-4 bg-sky-500 border-gray-400 object-cover mr-2"
               src={viewDetail?.image || imageProfile}
               alt="Profile"
             />
@@ -135,7 +133,7 @@ export const ViewUserDetailModal = ({ setModal, viewDetail }: ModalTProps) => {
               <span className="text-xs font-semibold text-gray-700  w-24">
                 Address:
               </span>
-              <div className="text-gray-600 text-xs pl-4 ">
+              <div className="text-gray-600 text-xs pl-4 overflow-hidden break-words ">
                 {viewDetail?.address}
               </div>
             </div>

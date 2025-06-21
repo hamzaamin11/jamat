@@ -80,8 +80,6 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
 
   const [eventData, setEventData] = useState<EventType | null>(null);
 
-  
-
   const handleGetEventDetail = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/user/getEventById/${eventID}`, {
@@ -200,7 +198,7 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
           </span>
           <table className="w-full border border-gray-300 overflow-hidden">
             {/* Table Header */}
-            <thead className="bg-gray-300 text-sm text-gray-800 ">
+            <thead className="bg-gray-300 lg:text-sm text-xs  text-gray-800 ">
               <tr>
                 <th className="p-1 border">Name</th>
                 <th className="p-1 border">Father Name</th>
@@ -213,7 +211,7 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
 
             {/* Table Body */}
             {leaveMembers?.map((end) => (
-              <tbody className="text-center bg-white text-sm ">
+              <tbody className="text-center bg-white lg:text-sm text-xs ">
                 <tr className="hover:bg-gray-100 transition duration-300">
                   <td className="p-1 border ">{end.fullName}</td>
                   <td className="p-1 border">{end.fatherName}</td>
