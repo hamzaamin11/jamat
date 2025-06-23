@@ -48,12 +48,6 @@ const initialState = {
   dateTo: "",
 };
 
-console.log("event form DAte =>", initialState?.dateFrom);
-
-console.log("event NAme =>", initialState?.eventName);
-
-console.log("event To date =>", initialState?.dateTo);
-
 export const EventReport = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);
 
@@ -93,7 +87,7 @@ export const EventReport = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setLoading(false);
     }
   };
@@ -103,7 +97,7 @@ export const EventReport = () => {
   ) => {
     e.preventDefault();
     const { name, value } = e.target;
-    console.log(name, "< Name >");
+
     setFormData({ ...formData, [name]: value });
   };
 
@@ -148,7 +142,7 @@ export const EventReport = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setReportEvents(null);
       setLoading(false);
     }
@@ -317,7 +311,7 @@ export const EventReport = () => {
   }
 
   useEffect(() => {
-    document.title = "(Jamat)EventReports";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("Eventreports"));
@@ -423,10 +417,13 @@ export const EventReport = () => {
           {/* Table Body */}
           {reportEvents?.map((event, index) => (
             <tbody className="text-center bg-white">
-              <tr className="hover:bg-gray-100 transition duration-300">
+              <tr
+                className="hover:bg-gray-100 transition duration-300"
+                key={event.id}
+              >
                 <td className="p-1 text-sm  border ">{index + 1}</td>
-                <td className="p-1 text-sm  border">{event?.date}</td>
-                <td className="p-1 text-sm  border ">{event.eventName}</td>
+                <td className="p-1 text-sm  border">{event.date}</td>
+                <td className="p-1 text-sm  border ">{event.date}</td>
                 <td className="p-1 text-sm  border">{event.eventType}</td>
                 <td className="p-1 text-sm  border ">{event.startTime}</td>
                 <td className="p-1 text-sm  border">{event.endTime}</td>
@@ -440,7 +437,7 @@ export const EventReport = () => {
         </table>
       </div>
       {(!reportEvents || reportEvents.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+        <span className="flex items-center justify-center border-b text-gray-700 p-2 text-xs lg:text-sm">
           No event records available at the moment!
         </span>
       )}

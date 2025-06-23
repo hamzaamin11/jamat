@@ -216,7 +216,9 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Email:
               </span>
-              <p className="text-gray-700">{addMember?.email}</p>
+              <p className="text-gray-700 overflow-hidden break-words w-48 ">
+                {addMember?.email}
+              </p>
             </div>
 
             <div className="flex items-center">
@@ -244,7 +246,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Address:
               </span>
-              <p className="text-gray-700 w-64 overflow-hidden break-words">
+              <p className="text-gray-700 w-52 overflow-hidden break-words">
                 {addMember?.address}
               </p>
             </div>

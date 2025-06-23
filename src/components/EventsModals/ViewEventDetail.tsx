@@ -69,7 +69,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                   Event Name:
                 </h1>
                 <h2 className=" text-gray-600 text-xs pl-4">
-                  {viewDetail?.eventName.slice(0,23)}
+                  {viewDetail?.eventName.slice(0, 23)}
                 </h2>
               </div>
               <div className="flex  items-center justify-between text-start bg-gray-100   py-2 px-2 rounded ">
@@ -83,7 +83,9 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                   Location:
                 </h1>
                 <h2 className=" text-gray-600 text-xs pl-12">
-                  {viewDetail?.location.slice(0,23)}
+                  {(viewDetail?.location &&
+                    viewDetail?.location.slice(0, 23)) ||
+                    "--"}
                 </h2>
               </div>
             </div>
@@ -106,7 +108,8 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                 Full Name:
               </span>
               <div className="text-gray-600 text-xs pl-4 ">
-                {viewDetail?.focalPersonName}
+                {(viewDetail?.focalPersonName && viewDetail?.focalPersonName) ||
+                  "--"}
               </div>
             </div>
 
@@ -115,7 +118,9 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                 Contact:
               </span>
               <div className="text-gray-600 text-xs pl-4 ">
-                {viewDetail?.focalPersonNumber}
+                {(viewDetail?.focalPersonNumber &&
+                  viewDetail?.focalPersonNumber) ||
+                  "--"}
               </div>
             </div>
 
@@ -124,7 +129,9 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
                 Email:
               </span>
               <div className="text-gray-600 text-xs pl-4 ">
-                {viewDetail?.focalPersonEmail}
+                {(viewDetail?.focalPersonEmail &&
+                  viewDetail?.focalPersonEmail) ||
+                  "--"}
               </div>
             </div>
           </div>
@@ -137,7 +144,8 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
               Full Name:
             </span>
             <div className="text-gray-600 text-xs  pl-4 h-4 ">
-              {viewDetail?.infoPersonName}
+              {(viewDetail?.infoPersonName && viewDetail?.infoPersonName) ||
+                "--"}
             </div>
           </div>
           <div className="flex  items-center text-start  py-1">
@@ -145,7 +153,8 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
               Contact:
             </span>
             <div className="text-gray-600 text-xs  pl-4 h-4 ">
-              {viewDetail?.infoPersonNumber}
+              {(viewDetail?.infoPersonNumber && viewDetail?.infoPersonNumber) ||
+                "--"}
             </div>
           </div>
 
@@ -154,7 +163,8 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
               Email:
             </span>
             <div className="text-gray-600 text-xs  pl-4 h-4 ">
-              {viewDetail?.infoPersonEmail}
+              {(viewDetail?.infoPersonEmail && viewDetail?.infoPersonEmail) ||
+                "--"}
             </div>
           </div>
 
@@ -163,7 +173,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
               Even type:
             </span>
             <div className="text-gray-600 text-xs  pl-4 h-4 ">
-              {viewDetail?.eventType}
+              {(viewDetail?.eventType && viewDetail?.eventType) || "--"}
             </div>
           </div>
 
@@ -172,7 +182,7 @@ export const ViewEventModal = ({ setModal, viewDetail }: ModalTProps) => {
               Description:
             </span>
             <div className="text-gray-600 text-xs pl-1 overflow-hidden break-words">
-              {viewDetail?.description}
+              {(viewDetail?.description && viewDetail?.description) || "--"}
             </div>
           </div>
         </div>

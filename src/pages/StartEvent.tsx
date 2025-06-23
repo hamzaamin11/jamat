@@ -57,7 +57,7 @@ export const StartEvent = () => {
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  console.log(detailEvent, "ID");
+  console.log(allEvent, "<=sabd");
   console.log(eventID);
   const [isOpenModal, setIsOpenModal] = useState<STARTEVENTProps | "">("");
   const handleToggleViewModal = (active: STARTEVENTProps) => {
@@ -65,7 +65,7 @@ export const StartEvent = () => {
   };
 
   useEffect(() => {
-    document.title = "(Jamat)StartEvent";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("StartEvent"));
@@ -82,7 +82,7 @@ export const StartEvent = () => {
       }
     };
 
-    if (allEvent && Object.keys(allEvent).length > 1) {
+    if (allEvent && Object.keys(allEvent).length > 0) {
       document.addEventListener("mousedown", handleOutsideClick);
     }
 
@@ -111,9 +111,9 @@ export const StartEvent = () => {
 
   const handleSelectEvent = (event: EventType) => {
     console.log("Event selected:", event);
-    setAllEvent(null);
     setSearch(event?.eventName);
     setEventID(event?.id);
+    setAllEvent(null);
   };
   console.log(allEvent, "allEvent");
   const getDetailEvent = async () => {
@@ -182,7 +182,7 @@ export const StartEvent = () => {
         </button>
       </form>
 
-      {allEvent && Object.keys(allEvent).length > 1 && (
+      {allEvent && allEvent.length > 0 && (
         <div
           ref={modalRef}
           className="bg-white lg:min-w-[87rem] min-w-[25rem] md:min-w-[30rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto"
@@ -207,7 +207,7 @@ export const StartEvent = () => {
       )}
 
       {/* Event Details Section */}
-      {detailEvent && (
+      {detailEvent &&  (
         <div className="bg-white shadow-lg rounded-lg p-6 mt-8 border border-gray-200 w-full">
           {/* Event Name */}
           <div className="flex items-center space-x-4 border-b pb-4">

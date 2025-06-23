@@ -78,7 +78,7 @@ export const MemberList = () => {
   const [searchData, setSearchData] = useState("");
 
   useEffect(() => {
-    document.title = "(Jamat)MemberList";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("MemberList"));
@@ -130,7 +130,7 @@ export const MemberList = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setMembers(null);
       setLoading(false);
     }
@@ -206,6 +206,7 @@ export const MemberList = () => {
           {/* Table Header */}
           <thead className="bg-sky-500 text-gray-700 lg:text-sm text-xs  ">
             <tr>
+              <th className="p-1.5 border text-white border-gray-700 ">Sr#</th>
               <th className="p-1.5 border text-white border-gray-700 ">Name</th>
               <th className="p-1 border text-white border-gray-700">
                 Father Name
@@ -222,12 +223,13 @@ export const MemberList = () => {
           </thead>
           {/* Table Body */}
 
-          {members?.map((member) => (
+          {members?.map((member, index) => (
             <tbody
               key={member?.id}
               className="text-center bg-white lg:text-sm text-xs "
             >
               <tr className="hover:bg-gray-100 transition duration-300">
+                <td className="p-1 border ">{index + 1}</td>
                 <td className="p-1 border ">{member?.fullName || "--"}</td>
                 <td className="p-1 border">{member?.fatherName || "--"}</td>
                 <td className="p-1 border">{member?.mobileNumber || "--"}</td>

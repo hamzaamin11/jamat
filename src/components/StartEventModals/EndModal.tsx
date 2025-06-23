@@ -142,9 +142,9 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm z-30">
+    <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm z-30 ">
       <div
-        className="bg-white w-[50rem] p-6 border border-gray-200 rounded-lg shadow-lg"
+        className="bg-white w-[90%] sm:w-[80%] md:w-[40rem] lg:w-[50rem] p-6 border border-gray-200 rounded-lg shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title Section */}
@@ -196,33 +196,35 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
           <span className="text-sm text-gray-800 font-semibold ">
             Participants List
           </span>
-          <table className="w-full border border-gray-300 overflow-hidden">
-            {/* Table Header */}
-            <thead className="bg-gray-300 lg:text-sm text-xs  text-gray-800 ">
-              <tr>
-                <th className="p-1 border">Name</th>
-                <th className="p-1 border">Father Name</th>
-                <th className="p-1 border">Contact Number</th>
-                <th className="p-1 border">Clock In</th>
-                <th className="p-1 border">Clock Out</th>
-                <th className="p-1 border">Present Hours</th>
-              </tr>
-            </thead>
-
-            {/* Table Body */}
-            {leaveMembers?.map((end) => (
-              <tbody className="text-center bg-white lg:text-sm text-xs ">
-                <tr className="hover:bg-gray-100 transition duration-300">
-                  <td className="p-1 border ">{end.fullName}</td>
-                  <td className="p-1 border">{end.fatherName}</td>
-                  <td className="p-1 border">{end.mobileNumber}</td>
-                  <td className="p-1 border">{end.memberClockin}</td>
-                  <td className="p-1 border">{end.memberClockout}</td>
-                  <td className="p-1 border">{end.presentHours}</td>
+          <div className="overflow-auto max-h-96 border border-gray-300 rounded">
+            <table className="w-full border border-gray-300 overflow-hidden">
+              {/* Table Header */}
+              <thead className="bg-gray-300 lg:text-sm text-xs  text-gray-800 sticky top-0 z-1 ">
+                <tr>
+                  <th className="p-1 border">Name</th>
+                  <th className="p-1 border">Father Name</th>
+                  <th className="p-1 border">Contact Number</th>
+                  <th className="p-1 border">Clock In</th>
+                  <th className="p-1 border">Clock Out</th>
+                  <th className="p-1 border">Present Hours</th>
                 </tr>
-              </tbody>
-            ))}
-          </table>
+              </thead>
+
+              {/* Table Body */}
+              {leaveMembers?.map((end) => (
+                <tbody className="text-center bg-white lg:text-sm text-xs ">
+                  <tr className="hover:bg-gray-100 transition duration-300">
+                    <td className="p-1 border ">{end.fullName}</td>
+                    <td className="p-1 border">{end.fatherName}</td>
+                    <td className="p-1 border">{end.mobileNumber}</td>
+                    <td className="p-1 border">{end.memberClockin}</td>
+                    <td className="p-1 border">{end.memberClockout}</td>
+                    <td className="p-1 border">{end.presentHours}</td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
+          </div>
         </div>
       </div>
     </div>

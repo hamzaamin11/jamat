@@ -28,6 +28,7 @@ import { authFailure } from "../redux/UserSlice";
 type AllZoneT = {
   id: number;
   zone: string;
+  district: string;
 };
 type ISOPENMODALT = "EDIT" | "DELETE" | "ADD";
 
@@ -51,7 +52,7 @@ export const Zone = () => {
   const [searchBar, setSearchBar] = useState("");
 
   useEffect(() => {
-    document.title = "(Jamat)Zone";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("ZoneList"));
@@ -109,7 +110,7 @@ export const Zone = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setAllZone(null);
       setLoading(false);
     }
@@ -168,7 +169,10 @@ export const Zone = () => {
               Sr#
             </th>
             <th className="p-1 text-sm border text-white border-gray-700">
-              Zone
+              District
+            </th>
+            <th className="p-1 text-sm border text-white border-gray-700">
+              Zone{" "}
             </th>
             <th className="p-1 text-sm border text-white border-gray-700">
               Actions
@@ -181,6 +185,7 @@ export const Zone = () => {
           <tbody key={zone?.id} className="text-center bg-white">
             <tr className="hover:bg-gray-100 transition duration-300">
               <td className="p-1 text-sm border ">{index + 1}</td>
+              <td className="p-1 text-sm border ">{"Lahore"}</td>
               <td className="p-1 text-sm border ">{zone?.zone}</td>
               <td className="p-1 text-sm border">
                 <div className="flex items-center justify-center gap-2">
@@ -193,7 +198,7 @@ export const Zone = () => {
         ))}
       </table>
       {(!allZone || allZone.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+        <span className="flex items-center justify-center border-b text-gray-700 p-2 text-xs lg:text-sm">
           No zone records available at the moment!
         </span>
       )}

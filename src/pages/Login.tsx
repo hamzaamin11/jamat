@@ -40,7 +40,7 @@ export const Login = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    document.title = "(Jamat)Login";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("login"));

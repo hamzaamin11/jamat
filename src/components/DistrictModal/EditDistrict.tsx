@@ -72,7 +72,7 @@ export const EditDistrict = ({
         <div className="mx-16 py-6">
           <InputField
             labelName="District Name*"
-            icon={<IoLocationSharp size={25} color="#DC2626" />}
+            icon={<IoLocationSharp size={25} />}
             placeHolder="Add district here..."
             handleChange={handleChange}
             name="district"

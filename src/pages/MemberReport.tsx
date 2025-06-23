@@ -17,7 +17,6 @@ import { Search } from "../components/Search/Search";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
 import { authFailure } from "../redux/UserSlice";
-import { toast } from "react-toastify";
 
 type MemberData = {
   id: number;
@@ -128,7 +127,7 @@ export const MemberReport = () => {
   };
 
   useEffect(() => {
-    document.title = "(Jamat)MemberReports";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("Membereports"));
@@ -157,7 +156,7 @@ export const MemberReport = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setMemberReports(null);
       setLoading(false);
     }
@@ -425,7 +424,7 @@ export const MemberReport = () => {
         </table>
       </div>
       {(!memberReports || memberReports.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+        <span className="flex items-center justify-center border-b text-gray-700 p-2 text-xs lg:text-sm">
           No report records available at the moment!
         </span>
       )}

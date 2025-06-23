@@ -80,7 +80,7 @@ export const EventList = () => {
   };
 
   useEffect(() => {
-    document.title = "(Jamat)EventList";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("EventList"));
@@ -140,7 +140,7 @@ export const EventList = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setGetEvent(null);
       setLoading(false);
     }
@@ -203,6 +203,9 @@ export const EventList = () => {
           <thead className="bg-sky-500 lg:text-sm text-xs ">
             <tr>
               <th className="p-1.5 border text-white border-gray-700 text-sm">
+                Sr#
+              </th>
+              <th className="p-1.5 border text-white border-gray-700 text-sm">
                 Event Name
               </th>
               <th className="p-1 border text-white border-gray-700 text-sm">
@@ -225,11 +228,12 @@ export const EventList = () => {
 
           {/* Table Body */}
           <tbody className="text-center bg-white lg:text-sm text-xs">
-            {getEvent?.map((events) => (
+            {getEvent?.map((events, index) => (
               <tr
                 key={events.id}
                 className="hover:bg-gray-100 transition duration-300"
               >
+                <td className="p-1 border text-sm">{index + 1}</td>
                 <td className="p-1 border text-sm">{events.eventName}</td>
                 <td className="p-1 border text-sm">{events.date}</td>
                 <td className="p-1 border text-sm">{events.location}</td>
@@ -257,7 +261,7 @@ export const EventList = () => {
         </table>
       </div>
       {(!getEvent || getEvent.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+        <span className="flex items-center justify-center border-b text-gray-700 p-2 text-xs lg:text-sm">
           No event records available at the moment!
         </span>
       )}

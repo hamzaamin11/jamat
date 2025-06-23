@@ -55,6 +55,11 @@ export const StartEventDetail = ({
         onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking inside
       >
         <Title setModal={setModal}>Event Detail</Title>
+        <div className="flex  items-center justify-center mt-2  ">
+          <span className="font-semibold px-1">Event Name: </span>
+
+          {detailEvent?.eventName}
+        </div>
 
         <div className="flex gap-6 items-start mt-4">
           {/* Event Image */}

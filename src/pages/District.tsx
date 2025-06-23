@@ -49,7 +49,7 @@ export const District = () => {
   const [pageNo, setPageNo] = useState(1);
 
   useEffect(() => {
-    document.title = "(Jamat)District";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("districtList"));
@@ -113,7 +113,7 @@ export const District = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setDistricts(null);
       setLoading(false);
     }
@@ -197,7 +197,7 @@ export const District = () => {
         ))}
       </table>
       {(!districts || districts.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
+        <span className="flex items-center justify-center border-b text-gray-700 p-2 text-xs lg:text-sm">
           No district records available at the moment!
         </span>
       )}

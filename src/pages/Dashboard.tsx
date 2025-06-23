@@ -7,7 +7,7 @@ export const Dashboard = () => {
   const { loader } = useAppSelector((state) => state?.NavigateSate);
   const dispatch = useAppDispatch();
   useEffect(() => {
-    document.title = "(Jamat)Dashboard";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("Dashboard"));

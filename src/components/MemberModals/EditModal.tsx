@@ -37,6 +37,7 @@ type MemberT = {
   cnic: string;
   dob: string;
   age: string;
+  memberType: string;
   profession: string;
 };
 
@@ -227,7 +228,7 @@ export const EditModal = ({
               placeHolder={"Enter your name..."}
               fieldType="text"
               name="fullName"
-              inputValue={formData?.fullName ?? ""}
+              inputValue={(formData?.fullName && formData?.fullName) ?? ""}
               handleChange={handleChange}
             />
 
@@ -237,7 +238,7 @@ export const EditModal = ({
               placeHolder={"Enter your father name..."}
               fieldType="text"
               name="fatherName"
-              inputValue={formData?.fatherName ?? ""}
+              inputValue={(formData?.fatherName && formData?.fatherName) ?? ""}
               handleChange={handleChange}
             />
 
@@ -247,7 +248,9 @@ export const EditModal = ({
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
               name="mobileNumber"
-              inputValue={formData?.mobileNumber ?? ""}
+              inputValue={
+                (formData?.mobileNumber && formData?.mobileNumber) ?? ""
+              }
               handleChange={handleChange}
             />
 
@@ -257,7 +260,7 @@ export const EditModal = ({
               placeHolder={"Enter your email ..."}
               fieldType="text"
               name="email"
-              inputValue={formData?.email ?? ""}
+              inputValue={(formData?.email && formData?.email) ?? ""}
               handleChange={handleChange}
             />
 
@@ -267,7 +270,7 @@ export const EditModal = ({
               placeHolder={"Enter your CNIC ..."}
               fieldType="text"
               name="cnic"
-              inputValue={formData?.cnic ?? ""}
+              inputValue={(formData?.cnic && formData?.cnic) ?? ""}
               handleChange={handleChange}
             />
 
@@ -277,7 +280,7 @@ export const EditModal = ({
               placeHolder={"Enter your age ..."}
               fieldType="number"
               name="age"
-              inputValue={formData?.age ?? ""}
+              inputValue={(formData?.age && formData?.age) ?? ""}
               handleChange={handleChange}
             />
 
@@ -287,7 +290,7 @@ export const EditModal = ({
               placeHolder={"Enter your date of birth ..."}
               fieldType="date"
               name="dob"
-              inputValue={formData?.dob.slice(0, 10) ?? ""}
+              inputValue={(formData?.dob && formData?.dob.slice(0, 10)) ?? ""}
               handleChange={handleChange}
             />
 
@@ -297,7 +300,7 @@ export const EditModal = ({
               placeHolder={"Enter your education..."}
               fieldType="text"
               name="education"
-              inputValue={formData?.education ?? ""}
+              inputValue={(formData?.education && formData?.education) ?? ""}
               handleChange={handleChange}
             />
 
@@ -307,7 +310,7 @@ export const EditModal = ({
               placeHolder={"Enter your profession..."}
               fieldType="text"
               name="profession"
-              inputValue={formData?.profession ?? ""}
+              inputValue={(formData?.profession && formData?.profession) ?? ""}
               handleChange={handleChange}
             />
 
@@ -315,7 +318,7 @@ export const EditModal = ({
               labelName="Zone*"
               handlerChange={handleChange}
               name="zone"
-              inputValue={formData?.zone ?? ""}
+              inputValue={(formData?.zone && formData?.zone) ?? ""}
               optionData={allZone?.map((zone) => ({
                 id: zone.id,
                 label: zone.zone,
@@ -329,7 +332,7 @@ export const EditModal = ({
               labelName="District*"
               handlerChange={handleChange}
               name="district"
-              inputValue={formData?.district ?? ""}
+              inputValue={(formData?.district && formData?.district) ?? ""}
               optionData={allDistrict?.map((district) => ({
                 id: district.id,
                 label: district.district,
@@ -361,14 +364,14 @@ export const EditModal = ({
               placeHolder={"Enter your address..."}
               fieldType="text"
               name="address"
-              inputValue={formData?.address ?? ""}
+              inputValue={(formData?.address && formData?.address) ?? ""}
               handleChange={handleChange}
             />
             <OptionField
               labelName="Member Types*"
               handlerChange={handleChange}
               name="memberType"
-              inputValue={""}
+              inputValue={(formData?.memberType && formData?.memberType) ?? ""}
               optionData={SelectMember?.map((member) => ({
                 id: member.id,
                 label: member?.label, // Common key for display

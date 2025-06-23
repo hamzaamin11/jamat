@@ -98,7 +98,7 @@ export const PresentReport = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    document.title = "(Jamat)PresentReports";
+    document.title = "Events Tracking - JI GRW";
     dispatch(navigationStart());
     setTimeout(() => {
       dispatch(navigationSuccess("PresentReports"));
@@ -144,7 +144,7 @@ export const PresentReport = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setPrintLoading(false);
     }
   };
@@ -335,7 +335,7 @@ export const PresentReport = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setMembers(null);
       setLoading(false);
     }
@@ -353,13 +353,12 @@ export const PresentReport = () => {
         }
       );
       console.log(res.data);
-      console.log("update");
       setLoading(false);
       setIndividualReports(res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
+      // toast.error(axiosError.response?.data?.message ?? "");
       setIndividualReports(null);
       setLoading(false);
     }
@@ -477,32 +476,39 @@ export const PresentReport = () => {
           </thead>
 
           {/* Table Body */}
-          {individualReports?.map((report, index) => (
-            <tbody className="text-center bg-white">
-              <tr
-                className="hover:bg-gray-100 transition duration-300"
-                key={report?.id}
-              >
-                <td className="p-1 border text-sm ">{index + 1}</td>
-                <td className="p-1 border text-sm">{report.fullName}</td>
-                <td className="p-1 border  text-sm">{report.mobileNumber}</td>
-                <td className="p-1 border text-sm">{report.eventName}</td>
-                <td className="p-1 border text-sm ">
-                  {report.date.slice(0, 10)}
+          {individualReports && individualReports.length > 0 ? (
+            individualReports.map((report, index) => (
+              <tbody key={report?.id} className="text-center bg-white">
+                <tr className="hover:bg-gray-100 transition duration-300">
+                  <td className="p-1 border text-sm">{index + 1}</td>
+                  <td className="p-1 border text-sm">{report.fullName}</td>
+                  <td className="p-1 border text-sm">{report.mobileNumber}</td>
+                  <td className="p-1 border text-sm">{report.eventName}</td>
+                  <td className="p-1 border text-sm">
+                    {report.date?.slice(0, 10)}
+                  </td>
+                  <td className="p-1 border text-sm">{report.memberClockin}</td>
+                  <td className="p-1 border text-sm">
+                    {report.memberClockout}
+                  </td>
+                  <td className="p-1 border text-sm">{report.presentHours}</td>
+                </tr>
+              </tbody>
+            ))
+          ) : (
+            <tbody>
+              <tr>
+                <td
+                  colSpan={8}
+                  className="text-center p-2 text-gray-700 text-xs lg:text-sm"
+                >
+                  No report records available at the moment!
                 </td>
-                <td className="p-1 border text-sm">{report.memberClockin}</td>
-                <td className="p-1 border text-sm">{report.memberClockout}</td>
-                <td className="p-1 border text-sm">{report.presentHours}</td>
               </tr>
             </tbody>
-          ))}
+          )}
         </table>
       </div>
-      {(!individualReports || individualReports.length === 0) && (
-        <span className="flex items-center justify-center border-b text-gray-700 p-2">
-          No report records available at the moment!
-        </span>
-      )}
 
       <div className="flex items-center justify-between">
         <ShowData />
