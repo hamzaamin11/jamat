@@ -107,8 +107,8 @@ export const AddZone = ({ setModal, handleGetallzone }: ADDZONEProps) => {
             inputValue={addZone?.district}
             optionData={getDistrict?.map((district) => ({
               id: district.id,
-              label: district?.district, // Common key for display
-              value: district.district, // Common key for value
+              label: district?.district,
+              value: district.district,
             }))}
             icon={<IoLocationSharp size={25} />}
             initial=" Please select district"

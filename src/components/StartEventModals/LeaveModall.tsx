@@ -204,63 +204,83 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Full Name:
               </span>
-              <p className="text-gray-700">{leaveMember.fullName}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.fullName && leaveMember?.fullName) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Father Name:
               </span>
-              <p className="text-gray-700">{leaveMember.fatherName}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.fatherName && leaveMember?.fatherName) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 CNIC:
               </span>
-              <p className="text-gray-700">{leaveMember.cnic}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.cnic && leaveMember?.cnic) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Contact:
               </span>
-              <p className="text-gray-700">{leaveMember.mobileNumber}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.mobileNumber && leaveMember?.mobileNumber) ||
+                  "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Email:
               </span>
-              <p className="text-gray-700">{leaveMember.email}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.email && leaveMember?.email) || "--"}{" "}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 District:
               </span>
-              <p className="text-gray-700">{leaveMember.district}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.district && leaveMember?.district) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Zone:
               </span>
-              <p className="text-gray-700">{leaveMember.zone}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.zone && leaveMember?.zone) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Current Time:
               </span>
-              <p className="text-gray-700">{leaveMember.memberClockin}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.memberClockin && leaveMember?.memberClockin) ||
+                  "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Address:
               </span>
-              <p className="text-gray-700">{leaveMember.address}</p>
+              <p className="text-gray-700">
+                {(leaveMember?.address && leaveMember?.address) || "--"}
+              </p>
             </div>
           </div>
         )}
@@ -302,13 +322,23 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
                 <tbody className="text-center bg-white lg:text-sm text-xs">
                   <tr className="hover:bg-gray-100 transition duration-300">
                     <td className="p-1 border ">
-                      {list?.fullName.slice(0, 7)}
+                      {(list?.fullName && list?.fullName.slice(0, 7)) || "--"}
                     </td>
-                    <td className="p-1 border">{list?.fatherName}</td>
-                    <td className="p-1 border">{list?.mobileNumber}</td>
-                    <td className="p-1 border">{list?.memberClockin}</td>
-                    <td className="p-1 border">{list?.memberClockout}</td>
-                    <td className="p-1 border">{list?.presentHours}</td>
+                    <td className="p-1 border">
+                      {(list?.fatherName && list?.fatherName) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(list?.mobileNumber && list?.mobileNumber) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(list?.memberClockin && list?.memberClockin) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(list?.memberClockout && list?.memberClockout) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(list?.presentHours && list?.presentHours) || "--"}
+                    </td>
                   </tr>
                 </tbody>
               ))}

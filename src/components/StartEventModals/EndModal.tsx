@@ -91,7 +91,6 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -107,7 +106,6 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -156,13 +154,18 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
             <span className="text-sm text-gray-800 font-semibold  w-24">
               Event Name:
             </span>
-            <p className="text-gray-700 text-sm">{eventData?.eventName}</p>
+            <p className="text-gray-700 text-sm">
+              {eventData?.eventName && eventData?.eventName}
+            </p>
           </div>
           <div className="flex items-center space-x-3">
             <span className="text-sm text-gray-800 font-semibold w-24">
               Start Time:
             </span>
-            <p className="text-gray-700 text-sm"> {eventData?.startTime}</p>
+            <p className="text-gray-700 text-sm">
+              {" "}
+              {eventData?.startTime && eventData?.startTime}
+            </p>
           </div>
         </div>
         {/* Search Bar */}
@@ -214,16 +217,33 @@ export const EndModal = ({ updateModal, eventID }: JOINPROPS) => {
               {leaveMembers?.map((end) => (
                 <tbody className="text-center bg-white lg:text-sm text-xs ">
                   <tr className="hover:bg-gray-100 transition duration-300">
-                    <td className="p-1 border ">{end.fullName}</td>
-                    <td className="p-1 border">{end.fatherName}</td>
-                    <td className="p-1 border">{end.mobileNumber}</td>
-                    <td className="p-1 border">{end.memberClockin}</td>
-                    <td className="p-1 border">{end.memberClockout}</td>
-                    <td className="p-1 border">{end.presentHours}</td>
+                    <td className="p-1 border ">
+                      {(end?.fullName && end?.fullName) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(end?.fatherName && end?.fatherName) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(end?.mobileNumber && end?.mobileNumber) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(end?.memberClockin && end?.memberClockin) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {end?.memberClockout && end?.memberClockout}
+                    </td>
+                    <td className="p-1 border">
+                      {(end?.presentHours && end?.presentHours) || "--"}
+                    </td>
                   </tr>
                 </tbody>
               ))}
             </table>
+            {(!leaveMembers || leaveMembers.length === 0) && (
+              <span className="flex items-center justify-center border-b text-gray-700 p-2 lg:text-sm text-xs">
+                No member records available at the moment!
+              </span>
+            )}
           </div>
         </div>
       </div>

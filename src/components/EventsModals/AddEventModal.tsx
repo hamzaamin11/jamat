@@ -158,7 +158,7 @@ export const AddEventModal = ({
               handleChange={handleChange}
             />
             <InputField
-              labelName="Location*"
+              labelName="Location"
               icon={<IoLocationSharp size={25} />} // Red
               placeHolder={"Enter your address..."}
               fieldType="text"
@@ -186,7 +186,7 @@ export const AddEventModal = ({
 
             <div className="">
               <TextArea
-                labelName="Description*"
+                labelName="Description"
                 icon={<MdOutlineDescription size={25} />} // Yellow
                 placeHolder={"Enter your description..."}
                 fieldType="text"
@@ -197,7 +197,7 @@ export const AddEventModal = ({
             </div>
           </div>
           <h2 className="mx-3 text-lg font-semibold underline pt-3">
-            Focal Person Information*
+            Focal Person Information
           </h2>
           <div className="grid lg:grid-cols-3 gap-4  mx-3">
             <InputField
@@ -210,7 +210,7 @@ export const AddEventModal = ({
               handleChange={handleChange}
             />
             <InputField
-              labelName="Phone Number*"
+              labelName="Phone Number"
               icon={<MdOutlineSmartphone size={25} />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
@@ -219,7 +219,7 @@ export const AddEventModal = ({
               handleChange={handleChange}
             />
             <InputField
-              labelName="Email*"
+              labelName="Email"
               icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
@@ -229,11 +229,11 @@ export const AddEventModal = ({
             />
           </div>
           <h2 className="mx-3 text-lg font-semibold underline pt-3">
-            Contact Person Information*
+            Contact Person Information
           </h2>
           <div className="grid lg:grid-cols-3 gap-4  mx-3">
             <InputField
-              labelName="Full Name*"
+              labelName="Full Name"
               icon={<FaUser size={25} />}
               placeHolder={"Enter your name..."}
               fieldType="text"
@@ -242,7 +242,7 @@ export const AddEventModal = ({
               handleChange={handleChange}
             />
             <InputField
-              labelName="Phone Number*"
+              labelName="Phone Number"
               icon={<MdOutlineSmartphone size={25} />}
               placeHolder={"Enter your phone number ..."}
               fieldType="number"
@@ -251,7 +251,7 @@ export const AddEventModal = ({
               handleChange={handleChange}
             />
             <InputField
-              labelName="Email*"
+              labelName="Email"
               icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"

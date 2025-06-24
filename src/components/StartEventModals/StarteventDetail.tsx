@@ -38,12 +38,14 @@ export const StartEventDetail = ({
 }: StartEventProps) => {
   const [isOpenModal, setIsOpenModal] = useState<EVENTOPENT | "">("");
 
-  console.log(detailEvent, "eventDetail");
+  console.log("  <<<<<<<<<<<<<<<=eventDetail", detailEvent);
 
   const handleToggleViewModal = (active: EVENTOPENT) => {
     // Prevents event bubbling
     setIsOpenModal((prev) => (prev === active ? "" : active));
   };
+
+  console.log("image", detailEvent?.image);
 
   return (
     <div
@@ -58,23 +60,23 @@ export const StartEventDetail = ({
         <div className="flex  items-center justify-center mt-2  ">
           <span className="font-semibold px-1">Event Name: </span>
 
-          {detailEvent?.eventName}
+          {detailEvent?.eventName && detailEvent?.eventName}
         </div>
 
         <div className="flex gap-6 items-start mt-4">
           {/* Event Image */}
           <div className="p-2 border rounded">
             <img
-              src={detailEvent?.image || image}
-              className=" bg-sky-500  border border-gray-300 object-cover lg:h-64 lg:w-full h-24 w-24 "
-              alt="Event"
+              src={(detailEvent?.image && detailEvent?.image) || image}
+              className=" bg-sky-500  border border-gray-300 object-cover lg:h-52 lg:w-full h-24 w-24 "
+              alt="Event Image"
             />
           </div>
 
           {/* Event Details */}
           <div className="w-full">
             <p className="text-sm text-gray-700 leading-relaxed h-44 overflow-hidden">
-              {detailEvent?.description}
+              {(detailEvent?.description && detailEvent?.description) || "--"}
             </p>
             {/* <p className="text-blue-500 font-medium mt-2">
               Join us and be part of the next big leap in technology!

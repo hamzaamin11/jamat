@@ -57,8 +57,8 @@ export const StartEvent = () => {
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  console.log(allEvent, "<=sabd");
-  console.log(eventID);
+  console.log("detail event di", detailEvent);
+
   const [isOpenModal, setIsOpenModal] = useState<STARTEVENTProps | "">("");
   const handleToggleViewModal = (active: STARTEVENTProps) => {
     setIsOpenModal((prev) => (prev === active ? "" : active));
@@ -78,7 +78,7 @@ export const StartEvent = () => {
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        setAllEvent(null); // Close the dropdown/modal
+        setAllEvent(null);
       }
     };
 
@@ -100,7 +100,7 @@ export const StartEvent = () => {
         },
       });
 
-      console.log(res.data);
+      console.log("=??????????????????????????????", res.data);
       setAllEvent(res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -109,12 +109,17 @@ export const StartEvent = () => {
     }
   };
 
+  console.log("All k all event", allEvent);
+
   const handleSelectEvent = (event: EventType) => {
     console.log("Event selected:", event);
-    setSearch(event?.eventName);
+    // setSearch(event?.eventName);
+    setDetailEvent(event);
     setEventID(event?.id);
     setAllEvent(null);
+    console.log("click me eventttt", event);
   };
+
   console.log(allEvent, "allEvent");
   const getDetailEvent = async () => {
     try {
@@ -152,13 +157,15 @@ export const StartEvent = () => {
     }
   };
   useEffect(() => {
-    if (search.length) {
+    if (search.length > 0) {
       handleSearchbar();
       getDetailEvent();
     }
   }, [search]);
 
   if (loader) return <Loading />;
+
+  console.log(" =>>>>>>>>>", detailEvent);
 
   return (
     <div
@@ -182,7 +189,7 @@ export const StartEvent = () => {
         </button>
       </form>
 
-      {allEvent && allEvent.length > 0 && (
+      {allEvent && allEvent?.length > 0 && (
         <div
           ref={modalRef}
           className="bg-white lg:min-w-[87rem] min-w-[25rem] md:min-w-[30rem] max-h-56 p-4 rounded-lg shadow-md absolute z-50 overflow-hidden overflow-y-auto"
@@ -207,7 +214,7 @@ export const StartEvent = () => {
       )}
 
       {/* Event Details Section */}
-      {detailEvent &&  (
+      {detailEvent && (
         <div className="bg-white shadow-lg rounded-lg p-6 mt-8 border border-gray-200 w-full">
           {/* Event Name */}
           <div className="flex items-center space-x-4 border-b pb-4">

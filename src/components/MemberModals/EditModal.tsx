@@ -37,7 +37,7 @@ type MemberT = {
   cnic: string;
   dob: string;
   age: string;
-  memberType: string;
+  // memberType: string;
   profession: string;
 };
 
@@ -133,23 +133,6 @@ export const EditModal = ({
       data.append("image", updateImage);
     }
 
-    if (
-      !formData?.address.trim() ||
-      // !formData?.age.trim() ||
-      !formData?.cnic.trim() ||
-      !formData?.district.trim() ||
-      !formData?.dob.trim() ||
-      !formData?.education.trim() ||
-      !formData?.email.trim() ||
-      !formData?.fatherName.trim() ||
-      !formData?.fullName.trim() ||
-      !formData?.mobileNumber.trim() ||
-      !formData?.profession.trim() ||
-      !formData?.zone.trim() ||
-      !updateImage
-    ) {
-      return toast.error("Required field must be filled");
-    }
     setLoading(true);
     try {
       const res = await axios.put(
@@ -233,7 +216,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Father Name*"
+              labelName="Father Name"
               icon={<FaUserTie size={25} />}
               placeHolder={"Enter your father name..."}
               fieldType="text"
@@ -255,7 +238,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Email*"
+              labelName="Email"
               icon={<IoMailSharp size={25} />}
               placeHolder={"Enter your email ..."}
               fieldType="text"
@@ -265,7 +248,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="CNIC*"
+              labelName="CNIC"
               icon={<FaRegIdCard size={25} />}
               placeHolder={"Enter your CNIC ..."}
               fieldType="text"
@@ -275,7 +258,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Age*"
+              labelName="Age"
               icon={<CiCalculator2 size={25} />}
               placeHolder={"Enter your age ..."}
               fieldType="number"
@@ -285,7 +268,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Date of Birth*"
+              labelName="Date of Birth"
               icon={<FaCalendarDays size={25} />}
               placeHolder={"Enter your date of birth ..."}
               fieldType="date"
@@ -295,7 +278,7 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Education*"
+              labelName="Education"
               icon={<PiStudent size={25} />}
               placeHolder={"Enter your education..."}
               fieldType="text"
@@ -305,27 +288,13 @@ export const EditModal = ({
             />
 
             <InputField
-              labelName="Professional*"
+              labelName="Professional"
               icon={<FaBriefcase size={25} />}
               placeHolder={"Enter your profession..."}
               fieldType="text"
               name="profession"
               inputValue={(formData?.profession && formData?.profession) ?? ""}
               handleChange={handleChange}
-            />
-
-            <OptionField
-              labelName="Zone*"
-              handlerChange={handleChange}
-              name="zone"
-              inputValue={(formData?.zone && formData?.zone) ?? ""}
-              optionData={allZone?.map((zone) => ({
-                id: zone.id,
-                label: zone.zone,
-                value: zone.zone,
-              }))}
-              icon={<FaBriefcase size={25} />}
-              initial="Please select zone"
             />
 
             <OptionField
@@ -340,6 +309,20 @@ export const EditModal = ({
               }))}
               icon={<IoLocationSharp size={25} />}
               initial="Please select district"
+            />
+
+            <OptionField
+              labelName="Zone*"
+              handlerChange={handleChange}
+              name="zone"
+              inputValue={(formData?.zone && formData?.zone) ?? ""}
+              optionData={allZone?.map((zone) => ({
+                id: zone.id,
+                label: zone.zone,
+                value: zone.zone,
+              }))}
+              icon={<FaBriefcase size={25} />}
+              initial="Please select zone"
             />
 
             <div className="flex flex-col  mt-1 ">
@@ -359,7 +342,7 @@ export const EditModal = ({
             </div>
 
             <InputField
-              labelName="Address*"
+              labelName="Address"
               icon={<FaAddressBook size={25} color="#495057" />}
               placeHolder={"Enter your address..."}
               fieldType="text"
@@ -371,7 +354,7 @@ export const EditModal = ({
               labelName="Member Types*"
               handlerChange={handleChange}
               name="memberType"
-              inputValue={(formData?.memberType && formData?.memberType) ?? ""}
+              inputValue={""}
               optionData={SelectMember?.map((member) => ({
                 id: member.id,
                 label: member?.label, // Common key for display

@@ -188,28 +188,36 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Full Name:
               </span>
-              <p className="text-gray-700">{addMember?.fullName}</p>
+              <p className="text-gray-700">
+                {(addMember?.fullName && addMember?.fullName) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Father Name:
               </span>
-              <p className="text-gray-700">{addMember?.fatherName}</p>
+              <p className="text-gray-700">
+                {(addMember?.fatherName && addMember?.fatherName) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 CNIC:
               </span>
-              <p className="text-gray-700">{addMember?.cnic}</p>
+              <p className="text-gray-700">
+                {(addMember?.cnic && addMember?.cnic) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Contact:
               </span>
-              <p className="text-gray-700">{addMember?.mobileNumber}</p>
+              <p className="text-gray-700">
+                {(addMember?.mobileNumber && addMember?.mobileNumber) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
@@ -217,7 +225,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                 Email:
               </span>
               <p className="text-gray-700 overflow-hidden break-words w-48 ">
-                {addMember?.email}
+                {(addMember?.email && addMember?.email) || "--"}
               </p>
             </div>
 
@@ -225,21 +233,27 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
               <span className="text-sm text-gray-800 font-semibold w-32">
                 District:
               </span>
-              <p className="text-gray-700">{addMember?.district}</p>
+              <p className="text-gray-700">
+                {(addMember?.district && addMember?.district) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Zone:
               </span>
-              <p className="text-gray-700">{addMember?.zone}</p>
+              <p className="text-gray-700">
+                {(addMember?.zone && addMember?.zone) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center">
               <span className="text-sm text-gray-800 font-semibold w-32">
                 Current Time:
               </span>
-              <p className="text-gray-700">{addMember?.currentTime}</p>
+              <p className="text-gray-700">
+                {(addMember?.currentTime && addMember?.currentTime) || "--"}
+              </p>
             </div>
 
             <div className="flex items-center ">
@@ -247,7 +261,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                 Address:
               </span>
               <p className="text-gray-700 w-52 overflow-hidden break-words">
-                {addMember?.address}
+                {(addMember?.address && addMember?.address) || "--"}
               </p>
             </div>
           </div>
@@ -293,11 +307,19 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                     className="hover:bg-gray-100 transition duration-300"
                     key={member.id}
                   >
-                    <td className="p-1 border ">{member?.fullName}</td>
-                    <td className="p-1 border">{member?.fatherName}</td>
-                    <td className="p-1 border">{member?.mobileNumber}</td>
+                    <td className="p-1 border ">
+                      {(member?.fullName && member?.fullName) || "--"}
+                    </td>
                     <td className="p-1 border">
-                      {member?.memberClockin?.slice(0, 5)}
+                      {(member?.fatherName && member?.fatherName) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(member?.mobileNumber && member?.mobileNumber) || "--"}
+                    </td>
+                    <td className="p-1 border">
+                      {(member?.memberClockin &&
+                        member?.memberClockin?.slice(0, 5)) ||
+                        "--"}
                     </td>
                     <td className="p-1 border">--</td>
                     <td className="p-1 border">--</td>

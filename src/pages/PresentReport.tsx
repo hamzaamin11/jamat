@@ -24,7 +24,7 @@ import { Search } from "../components/Search/Search";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
 import { authFailure } from "../redux/UserSlice";
-import { toast } from "react-toastify";
+
 import { ClipLoader } from "react-spinners";
 import { FaUser } from "react-icons/fa";
 
