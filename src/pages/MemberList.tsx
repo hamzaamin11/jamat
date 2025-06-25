@@ -48,6 +48,7 @@ type MemberT = {
   age: string;
   profession: string;
   image: string;
+  memberType: string;
 };
 
 type ISOPENMODALT = "EDIT" | "DELETE" | "VIEW";

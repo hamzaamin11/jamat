@@ -37,7 +37,7 @@ type MemberT = {
   cnic: string;
   dob: string;
   age: string;
-  // memberType: string;
+  memberType: string;
   profession: string;
 };
 
@@ -53,22 +53,22 @@ type getDestrictT = {
 
 const SelectMember = [
   {
-    id: 1,
+    id: "rukan",
     label: "Rukan",
     value: "rukan",
   },
   {
-    id: 2,
+    id: "umeedwar",
     label: "Umeedwar Rukan",
     value: "umeedwar",
   },
   {
-    id: 3,
+    id: "karkun",
     label: "Karkun",
     value: "karkun",
   },
   {
-    id: 4,
+    id: "hami",
     label: "Hami",
     value: "hami",
   },
@@ -95,6 +95,10 @@ export const EditModal = ({
   const [allDistrict, setAllDistrict] = useState<getDestrictT[] | null>(null);
 
   const [formData, setFormData] = useState(viewDetail);
+
+  const [editData, setEditData] = useState<MemberT | null>(null);
+
+  console.log(formData?.id, "iddddddddddddddddddd");
 
   const [updateImage, setUpdateImage] = useState<File | null>(null);
 
@@ -129,6 +133,7 @@ export const EditModal = ({
     data.append("profession", formData?.profession ?? "");
     data.append("district", formData?.district ?? "");
     data.append("zone", formData?.zone ?? "");
+    data.append("memberType", formData?.memberType ?? "");
     if (updateImage) {
       data.append("image", updateImage);
     }
@@ -158,19 +163,33 @@ export const EditModal = ({
     }
   };
 
+  const handleEditData = async (id: number) => {
+    try {
+      const res = await axios.get(`${BASE_URL}/user/editMember/${id}`, {
+        headers: { Authorization: token },
+      });
+      console.log(res.data);
+      setEditData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleGetZone = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getZone`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getZoneById/${formData?.district}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       setAllzone(res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
@@ -186,14 +205,21 @@ export const EditModal = ({
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
     }
   };
 
   useEffect(() => {
-    handleGetZone();
     handleGetDistrict();
-  }, []);
+    handleGetZone();
+  }, [formData?.district]);
+
+  useEffect(() => {
+    if (formData?.id) {
+      handleEditData(formData.id);
+    }
+  }, [formData?.id]);
+
+  console.log("=>>>>>>>>>>", editData?.zone);
 
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10 ">
@@ -211,7 +237,7 @@ export const EditModal = ({
               placeHolder={"Enter your name..."}
               fieldType="text"
               name="fullName"
-              inputValue={(formData?.fullName && formData?.fullName) ?? ""}
+              inputValue={(editData?.fullName && editData?.fullName) || "--"}
               handleChange={handleChange}
             />
 
@@ -221,7 +247,9 @@ export const EditModal = ({
               placeHolder={"Enter your father name..."}
               fieldType="text"
               name="fatherName"
-              inputValue={(formData?.fatherName && formData?.fatherName) ?? ""}
+              inputValue={
+                (editData?.fatherName && editData?.fatherName) || "--"
+              }
               handleChange={handleChange}
             />
 
@@ -232,7 +260,7 @@ export const EditModal = ({
               fieldType="number"
               name="mobileNumber"
               inputValue={
-                (formData?.mobileNumber && formData?.mobileNumber) ?? ""
+                (editData?.mobileNumber && editData?.mobileNumber) || "--"
               }
               handleChange={handleChange}
             />
@@ -301,7 +329,7 @@ export const EditModal = ({
               labelName="District*"
               handlerChange={handleChange}
               name="district"
-              inputValue={(formData?.district && formData?.district) ?? ""}
+              inputValue={(editData?.district && editData?.district) ?? ""}
               optionData={allDistrict?.map((district) => ({
                 id: district.id,
                 label: district.district,
@@ -315,7 +343,7 @@ export const EditModal = ({
               labelName="Zone*"
               handlerChange={handleChange}
               name="zone"
-              inputValue={(formData?.zone && formData?.zone) ?? ""}
+              inputValue={(editData?.zone && editData?.zone) ?? ""}
               optionData={allZone?.map((zone) => ({
                 id: zone.id,
                 label: zone.zone,
@@ -354,7 +382,7 @@ export const EditModal = ({
               labelName="Member Types*"
               handlerChange={handleChange}
               name="memberType"
-              inputValue={""}
+              inputValue={(formData?.memberType && formData?.memberType) ?? ""}
               optionData={SelectMember?.map((member) => ({
                 id: member.id,
                 label: member?.label, // Common key for display

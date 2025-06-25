@@ -40,7 +40,11 @@ export const AddZone = ({ setModal, handleGetallzone }: ADDZONEProps) => {
 
   const [addZone, setAddZone] = useState(initialState);
 
+  console.log("Zone By owais biro =>", addZone);
+
   const [getDistrict, setGetDistrict] = useState<ALLDISTRICTT[] | null>(null);
+
+  console.log(getDistrict, "=<district=>");
 
   const [btnLoader, setBtnLoader] = useState(false);
 

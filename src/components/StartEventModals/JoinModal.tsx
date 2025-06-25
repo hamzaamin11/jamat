@@ -24,7 +24,7 @@ type MemberT = {
   education: string;
   email: string;
   cnic: string;
-  district: string;
+  districtName: string;
   age: number;
   profession: string;
   currentTime: string;
@@ -234,7 +234,7 @@ export const JoinModal = ({ updateModal, eventID }: JOINPROPS) => {
                 District:
               </span>
               <p className="text-gray-700">
-                {(addMember?.district && addMember?.district) || "--"}
+                {(addMember?.districtName && addMember?.districtName) || "--"}
               </p>
             </div>
 

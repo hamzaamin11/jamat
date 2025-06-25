@@ -28,7 +28,7 @@ import { authFailure } from "../redux/UserSlice";
 type AllZoneT = {
   id: number;
   zone: string;
-  district: string;
+  districtName: string;
 };
 type ISOPENMODALT = "EDIT" | "DELETE" | "ADD";
 
@@ -185,7 +185,7 @@ export const Zone = () => {
           <tbody key={zone?.id} className="text-center bg-white">
             <tr className="hover:bg-gray-100 transition duration-300">
               <td className="p-1 text-sm border ">{index + 1}</td>
-              <td className="p-1 text-sm border ">{"Lahore"}</td>
+              <td className="p-1 text-sm border ">{zone?.districtName}</td>
               <td className="p-1 text-sm border ">{zone?.zone}</td>
               <td className="p-1 text-sm border">
                 <div className="flex items-center justify-center gap-2">

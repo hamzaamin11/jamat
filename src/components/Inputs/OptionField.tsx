@@ -1,4 +1,4 @@
-type option = { id: number; label: string; value: string };
+type option = { id: number | string; label: string; value: string };
 
 type OptionFieldProps = {
   labelName: string;

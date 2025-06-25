@@ -14,7 +14,7 @@ type MemberT = {
   cnic: string;
   dob: string;
   age: string;
-  // memberType: string;
+  memberType: string;
   profession: string;
   image: string;
 };
@@ -131,7 +131,9 @@ export const ViewUserDetailModal = ({ setModal, viewDetail }: ModalTProps) => {
               <span className="text-xs font-semibold text-gray-700  w-24">
                 Member Type:
               </span>
-              <div className="text-gray-600 text-xs pl-4 ">{"--"}</div>
+              <div className="text-gray-600 text-xs pl-4 ">
+                {(viewDetail?.memberType && viewDetail?.memberType) || "--"}
+              </div>
             </div>
 
             <div className="flex  items-center text-start py-1 ">

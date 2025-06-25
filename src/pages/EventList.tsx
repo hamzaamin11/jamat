@@ -234,9 +234,15 @@ export const EventList = () => {
                 className="hover:bg-gray-100 transition duration-300"
               >
                 <td className="p-1 border text-sm">{index + 1}</td>
-                <td className="p-1 border text-sm">{events.eventName}</td>
-                <td className="p-1 border text-sm">{events.date}</td>
-                <td className="p-1 border text-sm">{events.location}</td>
+                <td className="p-1 border text-sm">
+                  {(events.eventName && events.eventName) || "--"}
+                </td>
+                <td className="p-1 border text-sm">
+                  {(events.date && events?.date) || "--"}
+                </td>
+                <td className="p-1 border text-sm">
+                  {(events.location && events?.location) || "--"}
+                </td>
                 <td className="p-1 border text-sm">
                   {(events.startTime === "00:00:00" && "--") ||
                     events.startTime}

@@ -23,7 +23,7 @@ type MemberAttendanceT = {
   profession: string;
   education: string;
   zone: string;
-  district: string;
+  districtName: string;
   eventId: number;
   eventStatus: string; // "Leave", etc.
   joinStatus: string; // "Y" | "N"
@@ -251,7 +251,8 @@ export const LeaveModal = ({ updateModal, eventID }: JOINPROPS) => {
                 District:
               </span>
               <p className="text-gray-700">
-                {(leaveMember?.district && leaveMember?.district) || "--"}
+                {(leaveMember?.districtName && leaveMember?.districtName) ||
+                  "--"}
               </p>
             </div>
 

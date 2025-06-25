@@ -1,5 +1,5 @@
 import { Title } from "../title/Title";
-import image from "../../assets/expo.jpg";
+import image from "../../assets/jamat.png";
 import { useState } from "react";
 import { JoinModal } from "./JoinModal";
 import { LeaveModal } from "./LeaveModall";

@@ -18,7 +18,7 @@ import { authFailure } from "../../redux/UserSlice";
 type UPDATEZONET = {
   id: number;
   zone: string;
-  district: string;
+  districtName: string;
 };
 
 type ALLDISTRICTT = {
@@ -104,7 +104,7 @@ export const EditZone = ({
             labelName="District*"
             handlerChange={handleChange}
             name="district"
-            inputValue={zone?.district ?? ""}
+            inputValue={zone?.districtName ?? ""}
             optionData={getDistrict?.map((district) => ({
               id: district.id,
               label: district?.district, // Common key for display

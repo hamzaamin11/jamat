@@ -39,13 +39,13 @@ type IndividualType = {
   fullName: string;
   mobileNumber: string; // e.g., "+923001234567"
   eventName: string;
-  date: string; // ISO format e.g., "2015-11-21T19:00:00.000Z"
+  eventDate: string; // ISO format e.g., "2015-11-21T19:00:00.000Z"
 };
 
 type EventType = {
   id: number;
   eventName: string;
-  currentDate: string;
+  eventDate: string;
   location: string;
   focalPersonName: string;
   focalPersonNumber: string;
@@ -83,6 +83,7 @@ type MemberT = {
 
 const initialState = {
   eventName: "",
+  memberName: "",
   dateFrom: "",
   dateTo: "",
 };
@@ -107,6 +108,8 @@ export const PresentReport = () => {
   const token = currentUser?.token;
 
   const [formData, setFormData] = useState(initialState);
+
+  console.log(formData);
 
   const [allEvents, setAllEvents] = useState<EventType[] | null>(null);
 
@@ -345,7 +348,7 @@ export const PresentReport = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/individualMemberReport?page=${pageNo}&eventName=${formData.eventName}&from=${formData.dateFrom}&to=${formData.dateTo}`,
+        `${BASE_URL}/user/individualMemberReport?page=${pageNo}&eventName=${formData.eventName}&memberName=${formData.memberName}&from=${formData.dateFrom}&to=${formData.dateTo}`,
         {
           headers: {
             Authorization: token,
@@ -378,7 +381,13 @@ export const PresentReport = () => {
 
   useEffect(() => {
     getIndividualMembersReports();
-  }, [pageNo, formData.eventName, formData.dateTo, formData.dateFrom]);
+  }, [
+    pageNo,
+    formData.eventName,
+    formData.dateTo,
+    formData.dateFrom,
+    formData.memberName,
+  ]);
   if (loading) return <Loading />;
   return (
     <div className="text-gray-700 px-3 w-full">
@@ -404,8 +413,8 @@ export const PresentReport = () => {
         <OptionField
           labelName="Member Name*"
           handlerChange={handleChange}
-          name="eventName"
-          inputValue={formData.eventName}
+          name="memberName"
+          inputValue={formData.memberName}
           optionData={members?.map((member) => ({
             id: member?.id,
             label: member?.fullName,
@@ -481,17 +490,27 @@ export const PresentReport = () => {
               <tbody key={report?.id} className="text-center bg-white">
                 <tr className="hover:bg-gray-100 transition duration-300">
                   <td className="p-1 border text-sm">{index + 1}</td>
-                  <td className="p-1 border text-sm">{report.fullName}</td>
-                  <td className="p-1 border text-sm">{report.mobileNumber}</td>
-                  <td className="p-1 border text-sm">{report.eventName}</td>
                   <td className="p-1 border text-sm">
-                    {report.date?.slice(0, 10)}
+                    {(report?.fullName && report?.fullName) || "--"}
                   </td>
-                  <td className="p-1 border text-sm">{report.memberClockin}</td>
                   <td className="p-1 border text-sm">
-                    {report.memberClockout}
+                    {(report?.mobileNumber && report?.mobileNumber) || "--"}
                   </td>
-                  <td className="p-1 border text-sm">{report.presentHours}</td>
+                  <td className="p-1 border text-sm">
+                    {(report?.eventName && report?.eventName) || "--"}
+                  </td>
+                  <td className="p-1 border text-sm">
+                    {report.eventDate?.slice(0, 10)}
+                  </td>
+                  <td className="p-1 border text-sm">
+                    {(report?.memberClockin && report?.memberClockin) || "--"}
+                  </td>
+                  <td className="p-1 border text-sm">
+                    {(report?.memberClockout && report?.memberClockout) || "--"}
+                  </td>
+                  <td className="p-1 border text-sm">
+                    {(report?.presentHours && report?.presentHours) || "--"}
+                  </td>
                 </tr>
               </tbody>
             ))

@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 type EventType = {
   id: number;
   eventName: string;
-  date: string;
+  eventDate: string;
   location: string;
   focalPersonName: string;
   focalPersonNumber: string;
@@ -422,14 +422,27 @@ export const EventReport = () => {
                 key={event.id}
               >
                 <td className="p-1 text-sm  border ">{index + 1}</td>
-                <td className="p-1 text-sm  border">{event.date}</td>
-                <td className="p-1 text-sm  border ">{event.date}</td>
-                <td className="p-1 text-sm  border">{event.eventType}</td>
-                <td className="p-1 text-sm  border ">{event.startTime}</td>
-                <td className="p-1 text-sm  border">{event.endTime}</td>
-                <td className="p-1 text-sm  border">{event.focalPersonName}</td>
                 <td className="p-1 text-sm  border">
-                  {event.focalPersonNumber}{" "}
+                  {(event.eventDate && event.eventDate) || "--"}
+                </td>
+                <td className="p-1 text-sm  border ">
+                  {(event?.eventName && event?.eventName) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(event?.eventType && event?.eventType) || ""}
+                </td>
+                <td className="p-1 text-sm  border ">
+                  {(event?.startTime && event?.startTime) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(event?.endTime && event?.endTime) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(event?.focalPersonName && event?.focalPersonName) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(event?.focalPersonNumber && event?.focalPersonNumber) ||
+                    "--"}
                 </td>
               </tr>
             </tbody>

@@ -51,22 +51,22 @@ type ALLDISTRICTT = {
 
 const SelectMember = [
   {
-    id: 1,
+    id: "rukan",
     label: "Rukan",
     value: "rukan",
   },
   {
-    id: 2,
+    id: "umeedwar",
     label: "Umeedwar Rukan",
     value: "umeedwar",
   },
   {
-    id: 3,
+    id: "karkun",
     label: "Karkun",
     value: "karkun",
   },
   {
-    id: 4,
+    id: "hami",
     label: "Hami",
     value: "hami",
   },
@@ -78,8 +78,6 @@ export const AddMember = () => {
   const { loader } = useAppSelector((state) => state?.NavigateSate);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  console.log(inputRef, "inputRef");
 
   const dispatch = useAppDispatch();
 
@@ -123,11 +121,14 @@ export const AddMember = () => {
 
   const handleGetzone = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/user/getZone`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/user/getZoneById/${formData.district}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       setGetallzone(res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
@@ -180,6 +181,7 @@ export const AddMember = () => {
     data.append("profession", formData.profession);
     data.append("district", formData.district);
     data.append("zone", formData.zone);
+    data.append("memberType", formData.memberType);
     if (updateImage) {
       data.append("image", updateImage);
     }
@@ -209,9 +211,11 @@ export const AddMember = () => {
     }
   };
   useEffect(() => {
-    handleGetzone();
+    if (formData?.district) {
+      handleGetzone();
+    }
     handleGetdistrict();
-  }, []);
+  }, [formData?.district]);
 
   if (loader) return <Loading />;
 

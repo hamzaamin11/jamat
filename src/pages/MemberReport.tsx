@@ -28,7 +28,7 @@ type MemberData = {
   education: string;
   email: string;
   cnic: string;
-  district: string;
+  districtName: string;
   age: number;
   profession: string;
   dob: string;
@@ -412,12 +412,24 @@ export const MemberReport = () => {
             >
               <tr className="hover:bg-gray-100 transition duration-300">
                 <td className="p-1 text-sm  border ">{index + 1}</td>
-                <td className="p-1 text-sm  border">{member?.fullName}</td>
-                <td className="p-1 text-sm  border">{member?.fatherName}</td>
-                <td className="p-1 text-sm  border ">{member?.mobileNumber}</td>
-                <td className="p-1 text-sm  border ">{member?.email}</td>
-                <td className="p-1 text-sm  border">{member?.district}</td>
-                <td className="p-1 text-sm  border">{member?.zone}</td>
+                <td className="p-1 text-sm  border">
+                  {(member?.fullName && member?.fullName) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(member?.fatherName && member?.fatherName) || "--"}
+                </td>
+                <td className="p-1 text-sm  border ">
+                  {(member?.mobileNumber && member?.mobileNumber) || "--"}
+                </td>
+                <td className="p-1 text-sm  border ">
+                  {(member?.email && member?.email) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(member?.districtName && member?.districtName) || "--"}
+                </td>
+                <td className="p-1 text-sm  border">
+                  {(member?.zone && member?.zone) ?? "--"}
+                </td>
               </tr>
             </tbody>
           ))}
