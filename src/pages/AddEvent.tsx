@@ -29,9 +29,12 @@ import { Loading } from "../components/NavigationLoader/Loading";
 import { ClipLoader } from "react-spinners";
 import { authFailure } from "../redux/UserSlice";
 
+const currentDate =
+  new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
+
 const initialState = {
   eventName: "",
-  date: "",
+  date: currentDate,
   location: "",
   focalPersonName: "",
   focalPersonNumber: "",
