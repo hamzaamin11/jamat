@@ -28,7 +28,7 @@ import { useAppDispatch, useAppSelector } from "../redux/Hooks";
 
 import { toast } from "react-toastify";
 
-import { AddEventModal } from "../components/EventsModals/AddEventModal";
+import { UpdateEventModal } from "../components/EventsModals/UpdateEventModal";
 import { navigationStart, navigationSuccess } from "../redux/NavigationSlice";
 import { Loading } from "../components/NavigationLoader/Loading";
 import { authFailure } from "../redux/UserSlice";
@@ -49,7 +49,7 @@ type GETEVENTT = {
   startTime: string;
   endTime: string;
   presentTime: string;
-  eventType: "oneTimeEvent | recursiveEvent";
+  eventType: "oneTimeEvent" | "recursiveEvent" | undefined;
 };
 
 type ISOPENMODALT = "editEvent" | "deleteEvent" | "viewEvent" | "";
@@ -297,7 +297,7 @@ export const EventList = () => {
         )}
 
         {isOpenModal === "editEvent" && (
-          <AddEventModal
+          <UpdateEventModal
             setModal={() => setIsOpenModal("")}
             getEventDetail={viewDetail}
             handleGetEvent={handleGetEvents}

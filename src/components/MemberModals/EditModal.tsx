@@ -28,7 +28,7 @@ type MemberT = {
   id: number;
   fullName: string;
   fatherName: string;
-  district: string;
+  districtName: string;
   zone: string;
   mobileNumber: string;
   address: string;
@@ -131,7 +131,7 @@ export const EditModal = ({
     data.append("education", formData?.education ?? "");
     data.append("mobileNumber", formData?.mobileNumber ?? "");
     data.append("profession", formData?.profession ?? "");
-    data.append("district", formData?.district ?? "");
+    data.append("district", formData?.districtName ?? "");
     data.append("zone", formData?.zone ?? "");
     data.append("memberType", formData?.memberType ?? "");
     if (updateImage) {
@@ -178,7 +178,7 @@ export const EditModal = ({
   const handleGetZone = async () => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/user/getZoneById/${formData?.district}`,
+        `${BASE_URL}/user/getZoneById/${formData?.districtName}`,
         {
           headers: {
             Authorization: token,
@@ -211,7 +211,7 @@ export const EditModal = ({
   useEffect(() => {
     handleGetDistrict();
     handleGetZone();
-  }, [formData?.district]);
+  }, [formData?.districtName]);
 
   useEffect(() => {
     if (formData?.id) {
@@ -219,7 +219,7 @@ export const EditModal = ({
     }
   }, [formData?.id]);
 
-  console.log("=>>>>>>>>>>", editData?.zone);
+  console.log("=>>>>>>>>>>", editData);
 
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10 ">
@@ -329,7 +329,9 @@ export const EditModal = ({
               labelName="District*"
               handlerChange={handleChange}
               name="district"
-              inputValue={(editData?.district && editData?.district) ?? ""}
+              inputValue={
+                (editData?.districtName && editData?.districtName) ?? ""
+              }
               optionData={allDistrict?.map((district) => ({
                 id: district.id,
                 label: district.district,

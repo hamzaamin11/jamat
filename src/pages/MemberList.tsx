@@ -176,8 +176,7 @@ export const MemberList = () => {
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
-      toast.error(axiosError.response?.data?.message ?? "");
-    }
+     handleGetmembers();}
   };
   useEffect(() => {
     handleGetmembers();
@@ -186,6 +185,8 @@ export const MemberList = () => {
   useEffect(() => {
     if (searchData) {
       handleSearchbar();
+    } else {
+      handleGetmembers();
     }
   }, [searchData]);
 

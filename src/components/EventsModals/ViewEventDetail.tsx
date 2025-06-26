@@ -20,7 +20,7 @@ type GETEVENTT = {
   startTime: string;
   endTime: string;
   presentTime: string;
-  eventType: "oneTimeEvent | recursiveEvent";
+  eventType: "oneTimeEvent" | "recursiveEvent" | undefined;
 };
 type ModalTProps = {
   setModal: () => void;

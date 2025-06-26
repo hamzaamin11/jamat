@@ -46,14 +46,14 @@ type GETEVENTT = {
   startTime: string;
   endTime: string;
   presentTime: string;
-  eventType: "oneTimeEvent | recursiveEvent";
+  eventType: "oneTimeEvent" | "recursiveEvent" | undefined;
 };
 type EditModalProps = {
   setModal: () => void;
   getEventDetail: GETEVENTT | null;
   handleGetEvent: () => void;
 };
-export const AddEventModal = ({
+export const UpdateEventModal = ({
   setModal,
   getEventDetail,
   handleGetEvent,
@@ -65,6 +65,8 @@ export const AddEventModal = ({
   const token = currentUser?.token;
 
   const [updateEvent, setUpdateEvent] = useState(getEventDetail);
+
+  console.log("update event Data", updateEvent);
 
   const [updateImage, setUpdateImage] = useState<File | null>(null);
 
@@ -267,21 +269,18 @@ export const AddEventModal = ({
                 type="radio"
                 name="eventType"
                 className="radio border-gray-500 text-sky-500"
-                value={"oneTimeEvent"}
-                // checked={
-                //   updateEvent?.eventType === "oneTimeEvent | recursiveEvent"
-                // }
+                value="oneTimeEvent"
+                checked={updateEvent?.eventType === "oneTimeEvent"}
                 onChange={handleChange}
               />
               <label>One Time Event</label>
+
               <input
                 type="radio"
                 name="eventType"
                 className="radio border-gray-500 text-sky-500"
-                value={"recursiveEvent"}
-                // checked={
-                //   updateEvent?.eventType === "oneTimeEvent | recursiveEvent"
-                // }
+                value="recursiveEvent"
+                checked={updateEvent?.eventType === "recursiveEvent"}
                 onChange={handleChange}
               />
               <label>Recursive Event</label>

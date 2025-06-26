@@ -43,6 +43,8 @@ export const Zone = () => {
 
   const [allZone, setAllZone] = useState<AllZoneT[] | null>(null);
 
+  console.log("all zone", allZone);
+
   const [updateZone, setUpdateZone] = useState<AllZoneT | null>(null);
 
   const [isOpenModal, setIsOpenModal] = useState<ISOPENMODALT | "">("");

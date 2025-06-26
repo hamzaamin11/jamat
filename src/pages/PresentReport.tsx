@@ -78,14 +78,14 @@ type MemberT = {
   image: string;
 };
 
-// const currentDate =
-//   new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
+const currentDate =
+  new Date(new Date().toISOString()).toLocaleDateString("sv-SE") ?? "";
 
 const initialState = {
   eventName: "",
   memberName: "",
-  dateFrom: "",
-  dateTo: "",
+  dateFrom: currentDate,
+  dateTo: currentDate,
 };
 export const PresentReport = () => {
   const { currentUser } = useAppSelector((state) => state?.officeState);

@@ -4,7 +4,7 @@ import { Title } from "../title/Title";
 
 import { AddButton } from "../Buttons/AddButton";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBriefcase } from "react-icons/fa";
 import { BASE_URL } from "../../Contents/URL";
 import axios, { AxiosError } from "axios";
@@ -23,7 +23,7 @@ type UPDATEZONET = {
 
 type ALLDISTRICTT = {
   district: string;
-  id: number;
+  id: number | string;
 };
 interface ADDZONEProps {
   setModal: () => void;
@@ -42,6 +42,8 @@ export const EditZone = ({
   const [zone, setZone] = useState(updateZone);
 
   const [getDistrict, setGetDistrict] = useState<ALLDISTRICTT[] | null>(null);
+
+  console.log("get all district =>", getDistrict);
 
   const [btnLoading, setBtnLoading] = useState(false);
 
@@ -86,6 +88,7 @@ export const EditZone = ({
       });
 
       setGetDistrict(res.data);
+      console.log("end point hit ", res.data);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       dispatch(authFailure(axiosError.response?.data?.message ?? ""));
@@ -93,8 +96,11 @@ export const EditZone = ({
   };
   const handleClick = () => {
     handleUpdateZone();
-    handleGetdistrict();
   };
+
+  useEffect(() => {
+    handleGetdistrict();
+  }, []);
   return (
     <div className="fixed inset-0 backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-10">
       <div className="mx-3 bg-white text-gray-700 rounded">

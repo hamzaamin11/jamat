@@ -45,7 +45,7 @@ const currentDate =
 const initialState = {
   eventName: "",
   dateFrom: currentDate,
-  dateTo: "",
+  dateTo: currentDate,
 };
 
 export const EventReport = () => {

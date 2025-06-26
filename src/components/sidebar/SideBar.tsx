@@ -28,10 +28,10 @@ export const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
     setActiveBtns((prev) => (prev === activeBtn ? "" : activeBtn));
   };
 
-  useEffect(() => {
-    setActiveBtns("Dashboard");
-    navigate("/");
-  }, []);
+  // useEffect(() => {
+  //   setActiveBtns("Dashboard");
+  //   navigate("/");
+  // }, []);
 
   return (
     <div
